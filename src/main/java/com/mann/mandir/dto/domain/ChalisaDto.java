@@ -1,0 +1,22 @@
+package com.mann.mandir.dto.domain;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ChalisaDto {
+    private String id;
+    private String deity;
+    private String title;
+    private int totalVerses;
+    private List<ChalisaVerseDto> verses;
+}
