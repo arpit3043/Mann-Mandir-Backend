@@ -5,7 +5,6 @@ target
 /queries/
 /dataSources/
 /httpRequests/
-resources/
 src/java/test/
 /dataSources.local.xml
 /.idea/workspace.xml
