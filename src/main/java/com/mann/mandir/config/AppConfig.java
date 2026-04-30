@@ -38,28 +38,28 @@ public class AppConfig {
     @Value("${webclient.timeout.write:5000}")
     private int writeTimeoutMs;
 
-    @Value("${cache.gita.spec}")
+    @Value("${cache.gita.spec:5000}")
     private String gitaSpec;
 
-    @Value("${cache.veda.spec}")
+    @Value("${cache.veda.spec:5000}")
     private String vedaSpec;
 
-    @Value("${cache.ramayana.spec}")
+    @Value("${cache.ramayana.spec:5000}")
     private String ramayanaSpec;
 
-    @Value("${cache.mahabharata.spec}")
+    @Value("${cache.mahabharata.spec:5000}")
     private String mahabharataSpec;
 
-    @Value("${cache.aarti.spec}")
+    @Value("${cache.aarti.spec:5000}")
     private String aartiSpec;
 
-    @Value("${cache.chalisa.spec}")
+    @Value("${cache.chalisa.spec:5000}")
     private String chalisaSpec;
 
-    @Value("${cache.stotram.spec}")
+    @Value("${cache.stotram.spec:5000}")
     private String stotramSpec;
 
-    @Value("${cache.mantra.spec}")
+    @Value("${cache.mantra.spec:5000}")
     private String mantraSpec;
 
     @Bean
