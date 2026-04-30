@@ -11,7 +11,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -32,13 +34,48 @@ public class HavyakaApiClient extends BaseApiClient {
     }
 
     public Optional<List<MantraResponse>> getMantras(int limit) {
-        return get("/mantras?limit=" + limit, new ParameterizedTypeReference<>() {
-        });
+        return getWrappedMantras("/mantras?limit=" + limit);
     }
 
     public Optional<List<MantraResponse>> getMantras(String name, int limit) {
-        return get("/mantras?name=" + name + "&limit=" + limit, new ParameterizedTypeReference<>() {
+        return getWrappedMantras("/mantras?name=" + name + "&limit=" + limit);
+    }
+
+    private Optional<List<MantraResponse>> getWrappedMantras(String path) {
+        Optional<Map<String, Object>> response = get(path, new ParameterizedTypeReference<>() {
         });
+
+        if (response.isEmpty()) {
+            return Optional.empty();
+        }
+
+        Object raw = response.get().get("mantras");
+        if (!(raw instanceof List<?> rawList)) {
+            return Optional.empty();
+        }
+
+        List<MantraResponse> items = rawList.stream()
+                .filter(Map.class::isInstance)
+                .map(Map.class::cast)
+                .map(this::toMantraResponse)
+                .collect(Collectors.toList());
+
+        return Optional.of(items);
+    }
+
+    private MantraResponse toMantraResponse(Map<?, ?> raw) {
+        MantraResponse item = new MantraResponse();
+        item.setId(stringOf(raw.get("_id")));
+        item.setName(stringOf(raw.get("name")));
+        item.setText(stringOf(raw.get("shloka")));
+        item.setMeaning(stringOf(raw.get("purpose")));
+        item.setDeity(stringOf(raw.get("godName")));
+        item.setTags(List.of());
+        return item;
+    }
+
+    private String stringOf(Object value) {
+        return value == null ? "" : value.toString();
     }
 
     @Data

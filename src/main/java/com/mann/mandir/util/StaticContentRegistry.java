@@ -10,6 +10,7 @@ import com.mann.mandir.dto.domain.RamayanaKandaDto;
 import com.mann.mandir.dto.domain.RamayanaVerseDto;
 import com.mann.mandir.dto.domain.RigVedaVerseDto;
 import com.mann.mandir.dto.domain.StotramDto;
+import com.mann.mandir.dto.domain.StotramVerseDto;
 import com.mann.mandir.dto.domain.UpanishadDto;
 import com.mann.mandir.dto.domain.UpanishadVerseDto;
 import com.mann.mandir.dto.domain.VedaDto;
@@ -68,53 +69,75 @@ public class StaticContentRegistry {
 
     public List<AartiDto> getAllAartis() {
         return List.of(
-                AartiDto.builder().id("aarti-ganesh").name("Jai Ganesh Deva").deity("Ganesh")
+                AartiDto.builder().id("aarti-ganesh").name("Jai Ganesh Deva").deity("Ganesha")
                         .devanagari("जय गणेश जय गणेश जय गणेश देवा")
                         .transliteration("Jai Ganesh Jai Ganesh Jai Ganesh Deva")
-                        .translation("Victory to Lord Ganesha, the remover of obstacles")
+                        .translation("Victory to Lord Ganesha, son of Parvati and Shiva.")
                         .verses(List.of(
-                                "जय गणेश जय गणेश जय गणेश देवा। माता जाकी पार्वती पिता महादेवा॥",
-                                "एकदन्त दयावन्त चार भुजा धारी। माथे सिन्दूर सोहे मूसे की सवारी॥",
-                                "पान चढ़े फूल चढ़े और चढ़े मेवा। लड्डुअन का भोग लगे संत करें सेवा॥"
+                                "जय गणेश जय गणेश जय गणेश देवा माता जाकी पार्वती पिता महादेवा",
+                                "एक दन्त दयावन्त चार भुजा धारी माथे पर तिलक सोहे मूसे की सवारी",
+                                "पान चढ़े फूल चढ़े और चढ़े मेवा लड्डुअन का भोग लगे संत करें सेवा",
+                                "अन्धन को आँख देत कोढ़िन को काया बंझन को पुत्र देत निर्धन को माया",
+                                "सूर्य श्याम शरण आए सफल कीजे सेवा माता जाकी पार्वती पिता महादेवा"
                         )).build(),
                 AartiDto.builder().id("aarti-lakshmi").name("Jai Lakshmi Mata").deity("Lakshmi")
                         .devanagari("जय लक्ष्मी माता")
                         .transliteration("Jai Lakshmi Mata")
-                        .translation("Victory to Mother Lakshmi, goddess of wealth and prosperity")
+                        .translation("Victory to Mother Lakshmi, goddess of wealth and prosperity.")
                         .verses(List.of(
                                 "जय लक्ष्मी माता, मैया जय लक्ष्मी माता। तुमको निसदिन सेवत हर विष्णु विधाता॥",
-                                "उमा, रमा, ब्रह्माणी, तुम ही जग-माता। सूर्य-चंद्रमा ध्यावत नारद ऋषि गाता॥"
+                                "उमा, रमा, ब्रह्माणी, तुम ही जग-माता। सूर्य-चंद्रमा ध्यावत नारद ऋषि गाता॥",
+                                "दुर्गा रूप निरंजन सुख सम्पत्ति दाता। जो कोई तुमको ध्यावत ऋद्धि-सिद्धि धन पाता॥",
+                                "तुम ही पाताल निवासिनी, तुम ही शुभदाता। कर्मप्रभाव प्रकाशिनी, भवनिधि की ताता॥",
+                                "जिस घर में तुम रहतीं, सब सद्गुण आता। सब सम्भव हो जाता, मन वांछित फल पाता॥"
                         )).build(),
                 AartiDto.builder().id("aarti-shiva").name("Om Jai Shiv Omkara").deity("Shiva")
                         .devanagari("ॐ जय शिव ओंकारा")
                         .transliteration("Om Jai Shiv Omkara")
-                        .translation("Om, victory to Lord Shiva, the primordial sound")
+                        .translation("Glory to Lord Shiva, the primordial sound.")
                         .verses(List.of(
-                                "ॐ जय शिव ओंकारा, स्वामी जय शिव ओंकारा। ब्रह्मा विष्णु सदाशिव अर्द्धांगी धारा॥",
-                                "एकानन चतुरानन पञ्चानन राजे। हंसानन गरुड़ासन वृषवाहन साजे॥"
+                                "ॐ जय शिव ओंकारा, स्वामी जय शिव ओंकारा। ब्रह्मा विष्णु सदाशिव, अर्द्धांगी धारा॥",
+                                "एकानन चतुरानन पञ्चानन राजे। हंसासन गरूड़ासन वृषवाहन साजे॥",
+                                "दो भुज चार चतुर्भुज, दशभुज अति सोहे। त्रिगुण रूप निरखते, त्रिभुवन जन मोहे॥",
+                                "अक्षमाला वनमाला, मुण्डमाला धारी। चन्दन मृगमद सोहे, भाले शशिधारी॥",
+                                "श्वेताम्बर पीताम्बर, बाघम्बर अंगे। सनकादिक ब्रह्मादिक, भूतादिक संगे॥",
+                                "कर में कमण्डल चक्र त्रिशूल धर्ता। जगकर्ता जगभर्ता, जग पालन कर्ता॥",
+                                "ब्रह्मा विष्णु सदाशिव, जानत अविवेका। प्रणवाक्षर के मध्यें, ये तीनों एका॥",
+                                "त्रिगुण स्वामी की आरती, जो कोई नर गावे। कहत शिवानंद स्वामी, मनवांछित फल पावे॥"
                         )).build(),
-                AartiDto.builder().id("aarti-krishna").name("Jai Jagdish Hare").deity("Krishna")
-                        .devanagari("जय जगदीश हरे")
-                        .transliteration("Jai Jagdish Hare")
-                        .translation("Victory to the Lord of the Universe")
+                AartiDto.builder().id("aarti-krishna").name("Jai Jagdish Hare").deity("Vishnu/Krishna")
+                        .devanagari("ॐ जय जगदीश हरे")
+                        .transliteration("Om Jai Jagdish Hare")
+                        .translation("Victory to the Lord of the Universe.")
                         .verses(List.of(
                                 "ॐ जय जगदीश हरे, स्वामी जय जगदीश हरे। भक्त जनों के संकट, क्षण में दूर करे॥",
-                                "जो ध्यावे फल पावे, दुःख विनसे मन का। सुख सम्पत्ति घर आवे, कष्ट मिटे तन का॥"
+                                "जो ध्यावे फल पावे, दुःख विनसे मन का। सुख सम्पत्ति घर आवे, कष्ट मिटे तन का॥",
+                                "मात पिता तुम मेरे, शरण गहूं मैं किसकी। तुम बिन और न दूजा, आस करूँ मैं जिसकी॥",
+                                "तुम पूरण परमात्मा, तुम अन्तर्यामी। पारब्रह्म परमेश्वर, तुम सबके स्वामी॥",
+                                "तुम करुणा के सागर, तुम पालनकर्ता। मैं मूरख खल कामी, कृपा करो भर्ता॥",
+                                "तुम हो एक अगोचर, सबके प्राणपति। किस विधि मिलूं दयामय, तुमको मैं कुमति॥"
                         )).build(),
                 AartiDto.builder().id("aarti-durga").name("Jai Ambe Gauri").deity("Durga")
                         .devanagari("जय अम्बे गौरी")
                         .transliteration("Jai Ambe Gauri")
-                        .translation("Victory to Mother Durga, the divine feminine power")
+                        .translation("Victory to Mother Durga, the divine feminine power.")
                         .verses(List.of(
                                 "जय अम्बे गौरी, मैया जय श्यामा गौरी। तुमको निशिदिन ध्यावत, हरि ब्रह्मा शिवरी॥",
-                                "माँग सिन्दूर विराजत, टीको मृगमद को। उज्ज्वल से दोउ नैना, चन्द्रवदन नीको॥"
+                                "माँग सिन्दूर विराजत, टीको मृगमद को। उज्ज्वल से दोउ नैना, चन्द्रवदन नीको॥",
+                                "कनक समान कलेवर, रक्ताम्बर राजे। रक्तपुष्प गल माला, कण्ठन पर साजे॥",
+                                "केहरि वाहन राजत, खड्ग खप्पर धारी। सुर-नर-मुनि जन सेवत, तिनके दुखहारी॥",
+                                "कानन कुण्डल शोभित, नासाग्रे मोती। कोटिक चन्द्र दिवाकर, सम राजत ज्योती॥",
+                                "चण्ड-मुण्ड संहारे, शोणित बीज हरे। मधु-कैटभ दोउ मारे, सुर भयहीन करे॥"
                         )).build(),
                 AartiDto.builder().id("aarti-saraswati").name("Jai Saraswati Mata").deity("Saraswati")
                         .devanagari("जय सरस्वती माता")
                         .transliteration("Jai Saraswati Mata")
-                        .translation("Victory to Goddess Saraswati, bestower of knowledge")
+                        .translation("Victory to Goddess Saraswati, bestower of knowledge.")
                         .verses(List.of(
-                                "जय सरस्वती माता, मैया जय सरस्वती माता। सद्गुण वैभव शालिनी, त्रिभुवन विख्याता॥"
+                                "जय सरस्वती माता, मैया जय सरस्वती माता। सद्गुण वैभव शालिनी, त्रिभुवन विख्याता॥",
+                                "चन्द्रवदनि पद्मासिनी, ध्युति मंगलकारी। सोहभा श्वेताम्बर, सुरनर मुनि तारी॥",
+                                "कमलपटिका पदवन्दित, मुनि मन हरषाती। ज्ञान, बुद्धि, विद्या दा, वर दे मोहि माता॥",
+                                "तुम त्रिभुवन में न्यारी, तुम ही ज्ञानप्रदाता। भक्तों के दुख हरता, सदा सुखदाता॥"
                         )).build()
         );
     }
@@ -139,13 +162,36 @@ public class StaticContentRegistry {
     }
 
     public List<StotramDto> getAllStotrams() {
+        List<StotramVerseDto> shivaTandavaVerses = List.of(
+                StotramVerseDto.builder().verseNumber(1)
+                        .sanskrit("जटा टवी गलज्जलप्रवाह पावितस्थले गलेऽव लम्ब्यलम्बितां भुजंगतुंग मालिकाम्‌")
+                        .transliteration("Jata tavi galaj jal pravah pavit sthale gale av lambya lambitam bhujang tung malikam")
+                        .meaning("His neck is purified by the flowing waters from his matted hair, a serpent hangs like a garland").build(),
+                StotramVerseDto.builder().verseNumber(2)
+                        .sanskrit("जटाकटा हसंभ्रम भ्रमन्निलिंपनिर्झरी विलोलवीचिवल्लरी विराजमानमूर्धनि")
+                        .transliteration("Jata kata hasambhram bhraman nilimpanirjhari vilol vichi vallari virajmaan moordhani")
+                        .meaning("My devotion lies in Shiva whose head is adorned by the flowing Ganga").build(),
+                StotramVerseDto.builder().verseNumber(3)
+                        .sanskrit("धराधरेंद्रनंदिनी विलासबन्धुबन्धुर स्फुरद्दिगंतसंतति प्रमोद मानमानसे")
+                        .transliteration("Dharadharendra nandini vilas bandhu bandhura sphurad digant santati pramod man manase")
+                        .meaning("May my mind find joy in Shiva, beloved of Parvati, who spreads bliss everywhere").build(),
+                StotramVerseDto.builder().verseNumber(11)
+                        .sanskrit("जयत्वदभ्रविभ्रम भ्रमद्भुजंगमस्फुरद्ध गद्धगद्विनिर्गमत्कराल भाल हव्यवाट्")
+                        .transliteration("Jayatvad abhravibhram bhramad bhujangam sphurad dhagad dhagad vinirgamat karal bhaal")
+                        .meaning("Victory to Shiva, whose fierce cosmic dance resounds with powerful drumbeats").build(),
+                StotramVerseDto.builder().verseNumber(16)
+                        .sanskrit("इमं हि नित्यमेव मुक्तमुक्तमोत्तम स्तवं पठन्स्मरन्‌ ब्रुवन्नरो विशुद्धमेति संततम्‌")
+                        .transliteration("Imam hi nityameva muktamuktamottam stavam pathan smaran bruvannaro vishuddhameti santatam")
+                        .meaning("Whoever recites this hymn becomes pure, gains devotion to Shiva").build()
+        );
+
         return List.of(
                 StotramDto.builder().id("stotram-vishnu-sahasranama").name("Vishnu Sahasranama")
                         .deity("Vishnu").author("Vyasa").description("The thousand names of Lord Vishnu")
                         .verseCount(107).verses(Collections.emptyList()).build(),
                 StotramDto.builder().id("stotram-shiva-tandava").name("Shiva Tandava Stotram")
                         .deity("Shiva").author("Ravana").description("The cosmic dance of Lord Shiva described by Ravana")
-                        .verseCount(17).verses(Collections.emptyList()).build(),
+                        .verseCount(17).verses(shivaTandavaVerses).build(),
                 StotramDto.builder().id("stotram-mahishasura-mardini").name("Mahishasura Mardini Stotram")
                         .deity("Durga").author("Adi Shankaracharya")
                         .description("Hymn to Goddess Durga, the slayer of Mahishasura")

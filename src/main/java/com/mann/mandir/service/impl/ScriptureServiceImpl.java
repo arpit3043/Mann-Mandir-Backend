@@ -193,13 +193,24 @@ public class ScriptureServiceImpl implements ScriptureService {
     }
 
     private GitaChapterDto mapGitaChapter(GitaTheAumClient.TheAumChapterResponse c) {
+        Object s = c.getSummary();
+        String summary;
+        if (s instanceof Map<?, ?> summaryMap) {
+            Object english = summaryMap.get("en");
+            summary = english != null ? english.toString() : summaryMap.values().stream()
+                    .findFirst()
+                    .map(Object::toString)
+                    .orElse(null);
+        } else {
+            summary = s == null ? null : s.toString();
+        }
         return GitaChapterDto.builder()
                 .number(c.getNumber())
                 .name(c.getName())
                 .translation(c.getTranslation())
                 .transliteration(c.getTransliteration())
                 .versesCount(c.getVersesCount())
-                .summary(c.getSummary())
+                .summary(summary)
                 .build();
     }
 
