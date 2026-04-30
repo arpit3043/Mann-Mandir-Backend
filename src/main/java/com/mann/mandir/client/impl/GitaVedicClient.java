@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -19,12 +21,14 @@ import java.util.Optional;
 public class GitaVedicClient extends BaseApiClient {
 
     private final ApiProperties apiProps;
+    private final ObjectMapper objectMapper;
 
-    GitaVedicClient(WebClient.Builder builder, ApiProperties apiProps,
+    GitaVedicClient(WebClient.Builder builder, ApiProperties apiProps, ObjectMapper objectMapper,
                     @Value("${webclient.retry.max-attempts:3}") int maxRetries,
                     @Value("${webclient.retry.backoff-ms:500}") long retryBackoffMs) {
         super(builder, maxRetries, retryBackoffMs);
         this.apiProps = apiProps;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -37,8 +41,20 @@ public class GitaVedicClient extends BaseApiClient {
     }
 
     public Optional<List<VedicChapterResponse>> getAllChapters() {
-        return get("/chapters", new ParameterizedTypeReference<>() {
-        });
+        try {
+            byte[] bytes = client()
+                    .get()
+                    .uri("/chapters")
+                    .retrieve()
+                    .bodyToMono(byte[].class)
+                    .block();
+            if (bytes == null || bytes.length == 0) return Optional.empty();
+            List<VedicChapterResponse> chapters = objectMapper.readValue(bytes, new TypeReference<>() {});
+            return Optional.ofNullable(chapters);
+        } catch (Exception e) {
+            log.error("Error calling {}{}: {}", getBaseUrl(), "/chapters", e.getMessage());
+            return Optional.empty();
+        }
     }
 
     @Data
