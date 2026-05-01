@@ -4,10 +4,15 @@ WORKDIR /app
 
 RUN useradd --create-home --shell /bin/bash appuser
 
-COPY mann-mandir-god-service/requirements.txt .
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY mann-mandir-god-service/ .
+COPY api ./api
+COPY clients ./clients
+COPY core ./core
+COPY schemas ./schemas
+COPY services ./services
+COPY main.py .
 
 ENV PYTHONPATH=/app
 
