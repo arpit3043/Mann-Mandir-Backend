@@ -1,8 +1,8 @@
 target/
 __pycache__/
-*.py[cod]
 .venv/
-
 .idea
 .vscode/
+venv/
+*.py[cod]
 .DS_Store
