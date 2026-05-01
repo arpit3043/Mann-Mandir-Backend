@@ -8,8 +8,9 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from mann_mandir import __version__
 from api.deps import build_services
+
+__version__ = "1.0.0"
 from api.routers import scripture, veda
 from api.routers import god, search
 from core.config import Settings
