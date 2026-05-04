@@ -1,0 +1,775 @@
+{
+  "info": {
+    "_postman_id": "81ca4c4d-2c8d-4ab6-baef-fb450ffd3233",
+    "name": "Mann-Mandir",
+    "description": "Collection for God, Scriptures, Vedas APIs",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "51417749",
+    "_collection_link": "https://go.postman.co/collection/51417749-81ca4c4d-2c8d-4ab6-baef-fb450ffd3233?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Health & Docs",
+      "item": [
+        {
+          "name": "Health Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health_status",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "health_status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Docs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/docs",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "docs"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "OpenAPI",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/openapi.json",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "openapi.json"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "God APIs",
+      "item": [
+        {
+          "name": "Aartis",
+          "item": [
+            {
+              "name": "Get All Aartis",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/aartis",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "aartis"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter by Deity",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/aartis?deity=Ganesha",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "aartis"
+                  ],
+                  "query": [
+                    {
+                      "key": "deity",
+                      "value": "Ganesha"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Paginated",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/aartis?page=0&size=5",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "aartis"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "5"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Deities List",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/aartis/deities",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "aartis",
+                    "deities"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Aarti by ID",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/aartis/aarti-ganesh",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "aartis",
+                    "aarti-ganesh"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Invalid Aarti",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/aartis/not-found-id",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "aartis",
+                    "not-found-id"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Chalisas",
+          "item": [
+            {
+              "name": "All Chalisas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/chalisas",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "chalisas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Paginated",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/chalisas?page=0&size=10",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "chalisas"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Hanuman Chalisa",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/chalisas/hanuman",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "chalisas",
+                    "hanuman"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verse 1",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/chalisas/hanuman/verses/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "chalisas",
+                    "hanuman",
+                    "verses",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Ganesh Chalisa",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/chalisas/ganesh",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "chalisas",
+                    "ganesh"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Stotram",
+          "item": [
+            {
+              "name": "All Stotrams",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/stotram",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "stotram"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filter Shiva",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/stotram?deity=Shiva",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "stotram"
+                  ],
+                  "query": [
+                    {
+                      "key": "deity",
+                      "value": "Shiva"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Shiva Tandava",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/stotram/stotram-shiva-tandava",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "stotram",
+                    "stotram-shiva-tandava"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Mantras",
+          "item": [
+            {
+              "name": "Random Mantra",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/mantras/random",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "mantras",
+                    "random"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "All Mantras",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/mantras",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "mantras"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Filtered Mantras",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/god/mantras?deity=Shiva&limit=10",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "god",
+                    "mantras"
+                  ],
+                  "query": [
+                    {
+                      "key": "deity",
+                      "value": "Shiva"
+                    },
+                    {
+                      "key": "limit",
+                      "value": "10"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Scriptures",
+      "item": [
+        {
+          "name": "Gita",
+          "item": [
+            {
+              "name": "Chapters",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/gita/chapters",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "gita",
+                    "chapters"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Chapter 1",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/gita/chapters/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "gita",
+                    "chapters",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Chapter 1 Verses",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/gita/chapters/1/verses",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "gita",
+                    "chapters",
+                    "1",
+                    "verses"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verse 2.47",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/gita/chapters/2/verses/47",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "gita",
+                    "chapters",
+                    "2",
+                    "verses",
+                    "47"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Ramayana",
+          "item": [
+            {
+              "name": "Kandas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/ramayana/kandas",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "ramayana",
+                    "kandas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Bala Kanda",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/ramayana/kandas/bala",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "ramayana",
+                    "kandas",
+                    "bala"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Verses",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/ramayana/kandas/bala/sargas/1/verses",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "ramayana",
+                    "kandas",
+                    "bala",
+                    "sargas",
+                    "1",
+                    "verses"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Mahabharata",
+          "item": [
+            {
+              "name": "Parvas",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/mahabharata/parvas",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "mahabharata",
+                    "parvas"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Parva 1",
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/v1/scriptures/mahabharata/parvas/1",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "scriptures",
+                    "mahabharata",
+                    "parvas",
+                    "1"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Vedas",
+      "item": [
+        {
+          "name": "All Vedas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vedas",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "vedas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Single Veda",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/veda",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "veda"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rig Veda",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/v1/vedas/rig",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "vedas",
+                "rig"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080"
+    }
+  ]
+}
