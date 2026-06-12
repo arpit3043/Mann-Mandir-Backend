@@ -17,27 +17,35 @@ class GitaTheAumClient:
         base = self._settings.api_gita_theaum_base_url.rstrip("/")
         return base + (path if path.startswith("/") else "/" + path)
 
+    async def _get(self, path: str) -> Optional[Any]:
+        return await get_json(
+            self._http,
+            self._url(path),
+            max_retries=self._settings.webclient_retry_max_attempts,
+            backoff_ms=self._settings.webclient_retry_backoff_ms,
+        )
+
     async def get_verse(self, chapter: int, verse: int) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url(f"/text/{chapter}/{verse}"))
+        return await self._get(f"/text/{chapter}/{verse}")
 
     async def get_chapter_verses(self, chapter: int) -> Optional[List[Dict[str, Any]]]:
-        data = await get_json(self._http, self._url(f"/text/{chapter}"))
+        data = await self._get(f"/text/{chapter}")
         return data if isinstance(data, list) else None
 
     async def get_chapter(self, chapter: int) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url(f"/chapter/{chapter}"))
+        return await self._get(f"/chapter/{chapter}")
 
     async def get_all_chapters(self) -> Optional[List[Dict[str, Any]]]:
-        data = await get_json(self._http, self._url("/chapters/"))
+        data = await self._get("/chapters/")
         return data if isinstance(data, list) else None
 
     async def get_verse_translations(
         self, chapter: int, verse: int
     ) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url(f"/text/translations/{chapter}/{verse}"))
+        return await self._get(f"/text/translations/{chapter}/{verse}")
 
     async def get_verse_commentary(self, chapter: int, verse: int) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url(f"/text/commentaries/{chapter}/{verse}"))
+        return await self._get(f"/text/commentaries/{chapter}/{verse}")
 
 
 class GitaVedicClient:
@@ -49,11 +57,19 @@ class GitaVedicClient:
         base = self._settings.api_gita_vedic_base_url.rstrip("/")
         return base + (path if path.startswith("/") else "/" + path)
 
+    async def _get(self, path: str) -> Optional[Any]:
+        return await get_json(
+            self._http,
+            self._url(path),
+            max_retries=self._settings.webclient_retry_max_attempts,
+            backoff_ms=self._settings.webclient_retry_backoff_ms,
+        )
+
     async def get_slok(self, chapter: int, verse: int) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url(f"/slok/{chapter}/{verse}"))
+        return await self._get(f"/slok/{chapter}/{verse}")
 
     async def get_all_chapters(self) -> Optional[List[Dict[str, Any]]]:
-        data = await get_json(self._http, self._url("/chapters"))
+        data = await self._get("/chapters")
         return data if isinstance(data, list) else None
 
 
@@ -66,17 +82,25 @@ class DharmicDataClient:
         base = self._settings.api_dharmicdata_base_url.rstrip("/")
         return base + (path if path.startswith("/") else "/" + path)
 
+    async def _get(self, path: str) -> Optional[Any]:
+        return await get_json(
+            self._http,
+            self._url(path),
+            max_retries=self._settings.webclient_retry_max_attempts,
+            backoff_ms=self._settings.webclient_retry_backoff_ms,
+        )
+
     async def get_mahabharata_parva(self, parva_number: int) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url(f"/mahabharata/parva-{parva_number}.json"))
+        return await self._get(f"/mahabharata/parva-{parva_number}.json")
 
     async def get_ramayana_kanda(self, kanda: str) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url(f"/ramayana/{kanda}.json"))
+        return await self._get(f"/ramayana/{kanda}.json")
 
     async def get_yajur_veda(self) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url("/yajurveda/yajurveda.json"))
+        return await self._get("/yajurveda/yajurveda.json")
 
     async def get_atharva_veda(self) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url("/atharvaveda/atharvaveda.json"))
+        return await self._get("/atharvaveda/atharvaveda.json")
 
 
 class HanumanChalisaClient:
@@ -88,8 +112,16 @@ class HanumanChalisaClient:
         base = self._settings.api_chalisa_hanuman_base_url.rstrip("/")
         return base + (path if path.startswith("/") else "/" + path)
 
+    async def _get(self, path: str) -> Optional[Any]:
+        return await get_json(
+            self._http,
+            self._url(path),
+            max_retries=self._settings.webclient_retry_max_attempts,
+            backoff_ms=self._settings.webclient_retry_backoff_ms,
+        )
+
     async def get_all_verses(self) -> Optional[List[Dict[str, Any]]]:
-        data = await get_json(self._http, self._url("/hanumanChalisa.json"))
+        data = await self._get("/hanumanChalisa.json")
         return data if isinstance(data, list) else None
 
 
@@ -102,12 +134,20 @@ class HavyakaApiClient:
         base = self._settings.api_havyaka_base_url.rstrip("/")
         return base + (path if path.startswith("/") else "/" + path)
 
+    async def _get(self, path: str) -> Optional[Any]:
+        return await get_json(
+            self._http,
+            self._url(path),
+            max_retries=self._settings.webclient_retry_max_attempts,
+            backoff_ms=self._settings.webclient_retry_backoff_ms,
+        )
+
     async def get_mantras(self, limit: int) -> Optional[List[Dict[str, Any]]]:
-        wrapped = await get_json(self._http, self._url(f"/mantras?limit={limit}"))
+        wrapped = await self._get(f"/mantras?limit={limit}")
         return self._unwrap(wrapped)
 
     async def get_mantras_by_name(self, name: str, limit: int) -> Optional[List[Dict[str, Any]]]:
-        wrapped = await get_json(self._http, self._url(f"/mantras?name={name}&limit={limit}"))
+        wrapped = await self._get(f"/mantras?name={name}&limit={limit}")
         return self._unwrap(wrapped)
 
     def _unwrap(self, wrapped: Optional[Dict[str, Any]]) -> Optional[List[Dict[str, Any]]]:
@@ -132,8 +172,16 @@ class ShlokaApiClient:
         base = self._settings.api_shloka_base_url.rstrip("/")
         return base + (path if path.startswith("/") else "/" + path)
 
+    async def _get(self, path: str) -> Optional[Any]:
+        return await get_json(
+            self._http,
+            self._url(path),
+            max_retries=self._settings.webclient_retry_max_attempts,
+            backoff_ms=self._settings.webclient_retry_backoff_ms,
+        )
+
     async def get_random_shloka(self) -> Optional[Dict[str, Any]]:
-        return await get_json(self._http, self._url("/sanskrit/slogan/random"))
+        return await self._get("/sanskrit/slogan/random")
 
 
 class RigVedaApiClient:
@@ -145,14 +193,22 @@ class RigVedaApiClient:
         base = self._settings.api_rigveda_base_url.rstrip("/")
         return base + (path if path.startswith("/") else "/" + path)
 
+    async def _get(self, path: str) -> Optional[Any]:
+        return await get_json(
+            self._http,
+            self._url(path),
+            max_retries=self._settings.webclient_retry_max_attempts,
+            backoff_ms=self._settings.webclient_retry_backoff_ms,
+        )
+
     async def get_by_mandala(self, mandala: int) -> Optional[List[Dict[str, Any]]]:
-        data = await get_json(self._http, self._url(f"/meta/book/{mandala}"))
+        data = await self._get(f"/meta/book/{mandala}")
         return data if isinstance(data, list) else None
 
     async def get_by_deity(self, deity: str) -> Optional[List[Dict[str, Any]]]:
-        data = await get_json(self._http, self._url(f"/meta/god/{deity}"))
+        data = await self._get(f"/meta/god/{deity}")
         return data if isinstance(data, list) else None
 
     async def get_by_poet(self, poet: str) -> Optional[List[Dict[str, Any]]]:
-        data = await get_json(self._http, self._url(f"/meta/poet/{poet}"))
+        data = await self._get(f"/meta/poet/{poet}")
         return data if isinstance(data, list) else None
