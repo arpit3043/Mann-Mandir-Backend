@@ -29,3 +29,6 @@ class Settings(BaseSettings):
     api_dharmicdata_base_url: str = (
         "https://raw.githubusercontent.com/dharmicdata/dharmic-data/main"
     )
+    # Free Astrology API (server-side proxy)
+    astro_api_base: str = ""
+    astro_api_key: str = ""

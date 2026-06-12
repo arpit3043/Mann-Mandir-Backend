@@ -13,6 +13,7 @@ from api.deps import build_services
 __version__ = "1.0.0"
 from api.routers import scripture, veda
 from api.routers import god, search
+from api.routers import astro
 from core.config import Settings
 from core.exceptions import ResourceNotFoundError
 
@@ -27,8 +28,8 @@ def _mount_routes(app: FastAPI, api_prefix: str) -> None:
     app.include_router(god.router, prefix=f"{p}/god", tags=["God"])
     app.include_router(scripture.router, prefix=f"{p}/scriptures", tags=["Scriptures"])
     app.include_router(veda.router, prefix=f"{p}/vedas", tags=["Vedas"])
-    app.include_router(veda.router, prefix=f"{p}/veda", tags=["Vedas"])
     app.include_router(search.router, prefix=f"{p}/search", tags=["Search"])
+    app.include_router(astro.router, prefix=f"{p}/astro", tags=["Astro"])
 
 
 @asynccontextmanager
