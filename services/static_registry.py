@@ -303,6 +303,9 @@ class StaticContentRegistry:
     def get_gita_chapters(self) -> List[Dict[str, Any]]:
         return [dict(c) for c in GITA_CHAPTERS]
 
+    def get_gita_verses(self, chapter_number: int) -> List[Dict[str, Any]]:
+        return []
+
     def get_ramayana_kandas(self) -> List[Dict[str, Any]]:
         return [dict(k) for k in RAMAYANA_KANDAS]
 
