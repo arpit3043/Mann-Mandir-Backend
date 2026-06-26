@@ -1,10 +1,12 @@
 from __future__ import annotations
 
-import asyncio
 import logging
-from typing import Any, Optional
+from typing import TYPE_CHECKING, Any, Optional
 
 import httpx
+
+if TYPE_CHECKING:
+    from core.cache import RedisCache
 
 logger = logging.getLogger(__name__)
 
@@ -12,23 +14,32 @@ logger = logging.getLogger(__name__)
 async def get_json(
     client: httpx.AsyncClient,
     url: str,
-    *,
-    max_retries: int = 2,
-    backoff_ms: float = 400.0,
 ) -> Optional[Any]:
-    for attempt in range(max_retries):
-        try:
-            response = await client.get(url)
-            if response.status_code == 404:
-                return None
-            response.raise_for_status()
-            return response.json()
-        except httpx.HTTPStatusError as e:
-            logger.warning("HTTP %s for %s: %s", e.response.status_code, url, e)
-            return None
-        except httpx.RequestError as e:
-            logger.error("Request error for %s (attempt %s): %s", url, attempt + 1, e)
-            if attempt >= max_retries - 1:
-                return None
-            await asyncio.sleep((backoff_ms / 1000.0) * (2**attempt))
-    return None
+    response = await client.get(url)
+    if response.status_code == 404:
+        return None
+    response.raise_for_status()
+    return response.json()
+
+
+async def get_json_cached(
+    client: httpx.AsyncClient,
+    url: str,
+    cache: Optional[RedisCache],
+    ttl: int,
+) -> Optional[Any]:
+    if cache is not None:
+        key = cache.make_key(url)
+        cached = cache.get(key)
+        if cached is not None:
+            logger.debug("Cache HIT  key=%r", key)
+            return cached
+
+    result = await get_json(client, url)
+
+    if result is not None and cache is not None:
+        key = cache.make_key(url)
+        cache.set(key, result, ttl)
+        logger.debug("Cache SET  key=%r  ttl=%ds", key, ttl)
+
+    return result

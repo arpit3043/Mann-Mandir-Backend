@@ -1,0 +1,19 @@
+# Pyrefly configuration for Mann-Mandir-Backend
+# https://pyrefly.org/en/stable/configuration/
+
+python_interpreter = "C:\\Python314\\python.exe"
+
+# Treat the backend folder itself as the root so that
+# `api.*`, `core.*`, `clients.*` resolve correctly.
+source_roots = ["."]
+
+# Search paths: "." = this folder (so api.*, core.*, clients.* resolve)
+# + both site-packages locations for fastapi, httpx, etc.
+search_path = [
+  ".",
+  "C:\\Python314\\Lib\\site-packages",
+  "C:\\Users\\harsu\\AppData\\Roaming\\Python\\Python314\\site-packages",
+]
+
+# Suppress false positives from pyrefly's own virtual hover-analysis scratch files.
+project_excludes = ["**/__pyrefly_virtual__/**"]
