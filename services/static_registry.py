@@ -219,6 +219,16 @@ VEDA_MANTRA_POOL: List[Dict[str, Any]] = [
         "veda": "Rig",
         "tags": ["saraswati", "knowledge"],
     },
+    {
+        "id": "m6",
+        "name": "Sama Veda Opening",
+        "devanagari": "अग्न आयाहि वीतये गृणानो हव्यदातये। नि होता सत्सि बर्हिषि॥",
+        "transliteration": "Agna ayahi vitaye grnano havyadataye ni hota satsi barhishi",
+        "meaning": "Come, Agni, to the feast, praised as the giver of offerings; sit as the Hotr on the sacred grass.",
+        "deity": "Agni",
+        "veda": "Sama",
+        "tags": ["agni", "sama"],
+    },
 ]
 
 GITA_CHAPTERS: List[Dict[str, Any]] = [
@@ -280,6 +290,210 @@ ALL_VEDAS: List[Dict[str, Any]] = [
     {"vedaId": "atharva", "name": "Atharva Veda", "mandalas": 20, "hymns": 730, "verses": 5987, "description": "Practical hymns and formulas."},
 ]
 
+HANUMAN_CHALISA_VERSES: List[Dict[str, Any]] = [
+    {
+        "verseNumber": 1,
+        "type": "Doha",
+        "devanagari": "श्रीगुरु चरन सरोज रज, निज मनु मुकुरु सुधारि। बरनउँ रघुबर बिमल जसु, जो दायकु फल चारि॥",
+        "transliteration": "Shree Guru Charan Saroj Raj, Nij manu Mukuru Sudhari. Baranau Raghuvar Bimal Jasu, Jo Dayaku Phala Chari.",
+        "englishTranslation": "With the dust of the Guru's lotus feet, I cleanse the mirror of my mind and narrate the pure glory of Shri Raghuvar.",
+        "tags": ["Introductory", "Doha", "Prayer"],
+    },
+    {
+        "verseNumber": 2,
+        "type": "Doha",
+        "devanagari": "बुद्धिहीन तनु जानिके, सुमिरौं पवन-कुमार। बल बुद्धि बिद्या देहु मोहिं, हरहु कलेश बिकार॥",
+        "transliteration": "Buddhiheen Tanu Jaanike, Sumirau Pavan Kumar. Bal Buddhi Vidya Dehu Mohin, Harahu Kalesh Vikaar.",
+        "englishTranslation": "Considering myself ignorant, I remember the Son of the Wind-God. Grant me strength, wisdom, and knowledge.",
+        "tags": ["Introductory", "Doha", "Prayer"],
+    },
+    {
+        "verseNumber": 3,
+        "type": "Chaupai",
+        "devanagari": "जय हनुमान ज्ञान गुन सागर। जय कपीस तिहुँ लोक उजागर॥",
+        "transliteration": "Jai Hanuman Gyan Gun Sagar. Jai Kapeesh Tihun Lok Ujaagar.",
+        "englishTranslation": "Victory to Hanuman, the ocean of wisdom and virtue.",
+        "tags": ["Chaupai", "Praise"],
+    },
+]
+
+GANESH_CHALISA_VERSES: List[Dict[str, Any]] = [
+    {
+        "verseNumber": 1,
+        "type": "Doha",
+        "devanagari": "जय गणपति सद्गुण सदन, कविवर बदन कृपाल। विघ्न हरण मंगल करण, जय जय गिरिजा लाल॥",
+        "transliteration": "Jai Ganapati sadgun sadan, kavivar badan kripal. Vighna haran mangal karan, jai jai Girija lal.",
+        "englishTranslation": "Victory to Ganapati, abode of virtues, gracious to poets, remover of obstacles.",
+        "tags": ["Doha"],
+    }
+]
+
+GITA_VERSES: Dict[int, List[Dict[str, Any]]] = {
+    1: [
+        {
+            "bgId": "BG1.1",
+            "chapter": 1,
+            "verse": 1,
+            "shloka": "धृतराष्ट्र उवाच | धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः | मामकाः पाण्डवाश्चैव किमकुर्वत सञ्जय ||1-1||",
+            "transliteration": "dhritarashtra uvacha dharmakshetre kurukshetre samaveta yuyutsavah mamakah pandavaschaiva kimakurvata sanjaya",
+            "translations": {"en": "Dhritarashtra said: O Sanjaya, what did my sons and the sons of Pandu do when they assembled on the holy field of Kurukshetra, eager for battle?"},
+        },
+        {
+            "bgId": "BG1.2",
+            "chapter": 1,
+            "verse": 2,
+            "shloka": "सञ्जय उवाच | दृष्ट्वा तु पाण्डवानीकं व्यूढं दुर्योधनस्तदा | आचार्यमुपसङ्गम्य राजा वचनमब्रवीत् ||1-2||",
+            "transliteration": "sanjaya uvacha drishtva tu pandavanikam vyudham duryodhanastada acharyamupasangamya raja vachanamabravit",
+            "translations": {"en": "Sanjaya said: Seeing the Pandava army arrayed, King Duryodhana approached his teacher and spoke these words."},
+        },
+    ],
+    2: [
+        {
+            "bgId": "BG2.47",
+            "chapter": 2,
+            "verse": 47,
+            "shloka": "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन | मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि ||२-४७||",
+            "transliteration": "karmanye vadhikaraste ma phaleshu kadachana ma karmaphalaheturbhur ma te sango 'stv akarmani",
+            "translations": {
+                "en": "Your right is to work only, never to its fruits. Let not the fruits of action be your motive, nor let your attachment be to inaction."
+            },
+        }
+    ],
+}
+
+RAMAYANA_VERSES: List[Dict[str, Any]] = [
+    {
+        "kandaId": "bala",
+        "sarga": 1,
+        "verse": 1,
+        "original": "तपःस्वाध्यायनिरतं तपस्वी वाग्विदां वरम्। नारदं परिपप्रच्छ वाल्मीकिर्मुनिपुङ्गवम्॥",
+        "transliteration": "tapah svadhyaya niratam tapasvi vagvidam varam naradam paripapraccha valmikir munipungavam",
+        "translation": "The ascetic Valmiki asked Narada, the foremost of sages, who was ever engaged in austerity and study of the Veda.",
+    },
+    {
+        "kandaId": "bala",
+        "sarga": 1,
+        "verse": 2,
+        "original": "को न्वस्मिन् साम्प्रतं लोके गुणवान् कश्च वीर्यवान्। धर्मज्ञश्च कृतज्ञश्च सत्यवाक्यो दृढव्रतः॥",
+        "transliteration": "ko nvasmin sampratam loke gunavan kasca viryavan dharmajnasca krtajnasca satyavakyo drdhavratah",
+        "translation": "Who in this world now is endowed with virtues and prowess, who knows dharma, is grateful, truthful, and firm in vows?",
+    },
+    {
+        "kandaId": "bala",
+        "sarga": 1,
+        "verse": 3,
+        "original": "चारित्रेण च को युक्तः सर्वभूतेषु को हितः। विद्वान् कः कः समर्थश्च कश्चैकप्रियदर्शनः॥",
+        "transliteration": "caritrena ca ko yuktah sarvabhutesu ko hitah vidvan kah kah samarthasca kascaikapriyadarsanah",
+        "translation": "Who is of excellent conduct, who is a well-wisher of all beings, who is learned, capable, and pleasing to behold?",
+    },
+    {
+        "kandaId": "bala",
+        "sarga": 1,
+        "verse": 4,
+        "original": "आत्मवान् को जितक्रोधो द्युतिमान् कोऽनसूयकः। कस्य बिभ्यति देवाश्च जातरोषस्य संयुगे॥",
+        "transliteration": "atmavan ko jitakrodho dyutiman ko 'nasuyakah kasya bibhyati devasca jatarosasya samyuge",
+        "translation": "Who is self-possessed, who has conquered anger, who is radiant and free from envy? Whom do even the gods fear when he is angry in battle?",
+    },
+    {
+        "kandaId": "bala",
+        "sarga": 1,
+        "verse": 5,
+        "original": "एतदिच्छाम्यहं श्रोतुं परं कौतूहलं हि मे। महर्षे त्वं समर्थोऽसि ज्ञातुमेवंविधं नरम्॥",
+        "transliteration": "etad icchamy aham srotum param kautuhalam hi me maharse tvam samartho 'si jnatum evamvidham naram",
+        "translation": "This I wish to hear, for my curiosity is great. O great sage, you are able to know such a man.",
+    },
+]
+
+MAHABHARATA_VERSES: List[Dict[str, Any]] = [
+    {
+        "parva": 1,
+        "chapter": 1,
+        "verse": 1,
+        "text": "नारायणं नमस्कृत्य नरं चैव नरोत्तमम्। देवीं सरस्वतीं चैव ततो जयमुदीरयेत्॥",
+        "translation": "Having bowed to Narayana and Nara, the most exalted of men, and to goddess Saraswati, one should then utter Jaya.",
+    },
+    {
+        "parva": 1,
+        "chapter": 1,
+        "verse": 2,
+        "text": "लोमहर्षणपुत्र उग्रश्रवाः सूतः पौराणिको नैमिषारण्ये शौनकस्य कुलपतेर्द्वादशवार्षिके सत्रे॥",
+        "translation": "Ugrashrava, the son of Lomaharshana, a suta well-versed in the Puranas, came to Naimisha forest during Shaunaka's twelve-year sacrifice.",
+    },
+    {
+        "parva": 1,
+        "chapter": 1,
+        "verse": 3,
+        "text": "समासीनानभ्यगच्छद् ब्रह्मर्षीन् संशितव्रतान्। विनयावनतो भूत्वा कदाचित्सूतनन्दनः॥",
+        "translation": "Once the son of the suta approached those Brahmarishis of austere vows who were seated there, bowing with humility.",
+    },
+    {
+        "parva": 1,
+        "chapter": 1,
+        "verse": 4,
+        "text": "तमश्रौषीत्कुलपतिः सूतपुत्रं समागतम्। कस्येदानीं स कथयेत्कथां तां पाण्डुनन्दन॥",
+        "translation": "The head of the clan heard that the suta's son had arrived, and asked whose tale he would now recount.",
+    },
+    {
+        "parva": 1,
+        "chapter": 1,
+        "verse": 5,
+        "text": "कथयिष्यामि विप्रेन्द्रा यदि वो रोचते कथा। पुराणं परमं पुण्यं महाभारतमद्भुतम्॥",
+        "translation": "I shall narrate, O foremost of Brahmins, if the story pleases you — the supreme, sacred, and wondrous Mahabharata.",
+    },
+]
+
+RIG_VEDA_VERSES: List[Dict[str, Any]] = [
+    {
+        "mandala": 1,
+        "sukta": 1,
+        "stanza": 1,
+        "text": "अग्निमीळे पुरोहितं यज्ञस्य देवमृत्विजम्। होतारं रत्नधातमम्॥",
+        "poet": "Madhuchchhanda Vaishvamitra",
+        "deity": "Agni",
+        "meter": "Gayatri",
+        "poetCategory": "human male",
+        "deityCategory": "divine male",
+    },
+    {
+        "mandala": 1,
+        "sukta": 1,
+        "stanza": 2,
+        "text": "अग्निः पूर्वेभिरृषिभिरीड्यो नूतनैरुत। स देवाँ एह वक्षति॥",
+        "poet": "Madhuchchhanda Vaishvamitra",
+        "deity": "Agni",
+        "meter": "Gayatri",
+    },
+    {
+        "mandala": 1,
+        "sukta": 1,
+        "stanza": 3,
+        "text": "अग्निना रयिमश्नवत्पोषमेव दिवेदिवे। यशसं वीरवत्तमम्॥",
+        "poet": "Madhuchchhanda Vaishvamitra",
+        "deity": "Agni",
+        "meter": "Gayatri",
+    },
+]
+
+UPANISHAD_VERSES: List[Dict[str, Any]] = [
+    {
+        "upanishadId": "isha",
+        "chapter": 1,
+        "verse": 1,
+        "sanskrit": "ईशावास्यमिदं सर्वं यत्किञ्च जगत्यां जगत्। तेन त्यक्तेन भुञ्जीथा मा गृधः कस्यस्विद्धनम्॥",
+        "transliteration": "ishavasyam idam sarvam yat kincha jagatyam jagat tena tyaktena bhunjitha ma gridhah kasyasvid dhanam",
+        "translation": "All this, whatever moves in this moving world, is enveloped by the Lord. Enjoy by renunciation; do not covet anyone's wealth.",
+        "commentary": "The Isha Upanishad begins by affirming the divine presence in all that exists.",
+    },
+    {
+        "upanishadId": "isha",
+        "chapter": 1,
+        "verse": 2,
+        "sanskrit": "कुर्वन्नेवेह कर्माणि जिजीविषेच्छतं समाः। एवं त्वयि नान्यथेतोऽस्ति न कर्म लिप्यते नरे॥",
+        "transliteration": "kurvanneveha karmani jijivisec chatam samah evam tvayi nanyatheto 'sti na karma lipyate nare",
+        "translation": "Performing works here, one should wish to live a hundred years. Thus, and not otherwise, karma does not cling to a person.",
+    },
+]
+
 ALL_UPANISHADS: List[Dict[str, Any]] = [
     {"id": "isha", "name": "Isha Upanishad", "associatedVeda": "Yajur", "chapters": 1, "description": "Divine in all things."},
     {"id": "kena", "name": "Kena Upanishad", "associatedVeda": "Sama", "chapters": 4, "description": "Nature of Brahman."},
@@ -304,7 +518,7 @@ class StaticContentRegistry:
         return [dict(c) for c in GITA_CHAPTERS]
 
     def get_gita_verses(self, chapter_number: int) -> List[Dict[str, Any]]:
-        return []
+        return [dict(v) for v in GITA_VERSES.get(chapter_number, [])]
 
     def get_ramayana_kandas(self) -> List[Dict[str, Any]]:
         return [dict(k) for k in RAMAYANA_KANDAS]
@@ -319,19 +533,43 @@ class StaticContentRegistry:
         return [dict(u) for u in ALL_UPANISHADS]
 
     def get_hanuman_chalisa_verses(self) -> List[Dict[str, Any]]:
+        return [dict(v) for v in HANUMAN_CHALISA_VERSES]
+
+    def get_chalisa_verses(self, chalisa_id: str) -> List[Dict[str, Any]]:
+        cid = chalisa_id.strip().lower()
+        if cid in {"hanuman", "chalisa-hanuman"}:
+            return [dict(v) for v in HANUMAN_CHALISA_VERSES]
+        if cid in {"ganesh", "chalisa-ganesh"}:
+            return [dict(v) for v in GANESH_CHALISA_VERSES]
         return []
 
     def get_ramayana_verses(self, kanda_id: str, sarga: int) -> List[Dict[str, Any]]:
-        return []
+        wanted = kanda_id.strip().lower()
+        return [
+            dict(v)
+            for v in RAMAYANA_VERSES
+            if str(v.get("kandaId", "")).lower() == wanted and int(v.get("sarga") or 0) == sarga
+        ]
 
     def get_mahabharata_verses(self, parva: int, chapter: int) -> List[Dict[str, Any]]:
-        return []
+        return [
+            dict(v)
+            for v in MAHABHARATA_VERSES
+            if int(v.get("parva") or 0) == parva and int(v.get("chapter") or 0) == chapter
+        ]
 
-    def get_rig_veda_verses(self, mandala: int) -> List[Dict[str, Any]]:
-        return []
+    def get_rig_veda_verses(self, mandala: Optional[int]) -> List[Dict[str, Any]]:
+        if mandala is None:
+            return [dict(v) for v in RIG_VEDA_VERSES]
+        return [dict(v) for v in RIG_VEDA_VERSES if int(v.get("mandala") or 0) == mandala]
 
     def get_upanishad_verses(self, upanishad_id: str, chapter: int) -> List[Dict[str, Any]]:
-        return []
+        wanted = upanishad_id.strip().lower()
+        return [
+            dict(v)
+            for v in UPANISHAD_VERSES
+            if str(v.get("upanishadId", "")).lower() == wanted and int(v.get("chapter") or 0) == chapter
+        ]
 
     def get_chalisa_by_deity(self, deity: str) -> Optional[Dict[str, Any]]:
         d = deity.strip().lower()

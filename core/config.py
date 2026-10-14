@@ -22,7 +22,7 @@ class Settings(BaseSettings):
     api_gita_theaum_base_url: str = "https://vedicscriptures.github.io"
     api_gita_vedic_base_url: str = "https://vedicscriptures.github.io"
     api_shloka_base_url: str = "https://shloka.onrender.com"
-    api_rigveda_base_url: str = "https://vedicscriptures.github.io"
+    api_rigveda_base_url: str = "https://indica-1hwj.onrender.com/rv/v3"
     api_ramayana_base_url: str = "https://vedicscriptures.github.io"
     api_dharmicdata_base_url: str = (
         "https://raw.githubusercontent.com/dharmicdata/dharmic-data/main"

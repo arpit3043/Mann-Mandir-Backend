@@ -32,11 +32,6 @@ logger = logging.getLogger(__name__)
 
 settings = Settings()
 
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
 def _parse_replica_specs(raw: str) -> list[tuple[str, int]]:
     """Parse 'host:port,host:port' into a list of (host, port) tuples."""
     specs: list[tuple[str, int]] = []
@@ -103,6 +98,7 @@ def _mount_routes(app: FastAPI, api_prefix: str) -> None:
     app.include_router(ramayana_router.router, prefix=f"{p}/scriptures/ramayana", tags=["Ramayana"])
     app.include_router(mahabharata_router.router, prefix=f"{p}/scriptures/mahabharata", tags=["Mahabharata"])
     app.include_router(veda.router, prefix=f"{p}/vedas", tags=["Vedas"])
+    app.include_router(veda.router, prefix=f"{p}/veda", tags=["Vedas"])
     app.include_router(search.router, prefix=f"{p}/search", tags=["Search"])
     app.include_router(astro.router, prefix=f"{p}/astro", tags=["Astro"])
     app.include_router(panchang_router.router, prefix=f"{p}/panchang", tags=["Panchang"])

@@ -17,8 +17,12 @@ class DefaultMahabharataService(MahabharataService):
 
     async def get_mahabharata_parva(self, parva_number: int) -> MahabharataParvaDto:
         for p in self._static.get_mahabharata_parvas():
-            if p.get("id") == parva_number:
-                return MahabharataParvaDto.model_validate(p)
+            number = p.get("parvaNumber", p.get("id"))
+            try:
+                if int(number) == parva_number:
+                    return MahabharataParvaDto.model_validate(p)
+            except (TypeError, ValueError):
+                continue
         raise ResourceNotFoundError("Mahabharata parva", str(parva_number))
 
     async def get_mahabharata_verses(

@@ -1,4 +1,4 @@
-from typing import List, Protocol
+from typing import List, Optional, Protocol
 
 from schemas.dtos import (
     MantraDto,
@@ -11,7 +11,11 @@ from schemas.dtos import (
 
 
 class SearchService(Protocol):
-    async def search(self, query: str, limit: int = 10) -> List[SearchResultDto]: ...
+    async def search(
+        self, query: str, domain: Optional[str], page: int, size: int
+    ) -> List[SearchResultDto]: ...
+
+    async def count(self, query: str, domain: Optional[str]) -> int: ...
 
 
 class VedaService(Protocol):

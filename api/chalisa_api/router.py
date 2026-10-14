@@ -25,6 +25,13 @@ async def list_chalisas(
     return ok_payload(data, page=page, size=size, total=len(full))
 
 
+@router.get("/{chalisa_id}/verses/{verse_number}")
+async def get_chalisa_verse(
+    chalisa_id: str, verse_number: int, svc: ChalisaService = Depends(get_chalisa_service)
+):
+    return ok_payload(await svc.get_chalisa_verse(chalisa_id, verse_number))
+
+
 @router.get("/{chalisa_id}")
 async def get_chalisa(chalisa_id: str, svc: ChalisaService = Depends(get_chalisa_service)):
     return ok_payload(await svc.get_chalisa_by_id(chalisa_id))

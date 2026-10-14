@@ -303,14 +303,38 @@ class RigVedaApiClient:
             logger.error("RigVeda request failed: %s", exc)
             return None
 
+    @staticmethod
+    def _as_hymn_list(data: Optional[Any]) -> Optional[List[Dict[str, Any]]]:
+        if isinstance(data, dict):
+            hymns = data.get("hymns") or data.get("results")
+            if isinstance(hymns, list):
+                return [item for item in hymns if isinstance(item, dict)]
+        if isinstance(data, list):
+            return [item for item in data if isinstance(item, dict)]
+        return None
+
     async def get_by_mandala(self, mandala: int) -> Optional[List[Dict[str, Any]]]:
+        hymns = self._as_hymn_list(await self._safe_get(f"/hymns?mandal={mandala}"))
+        if hymns:
+            return hymns
         data = await self._safe_get(f"/meta/book/{mandala}")
         return data if isinstance(data, list) else None
 
     async def get_by_deity(self, deity: str) -> Optional[List[Dict[str, Any]]]:
+        hymns = self._as_hymn_list(await self._safe_get(f"/hymns?sungfor={deity}"))
+        if hymns:
+            return hymns
+        expanded = self._as_hymn_list(
+            await self._safe_get(f"/sungfor/{deity}/mandals?expand=true")
+        )
+        if expanded:
+            return expanded
         data = await self._safe_get(f"/meta/god/{deity}")
         return data if isinstance(data, list) else None
 
     async def get_by_poet(self, poet: str) -> Optional[List[Dict[str, Any]]]:
+        hymns = self._as_hymn_list(await self._safe_get(f"/hymns?sungby={poet}"))
+        if hymns:
+            return hymns
         data = await self._safe_get(f"/meta/poet/{poet}")
         return data if isinstance(data, list) else None

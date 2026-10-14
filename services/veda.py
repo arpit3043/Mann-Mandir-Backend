@@ -13,15 +13,23 @@ from services.static_registry import StaticContentRegistry
 logger = logging.getLogger(__name__)
 
 
+def _as_int(value: Any, default: int = 0) -> int:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
 def _map_rig_verse(r: Dict[str, Any]) -> RigVedaVerseDto:
     return RigVedaVerseDto(
-        mandala=int(r.get("mandal", 0)),
-        sukta=int(r.get("sukta", 0)),
-        stanza=int(r.get("stanza", 0)),
-        poet=r.get("sungby"),
-        poetCategory=r.get("sungbycategory"),
-        deity=r.get("sungfor"),
-        deityCategory=r.get("sungforcategory"),
+        mandala=_as_int(r.get("mandala", r.get("mandal"))),
+        sukta=_as_int(r.get("sukta")),
+        stanza=_as_int(r.get("stanza"), 1),
+        text=r.get("text") or r.get("sanskrit"),
+        poet=r.get("sungby") or r.get("poet"),
+        poetCategory=r.get("sungbycategory") or r.get("poetCategory"),
+        deity=r.get("sungfor") or r.get("deity"),
+        deityCategory=r.get("sungforcategory") or r.get("deityCategory"),
         meter=r.get("meter"),
     )
 
@@ -91,12 +99,28 @@ class DefaultVedaService:
 
     async def get_rig_veda_by_deity(self, deity: str, page: int, size: int) -> List[RigVedaVerseDto]:
         api_list = await self._rig.get_by_deity(deity)
-        all_v = [_map_rig_verse(x) for x in api_list] if api_list else []
+        if api_list:
+            all_v = [_map_rig_verse(x) for x in api_list]
+        else:
+            needle = deity.strip().lower()
+            all_v = [
+                RigVedaVerseDto.model_validate(x)
+                for x in self._static.get_rig_veda_verses(None)
+                if str(x.get("deity", "")).lower() == needle
+            ]
         return paginate(all_v, page, size)
 
     async def get_rig_veda_by_poet(self, poet: str, page: int, size: int) -> List[RigVedaVerseDto]:
         api_list = await self._rig.get_by_poet(poet)
-        all_v = [_map_rig_verse(x) for x in api_list] if api_list else []
+        if api_list:
+            all_v = [_map_rig_verse(x) for x in api_list]
+        else:
+            needle = poet.strip().lower()
+            all_v = [
+                RigVedaVerseDto.model_validate(x)
+                for x in self._static.get_rig_veda_verses(None)
+                if str(x.get("poet", "")).lower() == needle
+            ]
         return paginate(all_v, page, size)
 
     async def get_rig_veda_verse(self, mandala: int, sukta: int, stanza: int) -> RigVedaVerseDto:
