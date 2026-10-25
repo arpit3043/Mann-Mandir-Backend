@@ -17,7 +17,9 @@ def _as_int(value, default: int = 0) -> int:
 
 
 class DefaultMahabharataService(MahabharataService):
-    def __init__(self, dharmic: DharmicDataClient, static: StaticContentRegistry) -> None:
+    def __init__(
+        self, dharmic: DharmicDataClient, static: StaticContentRegistry
+    ) -> None:
         self._dharmic = dharmic
         self._static = static
 
@@ -33,14 +35,21 @@ class DefaultMahabharataService(MahabharataService):
                     return MahabharataParvaDto.model_validate(p)
             except (TypeError, ValueError):
                 continue
-        names = [str(p.get("parvaNumber") or p.get("name") or "") for p in self._static.get_mahabharata_parvas()]
+        names = [
+            str(p.get("parvaNumber") or p.get("name") or "")
+            for p in self._static.get_mahabharata_parvas()
+        ]
         raise ResourceNotFoundError(
             "Mahabharata parva",
             str(parva_number),
-            suggestion=suggestion_for(str(parva_number), names, fallback="Try searching: 1"),
+            suggestion=suggestion_for(
+                str(parva_number), names, fallback="Try searching: 1"
+            ),
         )
 
-    async def _verses_for_chapter(self, parva_number: int, chapter_number: int) -> List[MahabharataVerseDto]:
+    async def _verses_for_chapter(
+        self, parva_number: int, chapter_number: int
+    ) -> List[MahabharataVerseDto]:
         await self.get_mahabharata_parva(parva_number)
         raw = await self._dharmic.get_mahabharata_parva(parva_number)
         if raw:
@@ -52,7 +61,11 @@ class DefaultMahabharataService(MahabharataService):
                     MahabharataVerseDto(
                         parva=_as_int(item.get("book"), parva_number),
                         chapter=chapter_number,
-                        verse=_as_int(item.get("shloka") if item.get("shloka") is not None else item.get("verse")),
+                        verse=_as_int(
+                            item.get("shloka")
+                            if item.get("shloka") is not None
+                            else item.get("verse")
+                        ),
                         text=str(item.get("text") or "") or None,
                         translation=str(item.get("translation") or "") or None,
                     )
@@ -82,4 +95,6 @@ class DefaultMahabharataService(MahabharataService):
         for v in await self._verses_for_chapter(parva_number, chapter_number):
             if v.verse == verse:
                 return v
-        raise ResourceNotFoundError("Mahabharata verse", f"{parva_number}.{chapter_number}.{verse}")
+        raise ResourceNotFoundError(
+            "Mahabharata verse", f"{parva_number}.{chapter_number}.{verse}"
+        )

@@ -40,4 +40,6 @@ def ok_payload(
     pagination = None
     if page is not None and size is not None and total is not None:
         pagination = meta_from_totals(page, size, total)
-    return ApiResponse.ok_data(encoded, pagination).model_dump(mode="json", exclude_none=True)
+    return ApiResponse.ok_data(encoded, pagination).model_dump(
+        mode="json", exclude_none=True
+    )

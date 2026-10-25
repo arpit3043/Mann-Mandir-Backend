@@ -40,13 +40,13 @@ class Settings(BaseSettings):
     redis_master_host: str = "localhost"
     redis_master_port: int = 6379
 
-    redis_replica_hosts: str = "" 
+    redis_replica_hosts: str = ""
 
     redis_password: str = ""
     redis_db: int = 0
     redis_socket_timeout: float = 1.0
-    redis_tls: bool = False 
+    redis_tls: bool = False
 
     redis_default_ttl: int = 2592000  # 30 days
-    redis_short_ttl: int = 30         # 30 s
-    redis_medium_ttl: int = 3600      # 1 h
+    redis_short_ttl: int = 30  # 30 s
+    redis_medium_ttl: int = 3600  # 1 h

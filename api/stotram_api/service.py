@@ -26,7 +26,9 @@ class DefaultStotramService(StotramService):
         if not self.drik:
             return rows
         remote = await self.drik.get_collection()
-        path_by_id = {str(item.get("id") or "").lower(): item.get("path") for item in remote}
+        path_by_id = {
+            str(item.get("id") or "").lower(): item.get("path") for item in remote
+        }
         for row in rows:
             cid = str(row.get("id") or "").lower()
             if cid in path_by_id:
@@ -50,7 +52,9 @@ class DefaultStotramService(StotramService):
             )
         return rows
 
-    def _find_row(self, stotram_id: str, rows: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    def _find_row(
+        self, stotram_id: str, rows: List[Dict[str, Any]]
+    ) -> Optional[Dict[str, Any]]:
         wanted = norm(stotram_id)
         prefixed = wanted if wanted.startswith("stotram-") else f"stotram-{wanted}"
         for row in rows:
@@ -71,11 +75,15 @@ class DefaultStotramService(StotramService):
         rows = await self._catalog()
         return sorted({str(row["deity"]) for row in rows if row.get("deity")})
 
-    async def get_stotrams(self, deity: Optional[str], page: int, size: int) -> List[StotramDto]:
+    async def get_stotrams(
+        self, deity: Optional[str], page: int, size: int
+    ) -> List[StotramDto]:
         rows = await self._catalog()
         if deity and deity.strip():
             wanted = deity_key(deity)
-            matched = [row for row in rows if deity_key(str(row.get("deity") or "")) == wanted]
+            matched = [
+                row for row in rows if deity_key(str(row.get("deity") or "")) == wanted
+            ]
             if not matched:
                 raise ResourceNotFoundError(
                     "Stotram",
@@ -98,13 +106,19 @@ class DefaultStotramService(StotramService):
                 suggestion=self._not_found_suggestion(stotram_id, rows),
             )
         dto = StotramDto.model_validate(row)
-        verses = [verse for verse in (dto.verses or []) if verse.sanskrit or verse.transliteration or verse.meaning]
+        verses = [
+            verse
+            for verse in (dto.verses or [])
+            if verse.sanskrit or verse.transliteration or verse.meaning
+        ]
         if verses:
             dto.verses = verses
             dto.verseCount = len(verses)
             return dto
         if self.drik:
-            remote = await self.drik.get_verses(str(row.get("id") or stotram_id), path=row.get("path"))
+            remote = await self.drik.get_verses(
+                str(row.get("id") or stotram_id), path=row.get("path")
+            )
             if remote:
                 dto.verses = [StotramVerseDto.model_validate(item) for item in remote]
                 dto.verseCount = len(dto.verses)

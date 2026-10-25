@@ -14,14 +14,30 @@ from core.config import Settings
 
 logger = logging.getLogger(__name__)
 
-_gita_theaum_breaker = pybreaker.CircuitBreaker(fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError])
-_gita_vedic_breaker  = pybreaker.CircuitBreaker(fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError])
-_dharmic_breaker     = pybreaker.CircuitBreaker(fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError])
-_hanuman_breaker     = pybreaker.CircuitBreaker(fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError])
-_havyaka_breaker     = pybreaker.CircuitBreaker(fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError])
-_shloka_breaker      = pybreaker.CircuitBreaker(fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError])
-_rig_veda_breaker    = pybreaker.CircuitBreaker(fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError])
-_drik_breaker        = pybreaker.CircuitBreaker(fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError])
+_gita_theaum_breaker = pybreaker.CircuitBreaker(
+    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
+)
+_gita_vedic_breaker = pybreaker.CircuitBreaker(
+    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
+)
+_dharmic_breaker = pybreaker.CircuitBreaker(
+    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
+)
+_hanuman_breaker = pybreaker.CircuitBreaker(
+    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
+)
+_havyaka_breaker = pybreaker.CircuitBreaker(
+    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
+)
+_shloka_breaker = pybreaker.CircuitBreaker(
+    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
+)
+_rig_veda_breaker = pybreaker.CircuitBreaker(
+    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
+)
+_drik_breaker = pybreaker.CircuitBreaker(
+    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
+)
 
 
 class GitaTheAumClient:
@@ -42,7 +58,9 @@ class GitaTheAumClient:
 
     @_gita_theaum_breaker
     async def _get(self, path: str) -> Optional[Any]:
-        return await get_json_cached(self._http, self._url(path), self._cache, self._ttl)
+        return await get_json_cached(
+            self._http, self._url(path), self._cache, self._ttl
+        )
 
     async def _safe_get(self, path: str) -> Optional[Any]:
         try:
@@ -69,10 +87,14 @@ class GitaTheAumClient:
         data = await self._safe_get("/chapters/")
         return data if isinstance(data, list) else None
 
-    async def get_verse_translations(self, chapter: int, verse: int) -> Optional[Dict[str, Any]]:
+    async def get_verse_translations(
+        self, chapter: int, verse: int
+    ) -> Optional[Dict[str, Any]]:
         return await self._safe_get(f"/text/translations/{chapter}/{verse}")
 
-    async def get_verse_commentary(self, chapter: int, verse: int) -> Optional[Dict[str, Any]]:
+    async def get_verse_commentary(
+        self, chapter: int, verse: int
+    ) -> Optional[Dict[str, Any]]:
         return await self._safe_get(f"/text/commentaries/{chapter}/{verse}")
 
 
@@ -94,7 +116,9 @@ class GitaVedicClient:
 
     @_gita_vedic_breaker
     async def _get(self, path: str) -> Optional[Any]:
-        return await get_json_cached(self._http, self._url(path), self._cache, self._ttl)
+        return await get_json_cached(
+            self._http, self._url(path), self._cache, self._ttl
+        )
 
     async def _safe_get(self, path: str) -> Optional[Any]:
         try:
@@ -114,7 +138,9 @@ class GitaVedicClient:
         data = await self._safe_get("/chapters")
         return data if isinstance(data, list) else None
 
-    async def get_verses_for_chapter(self, chapter: int) -> Optional[List[Dict[str, Any]]]:
+    async def get_verses_for_chapter(
+        self, chapter: int
+    ) -> Optional[List[Dict[str, Any]]]:
         data = await self._safe_get(f"/sloks/{chapter}")
         return data if isinstance(data, list) else None
 
@@ -137,7 +163,9 @@ class DharmicDataClient:
 
     @_dharmic_breaker
     async def _get(self, path: str) -> Optional[Any]:
-        return await get_json_cached(self._http, self._url(path), self._cache, self._ttl)
+        return await get_json_cached(
+            self._http, self._url(path), self._cache, self._ttl
+        )
 
     async def _safe_get(self, path: str) -> Optional[Any]:
         try:
@@ -179,12 +207,20 @@ class DharmicDataClient:
                     return [item for item in raw if isinstance(item, dict)]
         return None
 
-    async def get_gita_chapter_verses(self, chapter: int) -> Optional[List[Dict[str, Any]]]:
-        data = await self._safe_get(f"/SrimadBhagvadGita/bhagavad_gita_chapter_{chapter}.json")
+    async def get_gita_chapter_verses(
+        self, chapter: int
+    ) -> Optional[List[Dict[str, Any]]]:
+        data = await self._safe_get(
+            f"/SrimadBhagvadGita/bhagavad_gita_chapter_{chapter}.json"
+        )
         return self._as_list(data, "BhagavadGitaChapter")
 
-    async def get_mahabharata_parva(self, parva_number: int) -> Optional[List[Dict[str, Any]]]:
-        data = await self._safe_get(f"/Mahabharata/mahabharata_book_{parva_number}.json")
+    async def get_mahabharata_parva(
+        self, parva_number: int
+    ) -> Optional[List[Dict[str, Any]]]:
+        data = await self._safe_get(
+            f"/Mahabharata/mahabharata_book_{parva_number}.json"
+        )
         return self._as_list(data)
 
     async def get_ramayana_kanda(self, kanda: str) -> Optional[List[Dict[str, Any]]]:
@@ -202,7 +238,9 @@ class DharmicDataClient:
         data = await self._safe_get(f"/AtharvaVeda/atharvaveda_kaanda_{kanda}.json")
         return self._as_list(data)
 
-    async def get_rig_veda_mandala(self, mandala: int) -> Optional[List[Dict[str, Any]]]:
+    async def get_rig_veda_mandala(
+        self, mandala: int
+    ) -> Optional[List[Dict[str, Any]]]:
         data = await self._safe_get(f"/Rigveda/rigveda_mandala_{mandala}.json")
         return self._as_list(data)
 
@@ -229,7 +267,9 @@ class HanumanChalisaClient:
 
     @_hanuman_breaker
     async def _get(self, path: str) -> Optional[Any]:
-        return await get_json_cached(self._http, self._url(path), self._cache, self._ttl)
+        return await get_json_cached(
+            self._http, self._url(path), self._cache, self._ttl
+        )
 
     async def _safe_get(self, path: str) -> Optional[Any]:
         try:
@@ -264,7 +304,9 @@ class HavyakaApiClient:
 
     @_havyaka_breaker
     async def _get(self, path: str) -> Optional[Any]:
-        return await get_json_cached(self._http, self._url(path), self._cache, self._ttl)
+        return await get_json_cached(
+            self._http, self._url(path), self._cache, self._ttl
+        )
 
     async def _safe_get(self, path: str) -> Optional[Any]:
         try:
@@ -279,10 +321,14 @@ class HavyakaApiClient:
     async def get_mantras(self, limit: int) -> Optional[List[Dict[str, Any]]]:
         return self._unwrap(await self._safe_get(f"/mantras?limit={limit}"))
 
-    async def get_mantras_by_name(self, name: str, limit: int) -> Optional[List[Dict[str, Any]]]:
+    async def get_mantras_by_name(
+        self, name: str, limit: int
+    ) -> Optional[List[Dict[str, Any]]]:
         return self._unwrap(await self._safe_get(f"/mantras?name={name}&limit={limit}"))
 
-    def _unwrap(self, wrapped: Optional[Dict[str, Any]]) -> Optional[List[Dict[str, Any]]]:
+    def _unwrap(
+        self, wrapped: Optional[Dict[str, Any]]
+    ) -> Optional[List[Dict[str, Any]]]:
         if not wrapped or not isinstance(wrapped, dict):
             return None
         raw = wrapped.get("mantras")
@@ -309,7 +355,9 @@ class ShlokaApiClient:
 
     @_shloka_breaker
     async def _get(self, path: str) -> Optional[Any]:
-        return await get_json_cached(self._http, self._url(path), self._cache, self._ttl)
+        return await get_json_cached(
+            self._http, self._url(path), self._cache, self._ttl
+        )
 
     async def _safe_get(self, path: str) -> Optional[Any]:
         try:
@@ -343,7 +391,9 @@ class RigVedaApiClient:
 
     @_rig_veda_breaker
     async def _get(self, path: str) -> Optional[Any]:
-        return await get_json_cached(self._http, self._url(path), self._cache, self._ttl)
+        return await get_json_cached(
+            self._http, self._url(path), self._cache, self._ttl
+        )
 
     async def _safe_get(self, path: str) -> Optional[Any]:
         try:
@@ -393,8 +443,6 @@ class RigVedaApiClient:
 
 
 class DrikPanchangClient:
-    """Shared HTTP access for drikpanchang.com lyric pages."""
-
     COLLECTION_PATH = ""
     KNOWN_PATHS: Dict[str, str] = {}
 
@@ -440,8 +488,6 @@ class DrikPanchangClient:
 
 
 class DrikPanchangChalisaClient(DrikPanchangClient):
-    """Lyrics from drikpanchang.com chalisa collection pages."""
-
     COLLECTION_PATH = "/lyrics/chalisa/chalisa-collection.html"
     KNOWN_PATHS = {
         "chalisa-hanuman": "/lyrics/chalisa/lord-hanuman/shree-hanuman-chalisa.html",
@@ -510,7 +556,9 @@ class DrikPanchangChalisaClient(DrikPanchangClient):
             for paragraph in re.findall(r'<p class="dpGroup">([\s\S]*?)</p>', group):
                 rows = [
                     self._strip_tags(span)
-                    for span in re.findall(r'<span class="dpRow">([\s\S]*?)</span>', paragraph)
+                    for span in re.findall(
+                        r'<span class="dpRow">([\s\S]*?)</span>', paragraph
+                    )
                 ]
                 text = " ".join(row for row in rows if row).strip()
                 if text:
@@ -547,7 +595,9 @@ class DrikPanchangChalisaClient(DrikPanchangClient):
             )
         return out
 
-    async def get_verses(self, chalisa_id: str, path: Optional[str] = None) -> Optional[List[Dict[str, Any]]]:
+    async def get_verses(
+        self, chalisa_id: str, path: Optional[str] = None
+    ) -> Optional[List[Dict[str, Any]]]:
         page = path or self.path_for_id(chalisa_id)
         if not page:
             collection = await self.get_collection()
@@ -565,8 +615,6 @@ class DrikPanchangChalisaClient(DrikPanchangClient):
 
 
 class DrikPanchangStotramClient(DrikPanchangClient):
-    """Lyrics from drikpanchang.com stotram collection pages."""
-
     COLLECTION_PATH = "/lyrics/stotram/stotram-collection.html"
     KNOWN_PATHS = {
         "stotram-shiva-tandava": "/lyrics/stotram/lord-shiva/shiva-tandav-stotram.html",
@@ -584,7 +632,13 @@ class DrikPanchangStotramClient(DrikPanchangClient):
 
     @staticmethod
     def _clean_deity(raw: str) -> str:
-        deity = raw.replace("Goddess ", "").replace("Lord ", "").replace(" Mata", "").replace(" Deva", "").strip()
+        deity = (
+            raw.replace("Goddess ", "")
+            .replace("Lord ", "")
+            .replace(" Mata", "")
+            .replace(" Deva", "")
+            .strip()
+        )
         return deity or raw.strip()
 
     async def get_collection(self) -> List[Dict[str, str]]:
@@ -618,12 +672,16 @@ class DrikPanchangStotramClient(DrikPanchangClient):
 
     def _parse_verses(self, html: str) -> List[Dict[str, Any]]:
         verses: List[Dict[str, Any]] = []
-        for group in re.findall(r'<div class="dpLyricsAartiGroup">([\s\S]*?)</div>', html):
+        for group in re.findall(
+            r'<div class="dpLyricsAartiGroup">([\s\S]*?)</div>', html
+        ):
             lines: List[str] = []
             for paragraph in re.findall(r"<p>([\s\S]*?)</p>", group):
                 rows = [
                     self._strip_tags(span)
-                    for span in re.findall(r'<span class="dpRow">([\s\S]*?)</span>', paragraph)
+                    for span in re.findall(
+                        r'<span class="dpRow">([\s\S]*?)</span>', paragraph
+                    )
                 ]
                 text = " ".join(row for row in rows if row).strip()
                 if text:
@@ -640,7 +698,9 @@ class DrikPanchangStotramClient(DrikPanchangClient):
             )
         return verses
 
-    async def get_verses(self, stotram_id: str, path: Optional[str] = None) -> Optional[List[Dict[str, Any]]]:
+    async def get_verses(
+        self, stotram_id: str, path: Optional[str] = None
+    ) -> Optional[List[Dict[str, Any]]]:
         page = path or self.path_for_id(stotram_id)
         if not page:
             collection = await self.get_collection()
@@ -656,4 +716,3 @@ class DrikPanchangStotramClient(DrikPanchangClient):
             return None
         verses = self._parse_verses(html)
         return verses or None
-

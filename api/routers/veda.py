@@ -2,7 +2,8 @@ from fastapi import APIRouter
 
 from api.deps import VedaSvc
 from api.responses import ok_payload
-from core.pagination import JAVA_MAX_INT, paginate as slice_page
+from core.pagination import JAVA_MAX_INT
+from core.pagination import paginate as slice_page
 
 router = APIRouter()
 

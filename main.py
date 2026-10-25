@@ -9,32 +9,30 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from api.deps import build_services
-
-__version__ = "1.0.0"
-from api.routers import veda
-from api.routers import search
-from api.routers import astro
 from api.aarti_api import router as aarti_router
 from api.chalisa_api import router as chalisa_router
-from api.stotram_api import router as stotram_router
+from api.deps import build_services
 from api.mantra_api import router as mantra_router
-from api.scriptures_api.gita_api import router as gita_router
-from api.scriptures_api.ramayana_api import router as ramayana_router
-from api.scriptures_api.mahabharata_api import router as mahabharata_router
 from api.panchang_api import router as panchang_router
+from api.routers import astro, search, veda
+from api.scriptures_api.gita_api import router as gita_router
+from api.scriptures_api.mahabharata_api import router as mahabharata_router
+from api.scriptures_api.ramayana_api import router as ramayana_router
+from api.stotram_api import router as stotram_router
 from core.cache import RedisCache, build_redis_cache
 from core.config import Settings
 from core.exceptions import ResourceNotFoundError
 from core.request_context import current_request
+
+__version__ = "1.0.0"
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 settings = Settings()
 
+
 def _parse_replica_specs(raw: str) -> list[tuple[str, int]]:
-    """Parse 'host:port,host:port' into a list of (host, port) tuples."""
     specs: list[tuple[str, int]] = []
     for entry in raw.split(","):
         entry = entry.strip()
@@ -49,13 +47,6 @@ def _parse_replica_specs(raw: str) -> list[tuple[str, int]]:
 
 
 def _build_cache(s: Settings) -> Optional[RedisCache]:
-    """
-    Construct a RedisCache from settings.
-
-    Returns None if Redis is disabled in config or if the master is
-    unreachable at startup (graceful degradation — the app keeps working
-    without cache in both cases).
-    """
     if not s.redis_enabled:
         logger.info("Redis caching disabled (REDIS_ENABLED=false)")
         return None
@@ -72,7 +63,9 @@ def _build_cache(s: Settings) -> Optional[RedisCache]:
     )
 
     if cache.ping_master():
-        replicas_info = f"{len(replica_specs)} replica(s)" if replica_specs else "no replicas"
+        replicas_info = (
+            f"{len(replica_specs)} replica(s)" if replica_specs else "no replicas"
+        )
         logger.info(
             "Redis connected — master=%s:%d  %s",
             s.redis_master_host,
@@ -92,22 +85,35 @@ def _build_cache(s: Settings) -> Optional[RedisCache]:
 def _mount_routes(app: FastAPI, api_prefix: str) -> None:
     p = api_prefix.rstrip("/")
     app.include_router(aarti_router.router, prefix=f"{p}/god/aartis", tags=["Aarti"])
-    app.include_router(chalisa_router.router, prefix=f"{p}/god/chalisas", tags=["Chalisa"])
-    app.include_router(stotram_router.router, prefix=f"{p}/god/stotram", tags=["Stotram"])
+    app.include_router(
+        chalisa_router.router, prefix=f"{p}/god/chalisas", tags=["Chalisa"]
+    )
+    app.include_router(
+        stotram_router.router, prefix=f"{p}/god/stotram", tags=["Stotram"]
+    )
     app.include_router(mantra_router.router, prefix=f"{p}/god/mantras", tags=["Mantra"])
     app.include_router(gita_router.router, prefix=f"{p}/scriptures/gita", tags=["Gita"])
-    app.include_router(ramayana_router.router, prefix=f"{p}/scriptures/ramayana", tags=["Ramayana"])
-    app.include_router(mahabharata_router.router, prefix=f"{p}/scriptures/mahabharata", tags=["Mahabharata"])
+    app.include_router(
+        ramayana_router.router, prefix=f"{p}/scriptures/ramayana", tags=["Ramayana"]
+    )
+    app.include_router(
+        mahabharata_router.router,
+        prefix=f"{p}/scriptures/mahabharata",
+        tags=["Mahabharata"],
+    )
     app.include_router(veda.router, prefix=f"{p}/vedas", tags=["Vedas"])
     app.include_router(veda.router, prefix=f"{p}/veda", tags=["Vedas"])
     app.include_router(search.router, prefix=f"{p}/search", tags=["Search"])
     app.include_router(astro.router, prefix=f"{p}/astro", tags=["Astro"])
-    app.include_router(panchang_router.router, prefix=f"{p}/panchang", tags=["Panchang"])
+    app.include_router(
+        panchang_router.router, prefix=f"{p}/panchang", tags=["Panchang"]
+    )
 
 
 # ---------------------------------------------------------------------------
 # App lifecycle
 # ---------------------------------------------------------------------------
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -195,6 +201,9 @@ async def handle_generic(_: Request, exc: Exception):
     logger.exception("Unhandled error: %s", exc)
     body = {
         "success": False,
-        "errorDetail": {"code": "INTERNAL_ERROR", "message": "An unexpected error occurred"},
+        "errorDetail": {
+            "code": "INTERNAL_ERROR",
+            "message": "An unexpected error occurred",
+        },
     }
     return JSONResponse(status_code=500, content=body)

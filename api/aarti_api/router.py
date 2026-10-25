@@ -1,11 +1,11 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends
-from fastapi import Request
+from fastapi import APIRouter, Depends, Request
 
 from api.aarti_api.service_contract import AartiService
 from api.responses import ok_payload
-from core.pagination import JAVA_MAX_INT, paginate as slice_page
+from core.pagination import JAVA_MAX_INT
+from core.pagination import paginate as slice_page
 
 router = APIRouter()
 
@@ -19,7 +19,7 @@ async def list_aartis(
     deity: Optional[str] = None,
     page: int = 0,
     size: int = 20,
-    svc: AartiService = Depends(get_aarti_service)
+    svc: AartiService = Depends(get_aarti_service),
 ):
     full = await svc.get_aartis(deity, 0, JAVA_MAX_INT)
     data = slice_page(full, page, size)

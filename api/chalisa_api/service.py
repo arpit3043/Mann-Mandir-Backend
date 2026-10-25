@@ -95,7 +95,11 @@ class DefaultChalisaService(ChalisaService):
             cid = str(item.get("id") or "").lower()
             deity = str(item.get("deity") or "").lower()
             title = str(item.get("title") or "").lower()
-            if cid in {wanted, prefixed} or deity == wanted or prefixed in title.replace(" ", "-"):
+            if (
+                cid in {wanted, prefixed}
+                or deity == wanted
+                or prefixed in title.replace(" ", "-")
+            ):
                 return {
                     "id": item["id"],
                     "deity": item.get("deity") or item.get("title") or item["id"],
@@ -119,7 +123,9 @@ class DefaultChalisaService(ChalisaService):
         rows = self.static.get_chalisa_verses(chalisa_id)
         return [ChalisaVerseDto.model_validate(v) for v in rows]
 
-    async def get_chalisas(self, deity: Optional[str], page: int, size: int) -> List[ChalisaDto]:
+    async def get_chalisas(
+        self, deity: Optional[str], page: int, size: int
+    ) -> List[ChalisaDto]:
         all_rows = await self._catalog()
         if deity and deity.strip():
             d = deity.strip().lower()
@@ -139,7 +145,9 @@ class DefaultChalisaService(ChalisaService):
         found = await self._find_chalisa(chalisa_id)
         if not found:
             rows = await self._catalog()
-            names = [str(c.get("id") or "") for c in rows] + [str(c.get("deity") or "") for c in rows]
+            names = [str(c.get("id") or "") for c in rows] + [
+                str(c.get("deity") or "") for c in rows
+            ]
             raise ResourceNotFoundError(
                 "Chalisa",
                 chalisa_id,
@@ -152,12 +160,16 @@ class DefaultChalisaService(ChalisaService):
             dto.totalVerses = len(verses)
         return dto
 
-    async def get_chalisa_verse(self, chalisa_id: str, verse_number: int) -> ChalisaVerseDto:
+    async def get_chalisa_verse(
+        self, chalisa_id: str, verse_number: int
+    ) -> ChalisaVerseDto:
         found = await self._find_chalisa(chalisa_id)
         if not found:
             rows = await self._catalog()
             names = [str(c.get("id") or "") for c in rows]
-            raise ResourceNotFoundError("Chalisa", chalisa_id, suggestion=suggestion_for(chalisa_id, names))
+            raise ResourceNotFoundError(
+                "Chalisa", chalisa_id, suggestion=suggestion_for(chalisa_id, names)
+            )
         for verse in await self._verses_for(found):
             if verse.verseNumber == verse_number:
                 return verse

@@ -14,9 +14,13 @@ class GitaService(ABC):
         pass
 
     @abstractmethod
-    async def get_gita_verses_by_chapter(self, chapter_number: int) -> List[GitaVerseDto]:
+    async def get_gita_verses_by_chapter(
+        self, chapter_number: int
+    ) -> List[GitaVerseDto]:
         pass
 
     @abstractmethod
-    async def get_gita_verse(self, chapter_number: int, verse_number: int) -> GitaVerseDto:
+    async def get_gita_verse(
+        self, chapter_number: int, verse_number: int
+    ) -> GitaVerseDto:
         pass

@@ -23,7 +23,9 @@ def _fill_text(dto: MantraDto) -> MantraDto:
 
 
 def _map_havyaka(raw: dict) -> MantraDto:
-    text = str(raw.get("shloka") or raw.get("text") or raw.get("devanagari") or "") or None
+    text = (
+        str(raw.get("shloka") or raw.get("text") or raw.get("devanagari") or "") or None
+    )
     return _fill_text(
         MantraDto(
             id=str(raw.get("_id") or raw.get("id") or "") or None,
@@ -43,19 +45,26 @@ def _hindu_today(date: Optional[str] = None) -> dt.date:
         try:
             return dt.date.fromisoformat(date.strip())
         except ValueError as exc:
-            raise ValueError("Invalid date. Use YYYY-MM-DD, for example 2026-10-26") from exc
+            raise ValueError(
+                "Invalid date. Use YYYY-MM-DD, for example 2026-10-26"
+            ) from exc
     return dt.datetime.now(_IST).date()
 
 
 class DefaultMantraService(MantraService):
     def __init__(
-        self, havyaka: HavyakaApiClient, shloka: ShlokaApiClient, static: StaticContentRegistry
+        self,
+        havyaka: HavyakaApiClient,
+        shloka: ShlokaApiClient,
+        static: StaticContentRegistry,
     ) -> None:
         self.havyaka = havyaka
         self.shloka = shloka
         self.static = static
 
-    async def get_mantras(self, deity: Optional[str], page: int, size: int) -> List[MantraDto]:
+    async def get_mantras(
+        self, deity: Optional[str], page: int, size: int
+    ) -> List[MantraDto]:
         fetch_limit = 200 if size > 200 else max(size * 5, 50)
         raw = await self.havyaka.get_mantras(limit=fetch_limit)
         mapped = [_map_havyaka(x) for x in (raw or [])]
@@ -72,8 +81,12 @@ class DefaultMantraService(MantraService):
             needle = deity.strip().lower()
             filtered = [m for m in mapped if (m.deity or "").lower() == needle]
             if not filtered:
-                names = [item.deity for item in mapped if item.deity] + [item.name for item in mapped if item.name]
-                ensure_found(filtered, resource="Mantra", identifier=deity, available=names)
+                names = [item.deity for item in mapped if item.deity] + [
+                    item.name for item in mapped if item.name
+                ]
+                ensure_found(
+                    filtered, resource="Mantra", identifier=deity, available=names
+                )
             mapped = filtered
         return paginate(mapped, page, size)
 

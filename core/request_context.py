@@ -5,7 +5,9 @@ from typing import Optional
 
 from starlette.requests import Request
 
-current_request: ContextVar[Optional[Request]] = ContextVar("current_request", default=None)
+current_request: ContextVar[Optional[Request]] = ContextVar(
+    "current_request", default=None
+)
 
 _PATH_RESOURCES = (
     ("/god/aartis", "Aarti"),

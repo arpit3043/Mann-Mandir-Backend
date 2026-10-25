@@ -1,5 +1,3 @@
-"""Bundled fallback content (replacements when upstream APIs fail)."""
-
 from __future__ import annotations
 
 import copy
@@ -82,12 +80,42 @@ ALL_AARTIS: List[Dict[str, Any]] = [
 ]
 
 ALL_CHALISAS: List[Dict[str, Any]] = [
-    {"id": "chalisa-hanuman", "deity": "Hanuman", "title": "Hanuman Chalisa", "totalVerses": 40},
-    {"id": "chalisa-ganesh", "deity": "Ganesh", "title": "Ganesh Chalisa", "totalVerses": 40},
-    {"id": "chalisa-durga", "deity": "Durga", "title": "Durga Chalisa", "totalVerses": 40},
-    {"id": "chalisa-lakshmi", "deity": "Lakshmi", "title": "Lakshmi Chalisa", "totalVerses": 40},
-    {"id": "chalisa-shiva", "deity": "Shiva", "title": "Shiv Chalisa", "totalVerses": 40},
-    {"id": "chalisa-saraswati", "deity": "Saraswati", "title": "Saraswati Chalisa", "totalVerses": 40},
+    {
+        "id": "chalisa-hanuman",
+        "deity": "Hanuman",
+        "title": "Hanuman Chalisa",
+        "totalVerses": 40,
+    },
+    {
+        "id": "chalisa-ganesh",
+        "deity": "Ganesh",
+        "title": "Ganesh Chalisa",
+        "totalVerses": 40,
+    },
+    {
+        "id": "chalisa-durga",
+        "deity": "Durga",
+        "title": "Durga Chalisa",
+        "totalVerses": 40,
+    },
+    {
+        "id": "chalisa-lakshmi",
+        "deity": "Lakshmi",
+        "title": "Lakshmi Chalisa",
+        "totalVerses": 40,
+    },
+    {
+        "id": "chalisa-shiva",
+        "deity": "Shiva",
+        "title": "Shiv Chalisa",
+        "totalVerses": 40,
+    },
+    {
+        "id": "chalisa-saraswati",
+        "deity": "Saraswati",
+        "title": "Saraswati Chalisa",
+        "totalVerses": 40,
+    },
     {"id": "chalisa-ram", "deity": "Ram", "title": "Ram Chalisa", "totalVerses": 40},
 ]
 
@@ -274,13 +302,13 @@ VEDA_MANTRA_POOL: List[Dict[str, Any]] = [
 
 # Hindu vara (weekday) ruling deities, Monday=0
 WEEKDAY_MANTRA_IDS = {
-    0: "m3",   # Monday — Shiva
-    1: "m7",   # Tuesday — Hanuman
-    2: "m8",   # Wednesday — Ganesha
-    3: "m4",   # Thursday — Vishnu
-    4: "m9",   # Friday — Lakshmi
+    0: "m3",  # Monday — Shiva
+    1: "m7",  # Tuesday — Hanuman
+    2: "m8",  # Wednesday — Ganesha
+    3: "m4",  # Thursday — Vishnu
+    4: "m9",  # Friday — Lakshmi
     5: "m10",  # Saturday — Shani
-    6: "m1",   # Sunday — Surya
+    6: "m1",  # Sunday — Surya
 }
 WEEKDAY_DEITIES = {
     0: ("Monday", "सोमवार", "Shiva"),
@@ -293,62 +321,359 @@ WEEKDAY_DEITIES = {
 }
 
 GITA_CHAPTERS: List[Dict[str, Any]] = [
-    {"number": 1, "name": "अर्जुन विषाद योग", "translation": "Arjuna Vishada Yoga", "transliteration": "Arjuna Vishada Yoga", "versesCount": 47, "summary": "Arjuna's grief on Kurukshetra"},
-    {"number": 2, "name": "सांख्य योग", "translation": "Sankhya Yoga", "transliteration": "Sankhya Yoga", "versesCount": 72, "summary": "The immortal soul and knowledge"},
-    {"number": 3, "name": "कर्म योग", "translation": "Karma Yoga", "transliteration": "Karma Yoga", "versesCount": 43, "summary": "Selfless action"},
-    {"number": 4, "name": "ज्ञान कर्म संन्यास योग", "translation": "Jnana Karma Sanyasa Yoga", "transliteration": "Jnana Karma Sanyasa Yoga", "versesCount": 42, "summary": "Knowledge and renunciation"},
-    {"number": 5, "name": "कर्म संन्यास योग", "translation": "Karma Sanyasa Yoga", "transliteration": "Karma Sanyasa Yoga", "versesCount": 29, "summary": "Renunciation of action"},
-    {"number": 6, "name": "ध्यान योग", "translation": "Dhyana Yoga", "transliteration": "Dhyana Yoga", "versesCount": 47, "summary": "Meditation"},
-    {"number": 7, "name": "ज्ञान विज्ञान योग", "translation": "Jnana Vijnana Yoga", "transliteration": "Jnana Vijnana Yoga", "versesCount": 30, "summary": "Knowledge of the Absolute"},
-    {"number": 8, "name": "अक्षर ब्रह्म योग", "translation": "Aksara Brahma Yoga", "transliteration": "Aksara Brahma Yoga", "versesCount": 28, "summary": "Imperishable Brahman"},
-    {"number": 9, "name": "राज विद्या राज गुह्य योग", "translation": "Raja Vidya Raja Guhya Yoga", "transliteration": "Raja Vidya Raja Guhya Yoga", "versesCount": 34, "summary": "Royal knowledge"},
-    {"number": 10, "name": "विभूति योग", "translation": "Vibhuti Yoga", "transliteration": "Vibhuti Yoga", "versesCount": 42, "summary": "Divine manifestations"},
-    {"number": 11, "name": "विश्वरूप दर्शन योग", "translation": "Vishvarupa Darshana Yoga", "transliteration": "Vishvarupa Darshana Yoga", "versesCount": 55, "summary": "Universal form"},
-    {"number": 12, "name": "भक्ति योग", "translation": "Bhakti Yoga", "transliteration": "Bhakti Yoga", "versesCount": 20, "summary": "Devotion"},
-    {"number": 13, "name": "क्षेत्र क्षेत्रज्ञ विभाग योग", "translation": "Kshetra Kshetrajna Vibhaga Yoga", "transliteration": "Kshetra Kshetrajna Vibhaga Yoga", "versesCount": 34, "summary": "Field and knower"},
-    {"number": 14, "name": "गुणत्रय विभाग योग", "translation": "Gunatraya Vibhaga Yoga", "transliteration": "Gunatraya Vibhaga Yoga", "versesCount": 27, "summary": "Three gunas"},
-    {"number": 15, "name": "पुरुषोत्तम योग", "translation": "Purushottama Yoga", "transliteration": "Purushottama Yoga", "versesCount": 20, "summary": "Supreme person"},
-    {"number": 16, "name": "दैवासुर सम्पद् विभाग योग", "translation": "Daivasura Sampad Vibhaga Yoga", "transliteration": "Daivasura Sampad Vibhaga Yoga", "versesCount": 24, "summary": "Divine and demoniac natures"},
-    {"number": 17, "name": "श्रद्धात्रय विभाग योग", "translation": "Shraddhatraya Vibhaga Yoga", "transliteration": "Shraddhatraya Vibhaga Yoga", "versesCount": 28, "summary": "Threefold faith"},
-    {"number": 18, "name": "मोक्ष संन्यास योग", "translation": "Moksha Sanyasa Yoga", "transliteration": "Moksha Sanyasa Yoga", "versesCount": 78, "summary": "Liberation"},
+    {
+        "number": 1,
+        "name": "अर्जुन विषाद योग",
+        "translation": "Arjuna Vishada Yoga",
+        "transliteration": "Arjuna Vishada Yoga",
+        "versesCount": 47,
+        "summary": "Arjuna's grief on Kurukshetra",
+    },
+    {
+        "number": 2,
+        "name": "सांख्य योग",
+        "translation": "Sankhya Yoga",
+        "transliteration": "Sankhya Yoga",
+        "versesCount": 72,
+        "summary": "The immortal soul and knowledge",
+    },
+    {
+        "number": 3,
+        "name": "कर्म योग",
+        "translation": "Karma Yoga",
+        "transliteration": "Karma Yoga",
+        "versesCount": 43,
+        "summary": "Selfless action",
+    },
+    {
+        "number": 4,
+        "name": "ज्ञान कर्म संन्यास योग",
+        "translation": "Jnana Karma Sanyasa Yoga",
+        "transliteration": "Jnana Karma Sanyasa Yoga",
+        "versesCount": 42,
+        "summary": "Knowledge and renunciation",
+    },
+    {
+        "number": 5,
+        "name": "कर्म संन्यास योग",
+        "translation": "Karma Sanyasa Yoga",
+        "transliteration": "Karma Sanyasa Yoga",
+        "versesCount": 29,
+        "summary": "Renunciation of action",
+    },
+    {
+        "number": 6,
+        "name": "ध्यान योग",
+        "translation": "Dhyana Yoga",
+        "transliteration": "Dhyana Yoga",
+        "versesCount": 47,
+        "summary": "Meditation",
+    },
+    {
+        "number": 7,
+        "name": "ज्ञान विज्ञान योग",
+        "translation": "Jnana Vijnana Yoga",
+        "transliteration": "Jnana Vijnana Yoga",
+        "versesCount": 30,
+        "summary": "Knowledge of the Absolute",
+    },
+    {
+        "number": 8,
+        "name": "अक्षर ब्रह्म योग",
+        "translation": "Aksara Brahma Yoga",
+        "transliteration": "Aksara Brahma Yoga",
+        "versesCount": 28,
+        "summary": "Imperishable Brahman",
+    },
+    {
+        "number": 9,
+        "name": "राज विद्या राज गुह्य योग",
+        "translation": "Raja Vidya Raja Guhya Yoga",
+        "transliteration": "Raja Vidya Raja Guhya Yoga",
+        "versesCount": 34,
+        "summary": "Royal knowledge",
+    },
+    {
+        "number": 10,
+        "name": "विभूति योग",
+        "translation": "Vibhuti Yoga",
+        "transliteration": "Vibhuti Yoga",
+        "versesCount": 42,
+        "summary": "Divine manifestations",
+    },
+    {
+        "number": 11,
+        "name": "विश्वरूप दर्शन योग",
+        "translation": "Vishvarupa Darshana Yoga",
+        "transliteration": "Vishvarupa Darshana Yoga",
+        "versesCount": 55,
+        "summary": "Universal form",
+    },
+    {
+        "number": 12,
+        "name": "भक्ति योग",
+        "translation": "Bhakti Yoga",
+        "transliteration": "Bhakti Yoga",
+        "versesCount": 20,
+        "summary": "Devotion",
+    },
+    {
+        "number": 13,
+        "name": "क्षेत्र क्षेत्रज्ञ विभाग योग",
+        "translation": "Kshetra Kshetrajna Vibhaga Yoga",
+        "transliteration": "Kshetra Kshetrajna Vibhaga Yoga",
+        "versesCount": 34,
+        "summary": "Field and knower",
+    },
+    {
+        "number": 14,
+        "name": "गुणत्रय विभाग योग",
+        "translation": "Gunatraya Vibhaga Yoga",
+        "transliteration": "Gunatraya Vibhaga Yoga",
+        "versesCount": 27,
+        "summary": "Three gunas",
+    },
+    {
+        "number": 15,
+        "name": "पुरुषोत्तम योग",
+        "translation": "Purushottama Yoga",
+        "transliteration": "Purushottama Yoga",
+        "versesCount": 20,
+        "summary": "Supreme person",
+    },
+    {
+        "number": 16,
+        "name": "दैवासुर सम्पद् विभाग योग",
+        "translation": "Daivasura Sampad Vibhaga Yoga",
+        "transliteration": "Daivasura Sampad Vibhaga Yoga",
+        "versesCount": 24,
+        "summary": "Divine and demoniac natures",
+    },
+    {
+        "number": 17,
+        "name": "श्रद्धात्रय विभाग योग",
+        "translation": "Shraddhatraya Vibhaga Yoga",
+        "transliteration": "Shraddhatraya Vibhaga Yoga",
+        "versesCount": 28,
+        "summary": "Threefold faith",
+    },
+    {
+        "number": 18,
+        "name": "मोक्ष संन्यास योग",
+        "translation": "Moksha Sanyasa Yoga",
+        "transliteration": "Moksha Sanyasa Yoga",
+        "versesCount": 78,
+        "summary": "Liberation",
+    },
 ]
 
 RAMAYANA_KANDAS: List[Dict[str, Any]] = [
-    {"kandaId": "bala", "name": "Bala Kanda", "description": "Childhood of Rama", "sargas": 77},
-    {"kandaId": "ayodhya", "name": "Ayodhya Kanda", "description": "Events at Ayodhya", "sargas": 119},
-    {"kandaId": "aranya", "name": "Aranya Kanda", "description": "Forest life", "sargas": 75},
-    {"kandaId": "kishkindha", "name": "Kishkindha Kanda", "description": "Alliance with Sugriva", "sargas": 67},
-    {"kandaId": "sundara", "name": "Sundara Kanda", "description": "Hanuman's journey", "sargas": 68},
-    {"kandaId": "yuddha", "name": "Yuddha Kanda", "description": "War with Ravana", "sargas": 128},
-    {"kandaId": "uttara", "name": "Uttara Kanda", "description": "Later life of Rama", "sargas": 111},
+    {
+        "kandaId": "bala",
+        "name": "Bala Kanda",
+        "description": "Childhood of Rama",
+        "sargas": 77,
+    },
+    {
+        "kandaId": "ayodhya",
+        "name": "Ayodhya Kanda",
+        "description": "Events at Ayodhya",
+        "sargas": 119,
+    },
+    {
+        "kandaId": "aranya",
+        "name": "Aranya Kanda",
+        "description": "Forest life",
+        "sargas": 75,
+    },
+    {
+        "kandaId": "kishkindha",
+        "name": "Kishkindha Kanda",
+        "description": "Alliance with Sugriva",
+        "sargas": 67,
+    },
+    {
+        "kandaId": "sundara",
+        "name": "Sundara Kanda",
+        "description": "Hanuman's journey",
+        "sargas": 68,
+    },
+    {
+        "kandaId": "yuddha",
+        "name": "Yuddha Kanda",
+        "description": "War with Ravana",
+        "sargas": 128,
+    },
+    {
+        "kandaId": "uttara",
+        "name": "Uttara Kanda",
+        "description": "Later life of Rama",
+        "sargas": 111,
+    },
 ]
 
 MAHABHARATA_PARVAS: List[Dict[str, Any]] = [
-    {"parvaNumber": 1, "name": "Adi Parva", "description": "The beginning — lineage and early life", "chapters": 225, "verses": 7984},
-    {"parvaNumber": 2, "name": "Sabha Parva", "description": "Dice game and exile", "chapters": 72, "verses": 2511},
-    {"parvaNumber": 3, "name": "Vana Parva", "description": "Forest exile", "chapters": 299, "verses": 11664},
-    {"parvaNumber": 4, "name": "Virata Parva", "description": "Incognito year", "chapters": 67, "verses": 2050},
-    {"parvaNumber": 5, "name": "Udyoga Parva", "description": "War preparations", "chapters": 186, "verses": 6698},
-    {"parvaNumber": 6, "name": "Bhishma Parva", "description": "Includes Bhagavad Gita", "chapters": 117, "verses": 5884},
-    {"parvaNumber": 7, "name": "Drona Parva", "description": "Drona's command", "chapters": 173, "verses": 8909},
-    {"parvaNumber": 8, "name": "Karna Parva", "description": "Karna as commander", "chapters": 69, "verses": 4964},
-    {"parvaNumber": 9, "name": "Shalya Parva", "description": "Shalya as commander", "chapters": 59, "verses": 3220},
-    {"parvaNumber": 10, "name": "Sauptika Parva", "description": "Night raid", "chapters": 18, "verses": 870},
-    {"parvaNumber": 11, "name": "Stri Parva", "description": "Women's lament", "chapters": 27, "verses": 775},
-    {"parvaNumber": 12, "name": "Shanti Parva", "description": "Peace instructions", "chapters": 353, "verses": 14732},
-    {"parvaNumber": 13, "name": "Anushasana Parva", "description": "Further instructions", "chapters": 154, "verses": 8000},
-    {"parvaNumber": 14, "name": "Ashvamedhika Parva", "description": "Horse sacrifice", "chapters": 96, "verses": 3320},
-    {"parvaNumber": 15, "name": "Ashramavasika Parva", "description": "Forest retreat", "chapters": 42, "verses": 1506},
-    {"parvaNumber": 16, "name": "Mausala Parva", "description": "Destruction of Yadavas", "chapters": 8, "verses": 320},
-    {"parvaNumber": 17, "name": "Mahaprasthanika Parva", "description": "Final journey", "chapters": 3, "verses": 120},
-    {"parvaNumber": 18, "name": "Svargarohana Parva", "description": "Ascent to heaven", "chapters": 5, "verses": 209},
+    {
+        "parvaNumber": 1,
+        "name": "Adi Parva",
+        "description": "The beginning — lineage and early life",
+        "chapters": 225,
+        "verses": 7984,
+    },
+    {
+        "parvaNumber": 2,
+        "name": "Sabha Parva",
+        "description": "Dice game and exile",
+        "chapters": 72,
+        "verses": 2511,
+    },
+    {
+        "parvaNumber": 3,
+        "name": "Vana Parva",
+        "description": "Forest exile",
+        "chapters": 299,
+        "verses": 11664,
+    },
+    {
+        "parvaNumber": 4,
+        "name": "Virata Parva",
+        "description": "Incognito year",
+        "chapters": 67,
+        "verses": 2050,
+    },
+    {
+        "parvaNumber": 5,
+        "name": "Udyoga Parva",
+        "description": "War preparations",
+        "chapters": 186,
+        "verses": 6698,
+    },
+    {
+        "parvaNumber": 6,
+        "name": "Bhishma Parva",
+        "description": "Includes Bhagavad Gita",
+        "chapters": 117,
+        "verses": 5884,
+    },
+    {
+        "parvaNumber": 7,
+        "name": "Drona Parva",
+        "description": "Drona's command",
+        "chapters": 173,
+        "verses": 8909,
+    },
+    {
+        "parvaNumber": 8,
+        "name": "Karna Parva",
+        "description": "Karna as commander",
+        "chapters": 69,
+        "verses": 4964,
+    },
+    {
+        "parvaNumber": 9,
+        "name": "Shalya Parva",
+        "description": "Shalya as commander",
+        "chapters": 59,
+        "verses": 3220,
+    },
+    {
+        "parvaNumber": 10,
+        "name": "Sauptika Parva",
+        "description": "Night raid",
+        "chapters": 18,
+        "verses": 870,
+    },
+    {
+        "parvaNumber": 11,
+        "name": "Stri Parva",
+        "description": "Women's lament",
+        "chapters": 27,
+        "verses": 775,
+    },
+    {
+        "parvaNumber": 12,
+        "name": "Shanti Parva",
+        "description": "Peace instructions",
+        "chapters": 353,
+        "verses": 14732,
+    },
+    {
+        "parvaNumber": 13,
+        "name": "Anushasana Parva",
+        "description": "Further instructions",
+        "chapters": 154,
+        "verses": 8000,
+    },
+    {
+        "parvaNumber": 14,
+        "name": "Ashvamedhika Parva",
+        "description": "Horse sacrifice",
+        "chapters": 96,
+        "verses": 3320,
+    },
+    {
+        "parvaNumber": 15,
+        "name": "Ashramavasika Parva",
+        "description": "Forest retreat",
+        "chapters": 42,
+        "verses": 1506,
+    },
+    {
+        "parvaNumber": 16,
+        "name": "Mausala Parva",
+        "description": "Destruction of Yadavas",
+        "chapters": 8,
+        "verses": 320,
+    },
+    {
+        "parvaNumber": 17,
+        "name": "Mahaprasthanika Parva",
+        "description": "Final journey",
+        "chapters": 3,
+        "verses": 120,
+    },
+    {
+        "parvaNumber": 18,
+        "name": "Svargarohana Parva",
+        "description": "Ascent to heaven",
+        "chapters": 5,
+        "verses": 209,
+    },
 ]
 
 ALL_VEDAS: List[Dict[str, Any]] = [
-    {"vedaId": "rig", "name": "Rig Veda", "mandalas": 10, "hymns": 1028, "verses": 10552, "description": "Oldest Veda — hymns to the gods."},
-    {"vedaId": "yajur", "name": "Yajur Veda", "mandalas": 40, "hymns": 1875, "verses": 1975, "description": "Ritual formulas."},
-    {"vedaId": "sama", "name": "Sama Veda", "mandalas": 2, "hymns": 1875, "verses": 1875, "description": "Melodies and chants."},
-    {"vedaId": "atharva", "name": "Atharva Veda", "mandalas": 20, "hymns": 730, "verses": 5987, "description": "Practical hymns and formulas."},
+    {
+        "vedaId": "rig",
+        "name": "Rig Veda",
+        "mandalas": 10,
+        "hymns": 1028,
+        "verses": 10552,
+        "description": "Oldest Veda — hymns to the gods.",
+    },
+    {
+        "vedaId": "yajur",
+        "name": "Yajur Veda",
+        "mandalas": 40,
+        "hymns": 1875,
+        "verses": 1975,
+        "description": "Ritual formulas.",
+    },
+    {
+        "vedaId": "sama",
+        "name": "Sama Veda",
+        "mandalas": 2,
+        "hymns": 1875,
+        "verses": 1875,
+        "description": "Melodies and chants.",
+    },
+    {
+        "vedaId": "atharva",
+        "name": "Atharva Veda",
+        "mandalas": 20,
+        "hymns": 730,
+        "verses": 5987,
+        "description": "Practical hymns and formulas.",
+    },
 ]
 
 HANUMAN_CHALISA_VERSES: List[Dict[str, Any]] = [
@@ -377,6 +702,7 @@ HANUMAN_CHALISA_VERSES: List[Dict[str, Any]] = [
         "tags": ["Chaupai", "Praise"],
     },
 ]
+
 
 def _chalisa_verse(
     number: int,
@@ -641,7 +967,9 @@ GITA_VERSES: Dict[int, List[Dict[str, Any]]] = {
             "verse": 1,
             "shloka": "धृतराष्ट्र उवाच | धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः | मामकाः पाण्डवाश्चैव किमकुर्वत सञ्जय ||1-1||",
             "transliteration": "dhritarashtra uvacha dharmakshetre kurukshetre samaveta yuyutsavah mamakah pandavaschaiva kimakurvata sanjaya",
-            "translations": {"en": "Dhritarashtra said: O Sanjaya, what did my sons and the sons of Pandu do when they assembled on the holy field of Kurukshetra, eager for battle?"},
+            "translations": {
+                "en": "Dhritarashtra said: O Sanjaya, what did my sons and the sons of Pandu do when they assembled on the holy field of Kurukshetra, eager for battle?"
+            },
         },
         {
             "bgId": "BG1.2",
@@ -649,7 +977,9 @@ GITA_VERSES: Dict[int, List[Dict[str, Any]]] = {
             "verse": 2,
             "shloka": "सञ्जय उवाच | दृष्ट्वा तु पाण्डवानीकं व्यूढं दुर्योधनस्तदा | आचार्यमुपसङ्गम्य राजा वचनमब्रवीत् ||1-2||",
             "transliteration": "sanjaya uvacha drishtva tu pandavanikam vyudham duryodhanastada acharyamupasangamya raja vachanamabravit",
-            "translations": {"en": "Sanjaya said: Seeing the Pandava army arrayed, King Duryodhana approached his teacher and spoke these words."},
+            "translations": {
+                "en": "Sanjaya said: Seeing the Pandava army arrayed, King Duryodhana approached his teacher and spoke these words."
+            },
         },
     ],
     2: [
@@ -848,12 +1178,48 @@ UPANISHAD_VERSES: List[Dict[str, Any]] = [
 ]
 
 ALL_UPANISHADS: List[Dict[str, Any]] = [
-    {"id": "isha", "name": "Isha Upanishad", "associatedVeda": "Yajur", "chapters": 1, "description": "Divine in all things."},
-    {"id": "kena", "name": "Kena Upanishad", "associatedVeda": "Sama", "chapters": 4, "description": "Nature of Brahman."},
-    {"id": "katha", "name": "Katha Upanishad", "associatedVeda": "Yajur", "chapters": 6, "description": "Nachiketa and Yama."},
-    {"id": "mundaka", "name": "Mundaka Upanishad", "associatedVeda": "Atharva", "chapters": 3, "description": "Higher and lower knowledge."},
-    {"id": "chandogya", "name": "Chandogya Upanishad", "associatedVeda": "Sama", "chapters": 8, "description": "Tat tvam asi."},
-    {"id": "brihadaranyaka", "name": "Brihadaranyaka Upanishad", "associatedVeda": "Yajur", "chapters": 6, "description": "Largest Upanishad."},
+    {
+        "id": "isha",
+        "name": "Isha Upanishad",
+        "associatedVeda": "Yajur",
+        "chapters": 1,
+        "description": "Divine in all things.",
+    },
+    {
+        "id": "kena",
+        "name": "Kena Upanishad",
+        "associatedVeda": "Sama",
+        "chapters": 4,
+        "description": "Nature of Brahman.",
+    },
+    {
+        "id": "katha",
+        "name": "Katha Upanishad",
+        "associatedVeda": "Yajur",
+        "chapters": 6,
+        "description": "Nachiketa and Yama.",
+    },
+    {
+        "id": "mundaka",
+        "name": "Mundaka Upanishad",
+        "associatedVeda": "Atharva",
+        "chapters": 3,
+        "description": "Higher and lower knowledge.",
+    },
+    {
+        "id": "chandogya",
+        "name": "Chandogya Upanishad",
+        "associatedVeda": "Sama",
+        "chapters": 8,
+        "description": "Tat tvam asi.",
+    },
+    {
+        "id": "brihadaranyaka",
+        "name": "Brihadaranyaka Upanishad",
+        "associatedVeda": "Yajur",
+        "chapters": 6,
+        "description": "Largest Upanishad.",
+    },
 ]
 
 
@@ -899,27 +1265,34 @@ class StaticContentRegistry:
         return [
             dict(v)
             for v in RAMAYANA_VERSES
-            if str(v.get("kandaId", "")).lower() == wanted and int(v.get("sarga") or 0) == sarga
+            if str(v.get("kandaId", "")).lower() == wanted
+            and int(v.get("sarga") or 0) == sarga
         ]
 
     def get_mahabharata_verses(self, parva: int, chapter: int) -> List[Dict[str, Any]]:
         return [
             dict(v)
             for v in MAHABHARATA_VERSES
-            if int(v.get("parva") or 0) == parva and int(v.get("chapter") or 0) == chapter
+            if int(v.get("parva") or 0) == parva
+            and int(v.get("chapter") or 0) == chapter
         ]
 
     def get_rig_veda_verses(self, mandala: Optional[int]) -> List[Dict[str, Any]]:
         if mandala is None:
             return [dict(v) for v in RIG_VEDA_VERSES]
-        return [dict(v) for v in RIG_VEDA_VERSES if int(v.get("mandala") or 0) == mandala]
+        return [
+            dict(v) for v in RIG_VEDA_VERSES if int(v.get("mandala") or 0) == mandala
+        ]
 
-    def get_upanishad_verses(self, upanishad_id: str, chapter: int) -> List[Dict[str, Any]]:
+    def get_upanishad_verses(
+        self, upanishad_id: str, chapter: int
+    ) -> List[Dict[str, Any]]:
         wanted = upanishad_id.strip().lower()
         return [
             dict(v)
             for v in UPANISHAD_VERSES
-            if str(v.get("upanishadId", "")).lower() == wanted and int(v.get("chapter") or 0) == chapter
+            if str(v.get("upanishadId", "")).lower() == wanted
+            and int(v.get("chapter") or 0) == chapter
         ]
 
     def get_chalisa_by_deity(self, deity: str) -> Optional[Dict[str, Any]]:
@@ -931,7 +1304,11 @@ class StaticContentRegistry:
 
     def get_random_mantra(self) -> Dict[str, Any]:
         pool = list(VEDA_MANTRA_POOL)
-        return dict(random.choice(pool)) if pool else {"text": "ॐ", "meaning": "The primordial sound, Brahman"}
+        return (
+            dict(random.choice(pool))
+            if pool
+            else {"text": "ॐ", "meaning": "The primordial sound, Brahman"}
+        )
 
     def get_weekday_mantra(self, weekday: int) -> Dict[str, Any]:
         mantra_id = WEEKDAY_MANTRA_IDS.get(weekday, WEEKDAY_MANTRA_IDS[0])
@@ -957,4 +1334,6 @@ class StaticContentRegistry:
         if veda is None:
             return [dict(m) for m in VEDA_MANTRA_POOL]
         v = veda.lower()
-        return [dict(m) for m in VEDA_MANTRA_POOL if str(m.get("veda", "")).lower() == v]
+        return [
+            dict(m) for m in VEDA_MANTRA_POOL if str(m.get("veda", "")).lower() == v
+        ]

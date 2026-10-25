@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, Request
 
 from api.mantra_api.service_contract import MantraService
 from api.responses import ok_payload
-from core.pagination import JAVA_MAX_INT, paginate as slice_page
+from core.pagination import JAVA_MAX_INT
+from core.pagination import paginate as slice_page
 
 router = APIRouter()
 
@@ -27,7 +28,7 @@ async def list_mantras(
     page: int = 0,
     size: int = 20,
     limit: Optional[int] = None,
-    svc: MantraService = Depends(get_mantra_service)
+    svc: MantraService = Depends(get_mantra_service),
 ):
     page_size = limit if limit is not None else size
     full = await svc.get_mantras(deity, 0, JAVA_MAX_INT)

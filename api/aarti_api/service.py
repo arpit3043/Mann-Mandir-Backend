@@ -20,11 +20,15 @@ class DefaultAartiService(AartiService):
     def __init__(self, static: StaticContentRegistry) -> None:
         self._static = static
 
-    async def get_aartis(self, deity: Optional[str], page: int, size: int) -> List[AartiDto]:
+    async def get_aartis(
+        self, deity: Optional[str], page: int, size: int
+    ) -> List[AartiDto]:
         rows = self._static.get_all_aartis()
         if deity and deity.strip():
             wanted = deity.strip().lower()
-            matched = [row for row in rows if str(row.get("deity") or "").lower() == wanted]
+            matched = [
+                row for row in rows if str(row.get("deity") or "").lower() == wanted
+            ]
             ensure_found(
                 matched,
                 resource="Aarti",
@@ -46,7 +50,13 @@ class DefaultAartiService(AartiService):
         )
 
     async def get_aarti_deities(self) -> List[str]:
-        return sorted({str(row["deity"]) for row in self._static.get_all_aartis() if row.get("deity")})
+        return sorted(
+            {
+                str(row["deity"])
+                for row in self._static.get_all_aartis()
+                if row.get("deity")
+            }
+        )
 
     def _not_found_suggestion(self, aarti_id: str) -> str:
         rows = self._static.get_all_aartis()

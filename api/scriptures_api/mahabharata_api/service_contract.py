@@ -2,6 +2,7 @@ from typing import List, Protocol
 
 from schemas.dtos import MahabharataParvaDto, MahabharataVerseDto
 
+
 class MahabharataService(Protocol):
     async def get_mahabharata_parvas(self) -> List[MahabharataParvaDto]: ...
     async def get_mahabharata_parva(self, parva_number: int) -> MahabharataParvaDto: ...

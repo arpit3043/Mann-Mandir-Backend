@@ -8,7 +8,7 @@ import time as _time
 from typing import Any, Dict, Optional, Tuple
 
 import httpx
-from fastapi import APIRouter, Request, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from api.responses import ok_payload
@@ -34,7 +34,9 @@ async def _proxy_json(
     base = settings.astro_api_base.rstrip("/") if settings.astro_api_base else ""
     key = settings.astro_api_key
     if not base or not key:
-        raise HTTPException(status_code=400, detail="Astro API not configured on server")
+        raise HTTPException(
+            status_code=400, detail="Astro API not configured on server"
+        )
 
     url = f"{base}/{path.lstrip('/')}"
     timeout = httpx.Timeout(
@@ -44,7 +46,11 @@ async def _proxy_json(
     )
     async with httpx.AsyncClient(
         timeout=timeout,
-        headers={"Accept": "application/json", "Content-Type": "application/json", "x-api-key": key},
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "x-api-key": key,
+        },
     ) as client:
         resp = await client.request(method, url, params=params, json=json_body)
         if resp.status_code < 200 or resp.status_code >= 300:
@@ -73,7 +79,9 @@ async def proxy_daily_horoscope(request: Request, sign: str):
         connect=settings.webclient_timeout_connect,
         write=settings.webclient_timeout_write,
     )
-    async with httpx.AsyncClient(timeout=timeout, headers={"Accept": "application/json"}, follow_redirects=True) as client:
+    async with httpx.AsyncClient(
+        timeout=timeout, headers={"Accept": "application/json"}, follow_redirects=True
+    ) as client:
         resp = await client.request("GET", url)
         if resp.status_code < 200 or resp.status_code >= 300:
             logger.error("Daily horoscope upstream error: %s", resp.text.strip())
@@ -99,8 +107,9 @@ async def proxy_daily_horoscope(request: Request, sign: str):
 _panchang_cache: Dict[Tuple, Tuple[Dict[str, Any], float]] = {}
 
 
-def _make_cache_key(year: int, month: int, date: int, lat: float, lon: float, tz: float) -> Tuple:
-    """Round lat/lon to 2 decimal places so nearby locations share a cache entry."""
+def _make_cache_key(
+    year: int, month: int, date: int, lat: float, lon: float, tz: float
+) -> Tuple:
     return (year, month, date, round(lat, 2), round(lon, 2), tz)
 
 
@@ -115,8 +124,9 @@ def _cache_get(key: Tuple) -> Optional[Dict[str, Any]]:
     return payload
 
 
-def _cache_set(key: Tuple, payload: Dict[str, Any], year: int, month: int, date: int) -> None:
-    """Cache until midnight of the next day (max 24 h) so stale entries self-clean."""
+def _cache_set(
+    key: Tuple, payload: Dict[str, Any], year: int, month: int, date: int
+) -> None:
     try:
         requested_date = datetime.date(year, month, date)
         next_day = requested_date + datetime.timedelta(days=1)
@@ -158,24 +168,30 @@ async def proxy_panchang(
         return ok_payload(cached)
 
     settings: Settings = request.app.state.settings
-    base = settings.astro_api_base.rstrip("/") if settings.astro_api_base else "https://json.freeastrologyapi.com"
+    base = (
+        settings.astro_api_base.rstrip("/")
+        if settings.astro_api_base
+        else "https://json.freeastrologyapi.com"
+    )
     key = settings.astro_api_key
     if not key:
-        return JSONResponse(status_code=400, content={"detail": "Astro API key not configured"})
+        return JSONResponse(
+            status_code=400, content={"detail": "Astro API key not configured"}
+        )
 
     body = {
-        'year': year,
-        'month': month,
-        'date': date,
-        'hours': hours,
-        'minutes': minutes,
-        'seconds': seconds,
-        'latitude': lat,
-        'longitude': lon,
-        'timezone': resolved_tz,
-        'config': {
-            'observation_point': 'topocentric',
-            'ayanamsha': 'lahiri',
+        "year": year,
+        "month": month,
+        "date": date,
+        "hours": hours,
+        "minutes": minutes,
+        "seconds": seconds,
+        "latitude": lat,
+        "longitude": lon,
+        "timezone": resolved_tz,
+        "config": {
+            "observation_point": "topocentric",
+            "ayanamsha": "lahiri",
         },
     }
 
@@ -214,7 +230,11 @@ async def proxy_panchang(
 
     async with httpx.AsyncClient(
         timeout=timeout,
-        headers={"Accept": "application/json", "Content-Type": "application/json", "x-api-key": key},
+        headers={
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            "x-api-key": key,
+        },
     ) as client:
         tasks = [
             fetch_endpoint_throttled(client, "tithi-durations"),
@@ -224,13 +244,16 @@ async def proxy_panchang(
         ]
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
-        tithi     = results[0] if not isinstance(results[0], Exception) else None
+        tithi = results[0] if not isinstance(results[0], Exception) else None
         nakshatra = results[1] if not isinstance(results[1], Exception) else None
-        sun       = results[2] if not isinstance(results[2], Exception) else None
-        yoga      = results[3] if not isinstance(results[3], Exception) else None
+        sun = results[2] if not isinstance(results[2], Exception) else None
+        yoga = results[3] if not isinstance(results[3], Exception) else None
 
     if not tithi and not nakshatra and not sun:
-        return JSONResponse(status_code=502, content={"detail": "Upstream rate limit or connection error"})
+        return JSONResponse(
+            status_code=502,
+            content={"detail": "Upstream rate limit or connection error"},
+        )
 
     output: Dict[str, Any] = {}
     if tithi:

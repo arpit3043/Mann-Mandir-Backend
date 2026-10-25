@@ -27,7 +27,9 @@ class ApiResponse(BaseModel, Generic[T]):
     success: bool
     message: Optional[str] = None
     data: Optional[T] = None
-    errorDetail: Optional[ErrorDetail] = Field(default=None, serialization_alias="errorDetail")
+    errorDetail: Optional[ErrorDetail] = Field(
+        default=None, serialization_alias="errorDetail"
+    )
     paginationMeta: Optional[PaginationMeta] = Field(
         default=None, serialization_alias="paginationMeta"
     )
@@ -36,7 +38,9 @@ class ApiResponse(BaseModel, Generic[T]):
     model_config = {"populate_by_name": True}
 
     @staticmethod
-    def ok_data(data: T, pagination: Optional[PaginationMeta] = None) -> "ApiResponse[T]":
+    def ok_data(
+        data: T, pagination: Optional[PaginationMeta] = None
+    ) -> "ApiResponse[T]":
         return ApiResponse(success=True, data=data, paginationMeta=pagination)
 
     @staticmethod
@@ -45,7 +49,9 @@ class ApiResponse(BaseModel, Generic[T]):
 
     @staticmethod
     def error(code: str, message: str) -> "ApiResponse[Any]":
-        return ApiResponse(success=False, errorDetail=ErrorDetail(code=code, message=message))
+        return ApiResponse(
+            success=False, errorDetail=ErrorDetail(code=code, message=message)
+        )
 
 
 def meta_from_totals(page: int, size: int, total: int) -> PaginationMeta:

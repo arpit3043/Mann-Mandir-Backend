@@ -14,9 +14,13 @@ class RamayanaService(ABC):
         pass
 
     @abstractmethod
-    async def get_ramayana_verses(self, kanda_id: str, sarga: int, skip: int, limit: int) -> List[RamayanaVerseDto]:
+    async def get_ramayana_verses(
+        self, kanda_id: str, sarga: int, skip: int, limit: int
+    ) -> List[RamayanaVerseDto]:
         pass
 
     @abstractmethod
-    async def get_ramayana_verse(self, kanda_id: str, sarga: int, verse: int) -> RamayanaVerseDto:
+    async def get_ramayana_verse(
+        self, kanda_id: str, sarga: int, verse: int
+    ) -> RamayanaVerseDto:
         pass

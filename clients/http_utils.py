@@ -21,7 +21,9 @@ async def get_json(
     try:
         return response.json()
     except ValueError:
-        logger.warning("Non-JSON response from %s (status=%s)", url, response.status_code)
+        logger.warning(
+            "Non-JSON response from %s (status=%s)", url, response.status_code
+        )
         return None
 
 

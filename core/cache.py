@@ -11,7 +11,6 @@ logger = logging.getLogger(__name__)
 
 
 class RedisCache:
-
     def __init__(
         self,
         master: redis.StrictRedis,
@@ -27,7 +26,6 @@ class RedisCache:
     # ------------------------------------------------------------------
 
     def get(self, key: str) -> Optional[Any]:
-        """Return the cached Python object for *key*, or None on miss/error."""
         client = self._next_read_client()
         try:
             raw = client.get(key)
@@ -46,7 +44,6 @@ class RedisCache:
             return None
 
     def set(self, key: str, value: Any, ttl: int) -> bool:
-        """Serialize *value* to JSON and store it on the master with TTL seconds."""
         try:
             payload = json.dumps(value, ensure_ascii=False)
             self._master.setex(key, ttl, payload)
@@ -57,11 +54,9 @@ class RedisCache:
 
     @staticmethod
     def make_key(url: str) -> str:
-        """Deterministic cache key derived from a URL."""
         return f"mm:{url}"
 
     def ping_master(self) -> bool:
-        """Return True if the master is reachable."""
         try:
             return self._master.ping()
         except redis.RedisError:
@@ -72,7 +67,6 @@ class RedisCache:
     # ------------------------------------------------------------------
 
     def _next_read_client(self) -> redis.StrictRedis:
-        """Return the next replica for reads, or master if none configured."""
         if self._replica_cycle is not None:
             return next(self._replica_cycle)
         return self._master
@@ -81,6 +75,7 @@ class RedisCache:
 # ---------------------------------------------------------------------------
 # Factory
 # ---------------------------------------------------------------------------
+
 
 def build_redis_cache(
     master_host: str,
@@ -101,7 +96,7 @@ def build_redis_cache(
         common["password"] = password
     if tls:
         common["ssl"] = True
-        common["ssl_cert_reqs"] = None 
+        common["ssl_cert_reqs"] = None
 
     master = redis.StrictRedis(host=master_host, port=master_port, **common)
 

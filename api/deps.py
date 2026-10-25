@@ -4,6 +4,14 @@ from typing import Annotated, Any, Optional
 
 from fastapi import Depends, Request
 
+from api.aarti_api.service import DefaultAartiService
+from api.chalisa_api.service import DefaultChalisaService
+from api.mantra_api.service import DefaultMantraService
+from api.panchang_api.service import DefaultPanchangService
+from api.scriptures_api.gita_api.service import DefaultGitaService
+from api.scriptures_api.mahabharata_api.service import DefaultMahabharataService
+from api.scriptures_api.ramayana_api.service import DefaultRamayanaService
+from api.stotram_api.service import DefaultStotramService
 from clients.upstream import (
     DharmicDataClient,
     DrikPanchangChalisaClient,
@@ -18,21 +26,24 @@ from clients.upstream import (
 from core.cache import RedisCache
 from core.config import Settings
 from services.contracts import SearchService, VedaService
-from api.aarti_api.service import DefaultAartiService
-from api.chalisa_api.service import DefaultChalisaService
-from api.stotram_api.service import DefaultStotramService
-from api.mantra_api.service import DefaultMantraService
-from api.scriptures_api.gita_api.service import DefaultGitaService
-from api.scriptures_api.ramayana_api.service import DefaultRamayanaService
-from api.scriptures_api.mahabharata_api.service import DefaultMahabharataService
-from api.panchang_api.service import DefaultPanchangService
 from services.search import DefaultSearchService
 from services.static_registry import StaticContentRegistry
 from services.veda import DefaultVedaService
 
 
 class AppServices:
-    __slots__ = ("aarti", "chalisa", "stotram", "mantra", "gita", "ramayana", "mahabharata", "veda", "search", "panchang")
+    __slots__ = (
+        "aarti",
+        "chalisa",
+        "stotram",
+        "mantra",
+        "gita",
+        "ramayana",
+        "mahabharata",
+        "veda",
+        "search",
+        "panchang",
+    )
 
     def __init__(
         self,

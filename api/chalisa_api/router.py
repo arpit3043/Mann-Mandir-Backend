@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, Request
 
 from api.chalisa_api.service_contract import ChalisaService
 from api.responses import ok_payload
-from core.pagination import JAVA_MAX_INT, paginate as slice_page
+from core.pagination import JAVA_MAX_INT
+from core.pagination import paginate as slice_page
 
 router = APIRouter()
 
@@ -18,7 +19,7 @@ async def list_chalisas(
     deity: Optional[str] = None,
     page: int = 0,
     size: int = 20,
-    svc: ChalisaService = Depends(get_chalisa_service)
+    svc: ChalisaService = Depends(get_chalisa_service),
 ):
     full = await svc.get_chalisas(deity, 0, JAVA_MAX_INT)
     data = slice_page(full, page, size)
@@ -27,11 +28,15 @@ async def list_chalisas(
 
 @router.get("/{chalisa_id}/verses/{verse_number}")
 async def get_chalisa_verse(
-    chalisa_id: str, verse_number: int, svc: ChalisaService = Depends(get_chalisa_service)
+    chalisa_id: str,
+    verse_number: int,
+    svc: ChalisaService = Depends(get_chalisa_service),
 ):
     return ok_payload(await svc.get_chalisa_verse(chalisa_id, verse_number))
 
 
 @router.get("/{chalisa_id}")
-async def get_chalisa(chalisa_id: str, svc: ChalisaService = Depends(get_chalisa_service)):
+async def get_chalisa(
+    chalisa_id: str, svc: ChalisaService = Depends(get_chalisa_service)
+):
     return ok_payload(await svc.get_chalisa_by_id(chalisa_id))

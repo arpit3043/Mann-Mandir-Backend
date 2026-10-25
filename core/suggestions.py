@@ -87,7 +87,9 @@ def expand_term(token: str) -> list[str]:
     return terms
 
 
-def closest_match(query: str, options: Sequence[str], *, cutoff: float = 0.55) -> Optional[str]:
+def closest_match(
+    query: str, options: Sequence[str], *, cutoff: float = 0.55
+) -> Optional[str]:
     wanted = deity_key(query)
     raw = compact(query)
     if not options:
@@ -101,11 +103,16 @@ def closest_match(query: str, options: Sequence[str], *, cutoff: float = 0.55) -
         if wanted and (wanted in key or key in wanted):
             return opt
     labels = [str(opt) for opt in options if opt]
-    close = get_close_matches(norm(query), [norm(opt) for opt in labels], n=1, cutoff=cutoff)
+    close = get_close_matches(
+        norm(query), [norm(opt) for opt in labels], n=1, cutoff=cutoff
+    )
     if close:
         hit = close[0]
         return next((opt for opt in labels if norm(opt) == hit), labels[0])
-    scored = [(SequenceMatcher(None, wanted or raw, compact(opt)).ratio(), opt) for opt in labels]
+    scored = [
+        (SequenceMatcher(None, wanted or raw, compact(opt)).ratio(), opt)
+        for opt in labels
+    ]
     scored.sort(reverse=True)
     if scored and scored[0][0] >= cutoff:
         return scored[0][1]
@@ -140,7 +147,9 @@ def closest_row(
     return None
 
 
-def suggestion_for(query: str, options: Iterable[str], *, fallback: Optional[str] = None) -> str:
+def suggestion_for(
+    query: str, options: Iterable[str], *, fallback: Optional[str] = None
+) -> str:
     values = [str(opt) for opt in options if opt]
     match = closest_match(query, values)
     if match:

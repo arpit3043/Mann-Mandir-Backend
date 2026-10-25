@@ -10,7 +10,13 @@ from clients.upstream import DharmicDataClient, HavyakaApiClient, RigVedaApiClie
 from core.exceptions import ResourceNotFoundError
 from core.pagination import JAVA_MAX_INT, paginate
 from core.suggestions import ensure_found, suggestion_for
-from schemas.dtos import MantraDto, RigVedaVerseDto, UpanishadDto, UpanishadVerseDto, VedaDto
+from schemas.dtos import (
+    MantraDto,
+    RigVedaVerseDto,
+    UpanishadDto,
+    UpanishadVerseDto,
+    VedaDto,
+)
 from services.static_registry import StaticContentRegistry
 
 logger = logging.getLogger(__name__)
@@ -124,10 +130,17 @@ class DefaultVedaService:
         for v in self._static.get_all_vedas():
             if str(v.get("vedaId", "")).lower() == veda_id.lower():
                 return VedaDto.model_validate(v)
-        names = [str(item.get("vedaId") or item.get("name") or "") for item in self._static.get_all_vedas()]
-        raise ResourceNotFoundError("Veda", veda_id, suggestion=suggestion_for(veda_id, names))
+        names = [
+            str(item.get("vedaId") or item.get("name") or "")
+            for item in self._static.get_all_vedas()
+        ]
+        raise ResourceNotFoundError(
+            "Veda", veda_id, suggestion=suggestion_for(veda_id, names)
+        )
 
-    async def get_rig_veda_by_mandala(self, mandala: int, page: int, size: int) -> List[RigVedaVerseDto]:
+    async def get_rig_veda_by_mandala(
+        self, mandala: int, page: int, size: int
+    ) -> List[RigVedaVerseDto]:
         dharmic = await self._dharmic.get_rig_veda_mandala(mandala)
         if dharmic:
             all_v = [verse for row in dharmic for verse in _map_dharmic_sukta(row)]
@@ -136,7 +149,10 @@ class DefaultVedaService:
             if api_list:
                 all_v = [_map_rig_verse(x) for x in api_list]
             else:
-                all_v = [RigVedaVerseDto.model_validate(x) for x in self._static.get_rig_veda_verses(mandala)]
+                all_v = [
+                    RigVedaVerseDto.model_validate(x)
+                    for x in self._static.get_rig_veda_verses(mandala)
+                ]
         if not all_v:
             raise ResourceNotFoundError(
                 "Rig Veda mandala",
@@ -145,7 +161,9 @@ class DefaultVedaService:
             )
         return paginate(all_v, page, size)
 
-    async def get_rig_veda_by_deity(self, deity: str, page: int, size: int) -> List[RigVedaVerseDto]:
+    async def get_rig_veda_by_deity(
+        self, deity: str, page: int, size: int
+    ) -> List[RigVedaVerseDto]:
         api_list = await self._rig.get_by_deity(deity)
         if api_list:
             all_v = [_map_rig_verse(x) for x in api_list]
@@ -157,11 +175,18 @@ class DefaultVedaService:
                 if str(x.get("deity", "")).lower() == needle
             ]
         if not all_v:
-            names = [str(x.get("deity") or "") for x in self._static.get_rig_veda_verses(None)]
-            ensure_found(all_v, resource="Rig Veda deity", identifier=deity, available=names)
+            names = [
+                str(x.get("deity") or "")
+                for x in self._static.get_rig_veda_verses(None)
+            ]
+            ensure_found(
+                all_v, resource="Rig Veda deity", identifier=deity, available=names
+            )
         return paginate(all_v, page, size)
 
-    async def get_rig_veda_by_poet(self, poet: str, page: int, size: int) -> List[RigVedaVerseDto]:
+    async def get_rig_veda_by_poet(
+        self, poet: str, page: int, size: int
+    ) -> List[RigVedaVerseDto]:
         api_list = await self._rig.get_by_poet(poet)
         if api_list:
             all_v = [_map_rig_verse(x) for x in api_list]
@@ -173,11 +198,17 @@ class DefaultVedaService:
                 if str(x.get("poet", "")).lower() == needle
             ]
         if not all_v:
-            names = [str(x.get("poet") or "") for x in self._static.get_rig_veda_verses(None)]
-            ensure_found(all_v, resource="Rig Veda poet", identifier=poet, available=names)
+            names = [
+                str(x.get("poet") or "") for x in self._static.get_rig_veda_verses(None)
+            ]
+            ensure_found(
+                all_v, resource="Rig Veda poet", identifier=poet, available=names
+            )
         return paginate(all_v, page, size)
 
-    async def get_rig_veda_verse(self, mandala: int, sukta: int, stanza: int) -> RigVedaVerseDto:
+    async def get_rig_veda_verse(
+        self, mandala: int, sukta: int, stanza: int
+    ) -> RigVedaVerseDto:
         all_v = await self.get_rig_veda_by_mandala(mandala, 0, JAVA_MAX_INT)
         for v in all_v:
             if v.sukta == sukta and v.stanza == stanza:
@@ -189,7 +220,10 @@ class DefaultVedaService:
         if raw:
             all_m = _mantras_from_rows(raw, "Yajur")
         else:
-            all_m = [MantraDto.model_validate(x) for x in self._static.get_veda_mantras("yajur")]
+            all_m = [
+                MantraDto.model_validate(x)
+                for x in self._static.get_veda_mantras("yajur")
+            ]
         return paginate(all_m, page, size)
 
     async def get_sama_veda_mantras(self, page: int, size: int) -> List[MantraDto]:
@@ -201,7 +235,10 @@ class DefaultVedaService:
             if havyaka:
                 all_m = [_map_havyaka_mantra(x) for x in havyaka]
             else:
-                all_m = [MantraDto.model_validate(x) for x in self._static.get_veda_mantras("sama")]
+                all_m = [
+                    MantraDto.model_validate(x)
+                    for x in self._static.get_veda_mantras("sama")
+                ]
         return paginate(all_m, page, size)
 
     async def get_atharva_veda_mantras(self, page: int, size: int) -> List[MantraDto]:
@@ -217,18 +254,28 @@ class DefaultVedaService:
         if rows:
             all_m = _mantras_from_rows(rows, "Atharva")
         else:
-            all_m = [MantraDto.model_validate(x) for x in self._static.get_veda_mantras("atharva")]
+            all_m = [
+                MantraDto.model_validate(x)
+                for x in self._static.get_veda_mantras("atharva")
+            ]
         return paginate(all_m, page, size)
 
     async def get_upanishads(self) -> List[UpanishadDto]:
-        return [UpanishadDto.model_validate(x) for x in self._static.get_all_upanishads()]
+        return [
+            UpanishadDto.model_validate(x) for x in self._static.get_all_upanishads()
+        ]
 
     async def get_upanishad(self, upanishad_id: str) -> UpanishadDto:
         for u in self._static.get_all_upanishads():
             if str(u.get("id", "")).lower() == upanishad_id.lower():
                 return UpanishadDto.model_validate(u)
-        names = [str(item.get("id") or item.get("name") or "") for item in self._static.get_all_upanishads()]
-        raise ResourceNotFoundError("Upanishad", upanishad_id, suggestion=suggestion_for(upanishad_id, names))
+        names = [
+            str(item.get("id") or item.get("name") or "")
+            for item in self._static.get_all_upanishads()
+        ]
+        raise ResourceNotFoundError(
+            "Upanishad", upanishad_id, suggestion=suggestion_for(upanishad_id, names)
+        )
 
     async def get_upanishad_verses(
         self, upanishad_id: str, chapter: int, page: int, size: int
@@ -243,12 +290,16 @@ class DefaultVedaService:
             )
         return paginate([UpanishadVerseDto.model_validate(x) for x in rows], page, size)
 
-    async def get_upanishad_verse(self, upanishad_id: str, chapter: int, verse: int) -> UpanishadVerseDto:
+    async def get_upanishad_verse(
+        self, upanishad_id: str, chapter: int, verse: int
+    ) -> UpanishadVerseDto:
         all_v = await self.get_upanishad_verses(upanishad_id, chapter, 0, JAVA_MAX_INT)
         for v in all_v:
             if v.verse == verse:
                 return v
-        raise ResourceNotFoundError("Upanishad verse", f"{upanishad_id}/{chapter}/{verse}")
+        raise ResourceNotFoundError(
+            "Upanishad verse", f"{upanishad_id}/{chapter}/{verse}"
+        )
 
     async def get_random_vedic_mantra(self) -> MantraDto:
         pool = self._static.get_veda_mantras(None)
@@ -265,5 +316,7 @@ class DefaultVedaService:
         if mapped:
             return mapped
         pool = self._static.get_mantras(None, 9999)
-        names = [str(item.get("deity") or "") for item in pool] + [str(item.get("name") or "") for item in pool]
+        names = [str(item.get("deity") or "") for item in pool] + [
+            str(item.get("name") or "") for item in pool
+        ]
         ensure_found(mapped, resource="Mantra", identifier=deity, available=names)

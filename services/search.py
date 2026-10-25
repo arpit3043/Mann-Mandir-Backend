@@ -130,9 +130,14 @@ def _field_hit(term: str, value: str) -> float:
         return 0.75
     for word in value_tokens:
         compact_word = compact(word)
-        if compact_word.startswith(compact_term) or compact_term.startswith(compact_word):
+        if compact_word.startswith(compact_term) or compact_term.startswith(
+            compact_word
+        ):
             return 0.7
-        if len(compact_term) >= 3 and SequenceMatcher(None, compact_term, compact_word).ratio() >= 0.78:
+        if (
+            len(compact_term) >= 3
+            and SequenceMatcher(None, compact_term, compact_word).ratio() >= 0.78
+        ):
             return 0.55
     return 0.0
 
@@ -146,7 +151,9 @@ def _score(doc: _Doc, terms: Sequence[str], types: Set[str]) -> float:
     unique_terms = list(dict.fromkeys(terms))
     if types:
         identity_hit = any(
-            _field_hit(term, doc.deity) or _field_hit(term, doc.title) or _field_hit(term, doc.id)
+            _field_hit(term, doc.deity)
+            or _field_hit(term, doc.title)
+            or _field_hit(term, doc.id)
             for term in unique_terms
         )
         if not identity_hit:
@@ -329,7 +336,14 @@ class DefaultSearchService(SearchService):
                         title=stotram.name,
                         snippet=stotram.description or "",
                         deity=stotram.deity,
-                        body=_join([stotram.name, stotram.deity, stotram.description, stotram.author]),
+                        body=_join(
+                            [
+                                stotram.name,
+                                stotram.deity,
+                                stotram.description,
+                                stotram.author,
+                            ]
+                        ),
                     )
                 )
         except Exception:
@@ -374,7 +388,12 @@ class DefaultSearchService(SearchService):
                         title=chapter.translation or chapter.name,
                         snippet=chapter.summary or "",
                         body=_join(
-                            [chapter.name, chapter.translation, chapter.transliteration, chapter.summary]
+                            [
+                                chapter.name,
+                                chapter.translation,
+                                chapter.transliteration,
+                                chapter.summary,
+                            ]
                         ),
                     )
                 )
@@ -407,7 +426,9 @@ class DefaultSearchService(SearchService):
                         source="local",
                         title=upanishad.name,
                         snippet=upanishad.description or "",
-                        body=_join([upanishad.id, upanishad.name, upanishad.description]),
+                        body=_join(
+                            [upanishad.id, upanishad.name, upanishad.description]
+                        ),
                     )
                 )
         except Exception:

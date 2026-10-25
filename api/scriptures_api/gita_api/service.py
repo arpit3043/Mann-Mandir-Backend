@@ -44,12 +44,16 @@ def _localized_text(value: Any) -> str:
     return str(value) if value else ""
 
 
-def _map_theaum_chapter(c: Dict[str, Any], *, include_summary: bool = True) -> GitaChapterDto:
+def _map_theaum_chapter(
+    c: Dict[str, Any], *, include_summary: bool = True
+) -> GitaChapterDto:
     summary = _localized_text(c.get("summary")) if include_summary else None
     return GitaChapterDto(
         number=_as_int(c.get("chapter_number", c.get("number"))),
         name=str(c.get("name", "")),
-        translation=str(c.get("translation") or _localized_text(c.get("meaning")) or ""),
+        translation=str(
+            c.get("translation") or _localized_text(c.get("meaning")) or ""
+        ),
         transliteration=str(c.get("transliteration", "")),
         summary=summary or None,
         versesCount=_as_int(c.get("verses_count", c.get("versesCount"))),
@@ -96,11 +100,15 @@ def _map_dharmic_verse(
         shloka=str(v.get("text") or v.get("slok") or v.get("shloka") or "") or None,
         transliteration=str(v.get("transliteration") or "") or None,
         translations=translations or None,
-        commentaries=_pick_commentaries(v.get("commentaries")) if include_commentaries else None,
+        commentaries=_pick_commentaries(v.get("commentaries"))
+        if include_commentaries
+        else None,
     )
 
 
-def _map_gita_verse(chapter_number: int, v: Dict[str, Any], verse_number: Optional[int] = None) -> GitaVerseDto:
+def _map_gita_verse(
+    chapter_number: int, v: Dict[str, Any], verse_number: Optional[int] = None
+) -> GitaVerseDto:
     verse = verse_number if verse_number is not None else _as_int(v.get("verse"))
     translations: Dict[str, str] = {}
     if isinstance(v.get("translations"), dict):
@@ -145,12 +153,19 @@ class DefaultGitaService(GitaService):
         self._static = static
 
     def _static_chapters(self, *, include_summary: bool) -> List[GitaChapterDto]:
-        return [_map_theaum_chapter(x, include_summary=include_summary) for x in self._static.get_gita_chapters()]
+        return [
+            _map_theaum_chapter(x, include_summary=include_summary)
+            for x in self._static.get_gita_chapters()
+        ]
 
     async def get_gita_chapters(self) -> List[GitaChapterDto]:
         raw = await self._gita_theaum.get_all_chapters()
         if raw:
-            return [_map_theaum_chapter(x, include_summary=False) for x in raw if isinstance(x, dict)]
+            return [
+                _map_theaum_chapter(x, include_summary=False)
+                for x in raw
+                if isinstance(x, dict)
+            ]
         return self._static_chapters(include_summary=False)
 
     async def get_gita_chapter(self, chapter_number: int) -> GitaChapterDto:
@@ -168,17 +183,23 @@ class DefaultGitaService(GitaService):
             suggestion="Try searching: 1",
         )
 
-    async def _dharmic_verses(self, chapter_number: int, *, include_commentaries: bool) -> List[GitaVerseDto]:
+    async def _dharmic_verses(
+        self, chapter_number: int, *, include_commentaries: bool
+    ) -> List[GitaVerseDto]:
         raw = await self._dharmic.get_gita_chapter_verses(chapter_number)
         if not raw:
             return []
         return [
-            _map_dharmic_verse(chapter_number, v, include_commentaries=include_commentaries)
+            _map_dharmic_verse(
+                chapter_number, v, include_commentaries=include_commentaries
+            )
             for v in raw
             if isinstance(v, dict)
         ]
 
-    async def get_gita_verses_by_chapter(self, chapter_number: int) -> List[GitaVerseDto]:
+    async def get_gita_verses_by_chapter(
+        self, chapter_number: int
+    ) -> List[GitaVerseDto]:
         verses = await self._dharmic_verses(chapter_number, include_commentaries=False)
         if verses:
             return verses
@@ -193,7 +214,9 @@ class DefaultGitaService(GitaService):
             suggestion="Try searching: 1",
         )
 
-    async def get_gita_verse(self, chapter_number: int, verse_number: int) -> GitaVerseDto:
+    async def get_gita_verse(
+        self, chapter_number: int, verse_number: int
+    ) -> GitaVerseDto:
         verses = await self._dharmic_verses(chapter_number, include_commentaries=True)
         for verse in verses:
             if verse.verse == verse_number:

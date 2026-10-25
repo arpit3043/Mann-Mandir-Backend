@@ -33,20 +33,72 @@ _TITHI_NAMES = [
 ]
 _KRISHNA_15 = "Amavasya"
 _NAKSHATRAS = [
-    "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashirsha", "Ardra",
-    "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni", "Uttara Phalguni",
-    "Hasta", "Chitra", "Swati", "Vishakha", "Anuradha", "Jyeshtha",
-    "Mula", "Purva Ashadha", "Uttara Ashadha", "Shravana", "Dhanishta", "Shatabhisha",
-    "Purva Bhadrapada", "Uttara Bhadrapada", "Revati",
+    "Ashwini",
+    "Bharani",
+    "Krittika",
+    "Rohini",
+    "Mrigashirsha",
+    "Ardra",
+    "Punarvasu",
+    "Pushya",
+    "Ashlesha",
+    "Magha",
+    "Purva Phalguni",
+    "Uttara Phalguni",
+    "Hasta",
+    "Chitra",
+    "Swati",
+    "Vishakha",
+    "Anuradha",
+    "Jyeshtha",
+    "Mula",
+    "Purva Ashadha",
+    "Uttara Ashadha",
+    "Shravana",
+    "Dhanishta",
+    "Shatabhisha",
+    "Purva Bhadrapada",
+    "Uttara Bhadrapada",
+    "Revati",
 ]
 _YOGA_NAMES = [
-    "Vishkambha", "Priti", "Ayushman", "Saubhagya", "Shobhana", "Atiganda",
-    "Sukarma", "Dhriti", "Shoola", "Ganda", "Vriddhi", "Dhruva",
-    "Vyaghata", "Harshana", "Vajra", "Siddhi", "Vyatipata", "Variyan",
-    "Parigha", "Shiva", "Siddha", "Sadhya", "Shubha", "Shukla",
-    "Brahma", "Indra", "Vaidhriti",
+    "Vishkambha",
+    "Priti",
+    "Ayushman",
+    "Saubhagya",
+    "Shobhana",
+    "Atiganda",
+    "Sukarma",
+    "Dhriti",
+    "Shoola",
+    "Ganda",
+    "Vriddhi",
+    "Dhruva",
+    "Vyaghata",
+    "Harshana",
+    "Vajra",
+    "Siddhi",
+    "Vyatipata",
+    "Variyan",
+    "Parigha",
+    "Shiva",
+    "Siddha",
+    "Sadhya",
+    "Shubha",
+    "Shukla",
+    "Brahma",
+    "Indra",
+    "Vaidhriti",
 ]
-_WEEKDAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+_WEEKDAYS = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+]
 _WEEKDAYS_HI = ["सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार", "रविवार"]
 _HOROSCOPE_URL = "https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily"
 
@@ -54,7 +106,10 @@ _HOROSCOPE_URL = "https://horoscope-app-api.vercel.app/api/v1/get-horoscope/dail
 def _julian_day(moment: dt.datetime) -> float:
     y = moment.year
     m = moment.month
-    d = moment.day + (moment.hour + moment.minute / 60.0 + moment.second / 3600.0) / 24.0
+    d = (
+        moment.day
+        + (moment.hour + moment.minute / 60.0 + moment.second / 3600.0) / 24.0
+    )
     if m <= 2:
         y -= 1
         m += 12
@@ -85,7 +140,9 @@ def _panchang_for(moment: dt.datetime) -> dict[str, Any]:
     tithi_index = int(elongation / 12)
     if tithi_index >= 15:
         paksha = "Krishna"
-        tithi_name = _KRISHNA_15 if tithi_index == 29 else _TITHI_NAMES[tithi_index - 15]
+        tithi_name = (
+            _KRISHNA_15 if tithi_index == 29 else _TITHI_NAMES[tithi_index - 15]
+        )
         tithi_number = tithi_index - 14
     else:
         paksha = "Shukla"
@@ -135,7 +192,11 @@ class DefaultPanchangService(PanchangService):
             parsed = dt.date.fromisoformat(date.strip())
         except ValueError as exc:
             raise ValueError("date must be YYYY-MM-DD") from exc
-        noon = dt.datetime.combine(parsed, dt.time(12, 0), tzinfo=dt.timezone(dt.timedelta(hours=5, minutes=30)))
+        noon = dt.datetime.combine(
+            parsed,
+            dt.time(12, 0),
+            tzinfo=dt.timezone(dt.timedelta(hours=5, minutes=30)),
+        )
         return _panchang_for(noon)
 
     async def get_daily_horoscope(self, sign: str) -> Any:
@@ -155,9 +216,18 @@ class DefaultPanchangService(PanchangService):
             resp = await self._http.get(url)
             if resp.status_code == 200:
                 payload = resp.json()
-                data = payload.get("data", payload) if isinstance(payload, dict) else payload
+                data = (
+                    payload.get("data", payload)
+                    if isinstance(payload, dict)
+                    else payload
+                )
                 return {"sign": cleaned, "day": "today", "horoscope": data}
         except Exception as exc:
             logger.warning("Daily horoscope upstream failed: %s", exc)
         panchang = _panchang_for(dt.datetime.now(dt.timezone.utc).astimezone())
-        return {"sign": cleaned, "day": "today", "panchang": panchang, "horoscope": None}
+        return {
+            "sign": cleaned,
+            "day": "today",
+            "panchang": panchang,
+            "horoscope": None,
+        }
