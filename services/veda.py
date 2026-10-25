@@ -151,7 +151,7 @@ def _parse_json_verses(
                 sanskrit=sanskrit,
                 transliteration=str(item.get("transliteration") or "") or None,
                 translation=str(item.get("english") or item.get("translation") or "")
-                or None,
+                            or None,
             )
         )
     return verses
