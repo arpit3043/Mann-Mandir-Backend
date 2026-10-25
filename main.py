@@ -26,6 +26,7 @@ from api.panchang_api import router as panchang_router
 from core.cache import RedisCache, build_redis_cache
 from core.config import Settings
 from core.exceptions import ResourceNotFoundError
+from core.request_context import current_request
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -149,6 +150,15 @@ app.add_middleware(
 )
 
 
+@app.middleware("http")
+async def bind_request_context(request: Request, call_next):
+    token = current_request.set(request)
+    try:
+        return await call_next(request)
+    finally:
+        current_request.reset(token)
+
+
 @app.get("/")
 async def root():
     return {"status": "ok", "service": "mann-mandir-backend", "version": __version__}
@@ -161,9 +171,12 @@ async def health_status():
 
 @app.exception_handler(ResourceNotFoundError)
 async def handle_not_found(_: Request, exc: ResourceNotFoundError):
+    error_detail = {"code": "NOT_FOUND", "message": str(exc)}
+    if getattr(exc, "suggestion", None):
+        error_detail["suggestion"] = exc.suggestion
     body = {
         "success": False,
-        "errorDetail": {"code": "NOT_FOUND", "message": str(exc)},
+        "errorDetail": error_detail,
     }
     return JSONResponse(status_code=404, content=body)
 

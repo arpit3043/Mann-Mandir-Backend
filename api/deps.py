@@ -6,6 +6,8 @@ from fastapi import Depends, Request
 
 from clients.upstream import (
     DharmicDataClient,
+    DrikPanchangChalisaClient,
+    DrikPanchangStotramClient,
     GitaTheAumClient,
     GitaVedicClient,
     HanumanChalisaClient,
@@ -76,6 +78,8 @@ def build_services(
 ) -> AppServices:
     static = StaticContentRegistry()
     hanuman = HanumanChalisaClient(http_client, settings, cache)
+    drik = DrikPanchangChalisaClient(http_client, settings, cache)
+    drik_stotram = DrikPanchangStotramClient(http_client, settings, cache)
     havyaka = HavyakaApiClient(http_client, settings, cache)
     shloka = ShlokaApiClient(http_client, settings, cache)
     gita_theaum = GitaTheAumClient(http_client, settings, cache)
@@ -84,17 +88,17 @@ def build_services(
     rig = RigVedaApiClient(http_client, settings, cache)
 
     aarti = DefaultAartiService(static)
-    chalisa = DefaultChalisaService(hanuman, static)
-    stotram = DefaultStotramService(static)
+    chalisa = DefaultChalisaService(hanuman, drik, static)
+    stotram = DefaultStotramService(static, drik_stotram)
     mantra = DefaultMantraService(havyaka, shloka, static)
 
-    gita = DefaultGitaService(gita_theaum, gita_vedic, static)
-    ramayana = DefaultRamayanaService(static)
-    mahabharata = DefaultMahabharataService(static)
+    gita = DefaultGitaService(gita_theaum, gita_vedic, dharmic, static)
+    ramayana = DefaultRamayanaService(dharmic, static)
+    mahabharata = DefaultMahabharataService(dharmic, static)
 
     veda = DefaultVedaService(rig, havyaka, dharmic, static)
     search = DefaultSearchService(aarti, chalisa, stotram, mantra, gita, veda)
-    panchang = DefaultPanchangService()
+    panchang = DefaultPanchangService(http_client)
     return AppServices(
         aarti=aarti,
         chalisa=chalisa,

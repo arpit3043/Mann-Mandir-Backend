@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import math
 from datetime import datetime, timezone
 from typing import Any, Generic, Optional, TypeVar
 
@@ -48,8 +49,6 @@ class ApiResponse(BaseModel, Generic[T]):
 
 
 def meta_from_totals(page: int, size: int, total: int) -> PaginationMeta:
-    import math
-
     if size <= 0:
         size = 20
     total_pages = int(math.ceil(total / size)) if total > 0 else 0

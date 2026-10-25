@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import asyncio
+import datetime
+import json as _json
 import logging
 import time as _time
-import datetime
-from typing import Optional, Dict, Any, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import httpx
 from fastapi import APIRouter, Request, HTTPException
@@ -11,6 +13,9 @@ from fastapi.responses import JSONResponse
 
 from api.responses import ok_payload
 from core.config import Settings
+from core.exceptions import ResourceNotFoundError
+from core.suggestions import suggestion_for
+from core.zodiac import ZODIAC_SIGNS
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +59,14 @@ async def _proxy_json(
 
 @router.get("/horoscope/daily")
 async def proxy_daily_horoscope(request: Request, sign: str):
-    url = f"https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily?sign={sign}&day=today"
+    cleaned = (sign or "").strip().lower()
+    if cleaned not in ZODIAC_SIGNS:
+        raise ResourceNotFoundError(
+            "Horoscope sign",
+            sign,
+            suggestion=suggestion_for(cleaned, ZODIAC_SIGNS),
+        )
+    url = f"https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily?sign={cleaned}&day=today"
     settings: Settings = request.app.state.settings
     timeout = httpx.Timeout(
         settings.webclient_timeout_read,
@@ -134,9 +146,6 @@ async def proxy_panchang(
     minutes: int = 0,
     seconds: int = 0,
 ):
-    import asyncio
-    import json as _json
-
     resolved_tz = tz if tz is not None else 5.5
 
     # ------------------------------------------------------------------

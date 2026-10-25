@@ -12,20 +12,21 @@ class Settings(BaseSettings):
     api_prefix: str = "/api/v1"
 
     webclient_timeout_connect: float = 4.0
-    webclient_timeout_read: float = 8.0
+    webclient_timeout_read: float = 25.0
     webclient_timeout_write: float = 5.0
 
     api_havyaka_base_url: str = "https://havyaka-rest-api-gaonkarbhai.vercel.app/api/v1"
     api_chalisa_hanuman_base_url: str = (
         "https://raw.githubusercontent.com/anonatul/hanuman-chalisa-api/main/data"
     )
+    api_drikpanchang_base_url: str = "https://www.drikpanchang.com"
     api_gita_theaum_base_url: str = "https://vedicscriptures.github.io"
     api_gita_vedic_base_url: str = "https://vedicscriptures.github.io"
     api_shloka_base_url: str = "https://shloka.onrender.com"
     api_rigveda_base_url: str = "https://indica-1hwj.onrender.com/rv/v3"
     api_ramayana_base_url: str = "https://vedicscriptures.github.io"
     api_dharmicdata_base_url: str = (
-        "https://raw.githubusercontent.com/dharmicdata/dharmic-data/main"
+        "https://raw.githubusercontent.com/bhavykhatri/DharmicData/main"
     )
     # Free Astrology API (server-side proxy)
     astro_api_base: str = ""

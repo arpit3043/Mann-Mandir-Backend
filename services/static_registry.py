@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import random
 from typing import Any, Dict, List, Optional
 
 ALL_AARTIS: List[Dict[str, Any]] = [
@@ -229,7 +230,67 @@ VEDA_MANTRA_POOL: List[Dict[str, Any]] = [
         "veda": "Sama",
         "tags": ["agni", "sama"],
     },
+    {
+        "id": "m7",
+        "name": "Hanuman Mool Mantra",
+        "devanagari": "ॐ हं हनुमते नमः",
+        "transliteration": "Om Ham Hanumate Namah",
+        "meaning": "I bow to Lord Hanuman, the embodiment of strength and devotion.",
+        "deity": "Hanuman",
+        "veda": "Ramayana",
+        "tags": ["hanuman", "mangalvar", "tuesday"],
+    },
+    {
+        "id": "m8",
+        "name": "Ganesh Mool Mantra",
+        "devanagari": "ॐ गं गणपतये नमः",
+        "transliteration": "Om Gam Ganapataye Namah",
+        "meaning": "I bow to Lord Ganesha, remover of obstacles.",
+        "deity": "Ganesha",
+        "veda": "Atharva",
+        "tags": ["ganesha", "budhvar", "wednesday"],
+    },
+    {
+        "id": "m9",
+        "name": "Mahalakshmi Mantra",
+        "devanagari": "ॐ श्रीं महालक्ष्म्यै नमः",
+        "transliteration": "Om Shreem Mahalakshmyai Namah",
+        "meaning": "I bow to Goddess Mahalakshmi, bestower of prosperity.",
+        "deity": "Lakshmi",
+        "veda": "Rig",
+        "tags": ["lakshmi", "shukravar", "friday"],
+    },
+    {
+        "id": "m10",
+        "name": "Shani Dev Mantra",
+        "devanagari": "ॐ शं शनैश्चराय नमः। नीलांजनसमाभासं रविपुत्रं यमाग्रजम्। छायामार्तण्डसम्भूतं तं नमामि शनैश्चरम्॥",
+        "transliteration": "Om Sham Shanaischaraya Namah. Neelanjanasamaabhasam raviputram yamagrajam, chhaya martanda sambhutam tam namami shanaishcharam.",
+        "meaning": "I bow to Shani Dev, son of the Sun, whose grace removes hardship and delay.",
+        "deity": "Shani",
+        "veda": "Jyotish",
+        "tags": ["shani", "shanivar", "saturday"],
+    },
 ]
+
+# Hindu vara (weekday) ruling deities, Monday=0
+WEEKDAY_MANTRA_IDS = {
+    0: "m3",   # Monday — Shiva
+    1: "m7",   # Tuesday — Hanuman
+    2: "m8",   # Wednesday — Ganesha
+    3: "m4",   # Thursday — Vishnu
+    4: "m9",   # Friday — Lakshmi
+    5: "m10",  # Saturday — Shani
+    6: "m1",   # Sunday — Surya
+}
+WEEKDAY_DEITIES = {
+    0: ("Monday", "सोमवार", "Shiva"),
+    1: ("Tuesday", "मंगलवार", "Hanuman"),
+    2: ("Wednesday", "बुधवार", "Ganesha"),
+    3: ("Thursday", "गुरुवार", "Vishnu"),
+    4: ("Friday", "शुक्रवार", "Lakshmi"),
+    5: ("Saturday", "शनिवार", "Shani"),
+    6: ("Sunday", "रविवार", "Surya"),
+}
 
 GITA_CHAPTERS: List[Dict[str, Any]] = [
     {"number": 1, "name": "अर्जुन विषाद योग", "translation": "Arjuna Vishada Yoga", "transliteration": "Arjuna Vishada Yoga", "versesCount": 47, "summary": "Arjuna's grief on Kurukshetra"},
@@ -317,16 +378,260 @@ HANUMAN_CHALISA_VERSES: List[Dict[str, Any]] = [
     },
 ]
 
-GANESH_CHALISA_VERSES: List[Dict[str, Any]] = [
-    {
-        "verseNumber": 1,
-        "type": "Doha",
-        "devanagari": "जय गणपति सद्गुण सदन, कविवर बदन कृपाल। विघ्न हरण मंगल करण, जय जय गिरिजा लाल॥",
-        "transliteration": "Jai Ganapati sadgun sadan, kavivar badan kripal. Vighna haran mangal karan, jai jai Girija lal.",
-        "englishTranslation": "Victory to Ganapati, abode of virtues, gracious to poets, remover of obstacles.",
-        "tags": ["Doha"],
+def _chalisa_verse(
+    number: int,
+    verse_type: str,
+    devanagari: str,
+    transliteration: str,
+    english: str,
+) -> Dict[str, Any]:
+    return {
+        "verseNumber": number,
+        "type": verse_type,
+        "devanagari": devanagari,
+        "transliteration": transliteration,
+        "englishTranslation": english,
+        "tags": [verse_type],
     }
+
+
+GANESH_CHALISA_VERSES: List[Dict[str, Any]] = [
+    _chalisa_verse(
+        1,
+        "Doha",
+        "जय गणपति सद्गुण सदन, कविवर बदन कृपाल। विघ्न हरण मंगल करण, जय जय गिरिजा लाल॥",
+        "Jai Ganapati sadgun sadan, kavivar badan kripal. Vighna haran mangal karan, jai jai Girija lal.",
+        "Victory to Ganapati, abode of virtues, gracious to poets, remover of obstacles.",
+    ),
+    _chalisa_verse(
+        2,
+        "Chaupai",
+        "जय जय जय गणपति गणराजू। रंकहु दाहिन सिद्धि निवाजू॥",
+        "Jai jai jai Ganapati Ganaraju. Rankahu dahin siddhi nivaju.",
+        "Glory to Ganesha, king of the ganas, who grants success even to the poorest.",
+    ),
+    _chalisa_verse(
+        3,
+        "Chaupai",
+        "एक दंत दयावंत सामी। चरण कमल वंदौं अभिरामी॥",
+        "Ek dant dayavant swami. Charan kamal vandau abhirami.",
+        "I bow to the lotus feet of the one-tusked, compassionate Lord.",
+    ),
+    _chalisa_verse(
+        4,
+        "Chaupai",
+        "लंबोदर पंचानन सोहे। चक्र कुठार त्रिशूल धरे मोहे॥",
+        "Lambodar panchanan sohe. Chakra kuthar trishul dhare mohe.",
+        "The large-bellied, five-faced Lord shines, holding discus, axe, and trident.",
+    ),
 ]
+
+SHIVA_CHALISA_VERSES: List[Dict[str, Any]] = [
+    _chalisa_verse(
+        1,
+        "Doha",
+        "जय गणेश गिरिजा सुवन, मंगल मूल सुजान। कहत अयोध्या दास तुम, देहु अभय वरदान॥",
+        "Jai Ganesh Girija suvan, mangal mool sujaan. Kahat Ayodhya Das tum, dehu abhay vardaan.",
+        "Glory to Ganesha, son of Girija, source of auspicious wisdom. Ayodhya Das asks you for the blessing of fearlessness.",
+    ),
+    _chalisa_verse(
+        2,
+        "Chaupai",
+        "जय गिरिजा पति दीन दयाला। सदा करत सन्तन प्रतिपाला॥",
+        "Jai Girija pati deen dayala. Sada karat santan pratipala.",
+        "Glory to the Lord of Girija, compassionate to the humble, always protecting the saints.",
+    ),
+    _chalisa_verse(
+        3,
+        "Chaupai",
+        "भाल चन्द्रमा सोहत नीके। कानन कुण्डल नागफनी के॥",
+        "Bhal chandrama sohat neeke. Kanan kundal naagphani ke.",
+        "The moon shines beautifully on his forehead; serpent-hoods adorn his ears as earrings.",
+    ),
+    _chalisa_verse(
+        4,
+        "Chaupai",
+        "अंग गौर शिर गंग बहाये। मुण्डमाल तन क्षार लगाये॥",
+        "Ang gaur shir Gang bahaye. Mundmaal tan kshar lagaye.",
+        "His fair body bears the Ganga on his head, a garland of skulls, and sacred ash.",
+    ),
+    _chalisa_verse(
+        5,
+        "Chaupai",
+        "वस्त्र व्याघ्र छाला अंग सोहे। शिव शंकर अस नाम तिन्हो के॥",
+        "Vastr vyaghra chhala ang sohe. Shiv Shankar as naam tinho ke.",
+        "A tiger-skin garment graces his body; he is known as Shiva and Shankara.",
+    ),
+    _chalisa_verse(
+        6,
+        "Chaupai",
+        "मन कामना को पूरन करई। जो कोई शिव ध्यान में परई॥",
+        "Man kamna ko pooran karai. Jo koi Shiv dhyan mein parai.",
+        "Whoever meditates on Shiva has every heartfelt wish fulfilled.",
+    ),
+    _chalisa_verse(
+        7,
+        "Chaupai",
+        "जय शिव शंकर हो हर नाथा। सुर नर मुनि सब करते साथा॥",
+        "Jai Shiv Shankar ho Har natha. Sur nar muni sab karate satha.",
+        "Glory to Shiva Shankara, Lord Hara; gods, humans, and sages all take refuge in you.",
+    ),
+    _chalisa_verse(
+        8,
+        "Chaupai",
+        "हर हर महादेव रटत रहैं। अनत न दूजा मन क्रम कहैं॥",
+        "Har Har Mahadev ratat rahain. Anat na dooja man kram kahain.",
+        "They keep repeating Har Har Mahadev and hold no other in thought, word, or deed.",
+    ),
+    _chalisa_verse(
+        9,
+        "Chaupai",
+        "काशी में प्रकट भए भवानी। त्रिपुरारि त्रैलोक पति जानी॥",
+        "Kashi mein prakat bhae Bhavani. Tripurari trailok pati jaani.",
+        "In Kashi, Bhavani appeared; know him as Tripurari, lord of the three worlds.",
+    ),
+    _chalisa_verse(
+        10,
+        "Chaupai",
+        "नन्दि गणेश सहित शिव राजा। नाचत नित्य मुदित मन माजा॥",
+        "Nandi Ganesh sahit Shiv raja. Nachat nitya mudit man maja.",
+        "King Shiva, with Nandi and Ganesha, dances daily in joyful play.",
+    ),
+    _chalisa_verse(
+        11,
+        "Chaupai",
+        "कर्पूर गौर करुणा अवतार। संकट हरो मम भक्ति विस्तार॥",
+        "Karpoor gaur karuna avatar. Sankat haro mam bhakti vistaar.",
+        "Camphor-white incarnation of compassion, remove my troubles and expand my devotion.",
+    ),
+    _chalisa_verse(
+        12,
+        "Chaupai",
+        "त्रिशूल डमरू डमरु बजाये। प्रेम सहित शिव भक्त रिझाये॥",
+        "Trishul damaru damaru bajaye. Prem sahit Shiv bhakt rijhaye.",
+        "He sounds the damaru and holds the trident, delighting devotees with love.",
+    ),
+    _chalisa_verse(
+        13,
+        "Chaupai",
+        "जो यह शिव चलिसा पढ़े। शिव कृपा से संकट कटे॥",
+        "Jo yeh Shiv Chalisa padhe. Shiv kripa se sankat kate.",
+        "Whoever recites this Shiv Chalisa has afflictions cut away by Shiva's grace.",
+    ),
+    _chalisa_verse(
+        14,
+        "Doha",
+        "नित्य नेम जो गावे शिव चरitra, कहत अयोध्यादास। ताहि मिलै कल्याण निधि, मिटै सकल पीर त्रास॥",
+        "Nitya nem jo gave Shiv charitra, kahat Ayodhya Das. Tahi milai kalyan nidhi, mitai sakal peer traas.",
+        "Ayodhya Das says: whoever sings Shiva's glory daily receives the treasure of welfare and all pain is destroyed.",
+    ),
+]
+
+DURGA_CHALISA_VERSES: List[Dict[str, Any]] = [
+    _chalisa_verse(
+        1,
+        "Doha",
+        "नमो नमो दुर्गे सुख करनी। नमो नमो दुर्गे दुख हरनी॥",
+        "Namo namo Durge sukh karani. Namo namo Durge dukh harani.",
+        "I bow to Durga, giver of joy and remover of sorrow.",
+    ),
+    _chalisa_verse(
+        2,
+        "Chaupai",
+        "निरंकार तेरी गुफा में, जपे जपै जो कोई नरो।",
+        "Nirankar teri gufa mein, jape japai jo koi naro.",
+        "Whoever chants you in the cave of the formless attains your grace.",
+    ),
+    _chalisa_verse(
+        3,
+        "Chaupai",
+        "शोक निवारण मंगल करणी। जय जय अम्बे दुर्गति हरणी॥",
+        "Shok nivaran mangal karani. Jai jai Ambe durgati harani.",
+        "Glory to Amba, who ends grief and removes misfortune.",
+    ),
+]
+
+LAKSHMI_CHALISA_VERSES: List[Dict[str, Any]] = [
+    _chalisa_verse(
+        1,
+        "Doha",
+        "मातु लक्ष्मी करहु कल्याण। धन जन कीरति सुख सम्पदा, दीजै मोहि प्रधान॥",
+        "Matu Lakshmi karahu kalyan. Dhan jan kirti sukh sampada, dijai mohi pradhan.",
+        "Mother Lakshmi, bless me with welfare, wealth, people, fame, and happiness.",
+    ),
+    _chalisa_verse(
+        2,
+        "Chaupai",
+        "जय जय मातु पद्मावती, जय हरि-वल्लभे मैया।",
+        "Jai jai Matu Padmavati, jai Hari-vallabhe maiya.",
+        "Glory to Mother Padmavati, beloved of Hari.",
+    ),
+    _chalisa_verse(
+        3,
+        "Chaupai",
+        "तुम समरथ सब के कल्याण करन हारी। दारिद्र हरन मंगल करन, भव-भय हरणि हमारी॥",
+        "Tum samrath sab ke kalyan karan hari. Daridra haran mangal karan, bhav-bhay harani hamari.",
+        "You are able to bless all; you remove poverty and the fear of worldly existence.",
+    ),
+]
+
+SARASWATI_CHALISA_VERSES: List[Dict[str, Any]] = [
+    _chalisa_verse(
+        1,
+        "Doha",
+        "जय जय जय वीणावादिनि, जय जय जय ज्ञानदायिनि॥",
+        "Jai jai jai Veena-vadini, jai jai jai gyan-dayini.",
+        "Glory to the veena-player, glory to the giver of knowledge.",
+    ),
+    _chalisa_verse(
+        2,
+        "Chaupai",
+        "तुम सम ज्ञान प्रदायिनी देवी। मोह अज्ञान निवारण सेवी॥",
+        "Tum sam gyan pradayini devi. Moh agyan nivaran sevi.",
+        "You are the goddess who grants knowledge and removes ignorance and delusion.",
+    ),
+    _chalisa_verse(
+        3,
+        "Chaupai",
+        "शारदे मातु दया विस्तारो। बुद्धि विवेक हमैं उपकारो॥",
+        "Sharade matu daya vistaro. Buddhi vivek hamain upkaro.",
+        "Mother Sharada, extend your compassion and bless us with intellect and discernment.",
+    ),
+]
+
+RAM_CHALISA_VERSES: List[Dict[str, Any]] = [
+    _chalisa_verse(
+        1,
+        "Doha",
+        "श्री रामचन्द्र कृपालु भजु मन, हरण भव भय दारुणम्।",
+        "Shri Ramchandra kripalu bhaju man, haran bhav bhay daarunam.",
+        "O mind, worship compassionate Ramachandra, who removes the terrible fear of worldly existence.",
+    ),
+    _chalisa_verse(
+        2,
+        "Chaupai",
+        "जय रघुवंश मुकुट मनि राम। सीता सहित सदा सुखधाम॥",
+        "Jai Raghuvansh mukut mani Ram. Sita sahit sada sukhdham.",
+        "Glory to Rama, jewel in the crown of the Raghu line, always the abode of joy with Sita.",
+    ),
+    _chalisa_verse(
+        3,
+        "Chaupai",
+        "दशरथनन्दन भक्त दयाला। संत समाज सदा प्रतिपाला॥",
+        "Dasharath-nandan bhakt dayala. Sant samaj sada pratipala.",
+        "Son of Dasharatha, kind to devotees, always the protector of the community of saints.",
+    ),
+]
+
+CHALISA_VERSES: Dict[str, List[Dict[str, Any]]] = {
+    "chalisa-hanuman": HANUMAN_CHALISA_VERSES,
+    "chalisa-ganesh": GANESH_CHALISA_VERSES,
+    "chalisa-shiva": SHIVA_CHALISA_VERSES,
+    "chalisa-durga": DURGA_CHALISA_VERSES,
+    "chalisa-lakshmi": LAKSHMI_CHALISA_VERSES,
+    "chalisa-saraswati": SARASWATI_CHALISA_VERSES,
+    "chalisa-ram": RAM_CHALISA_VERSES,
+}
 
 GITA_VERSES: Dict[int, List[Dict[str, Any]]] = {
     1: [
@@ -492,6 +797,54 @@ UPANISHAD_VERSES: List[Dict[str, Any]] = [
         "transliteration": "kurvanneveha karmani jijivisec chatam samah evam tvayi nanyatheto 'sti na karma lipyate nare",
         "translation": "Performing works here, one should wish to live a hundred years. Thus, and not otherwise, karma does not cling to a person.",
     },
+    {
+        "upanishadId": "kena",
+        "chapter": 1,
+        "verse": 1,
+        "sanskrit": "केनेषितं पतति प्रेषितं मनः केन प्राणः प्रथमः प्रैति युक्तः। केनेषितां वाचमिमां वदन्ति चक्षुः श्रोत्रं क उ देवो युनक्ति॥",
+        "transliteration": "keneshitam patati preshitam manah kena pranah prathamah praiti yuktah keneshitam vacam imam vadanti cakshuh shrotram ka u devo yunakti",
+        "translation": "By whom willed and directed does the mind light on its objects? By whom commanded does the first breath go forth? By whom is this speech willed that people speak? What god engages the eye and the ear?",
+    },
+    {
+        "upanishadId": "kena",
+        "chapter": 1,
+        "verse": 2,
+        "sanskrit": "श्रोत्रस्य श्रोत्रं मनसो मनो यद्वाचो ह वाचं स उ प्राणस्य प्राणः। चक्षुषश्चक्षुरतिमुच्य धीराः प्रेत्यास्माल्लोकादमृता भवन्ति॥",
+        "transliteration": "shrotrasya shrotram manaso mano yad vaco ha vacam sa u pranasya pranah cakshushash cakshur atimucya dhirah pretya smat lokad amrita bhavanti",
+        "translation": "It is the ear of the ear, the mind of the mind, the speech of speech, the breath of breath, the eye of the eye. The wise, giving these up, become immortal.",
+    },
+    {
+        "upanishadId": "katha",
+        "chapter": 1,
+        "verse": 1,
+        "sanskrit": "ॐ उशन् ह वै वाजश्रवसः सर्ववेदसं ददौ। तस्य ह नचिकेता नाम पुत्र आस॥",
+        "transliteration": "om ushan ha vai vajashravasah sarvavedasam dadau tasya ha nachiketa nama putra asa",
+        "translation": "Vajashrava, desiring reward, gave away all his wealth. He had a son named Nachiketa.",
+    },
+    {
+        "upanishadId": "mundaka",
+        "chapter": 1,
+        "verse": 1,
+        "sanskrit": "ॐ ब्रह्मा देवानां प्रथमः संबभूव विश्वस्य कर्ता भुवनस्य गोप्ता। स ब्रह्मविद्यां सर्वविद्याप्रतिष्ठामथर्वाय ज्येष्ठपुत्राय प्राह॥",
+        "transliteration": "om brahma devanam prathamah sambabhuva vishvasya karta bhuvanasya gopta sa brahmavidyam sarvavidyaprathishtham atharvaya jyeshthaputraya praha",
+        "translation": "Brahma, first among the gods, creator and protector of the world, taught Brahma-vidya, the foundation of all knowledge, to Atharvan, his eldest son.",
+    },
+    {
+        "upanishadId": "chandogya",
+        "chapter": 6,
+        "verse": 8,
+        "sanskrit": "स य एषोऽणिमैतदात्म्यमिदं सर्वं तत् सत्यं स आत्मा तत्त्वमसि श्वेतकेतो इति।",
+        "transliteration": "sa ya esho 'nimaitadatmyam idam sarvam tat satyam sa atma tattvamasi shvetaketo iti",
+        "translation": "That which is the subtle essence, this whole world has that as its self. That is the true. That is the Self. That thou art, Shvetaketu.",
+    },
+    {
+        "upanishadId": "brihadaranyaka",
+        "chapter": 1,
+        "verse": 1,
+        "sanskrit": "ॐ ऊषा वा अश्वस्य मेध्यस्य शिरः। सूर्यश्चक्षुर्वातः प्राणो व्यात्तमग्निर्वैश्वानरः संवत्सर आत्माश्वस्य मेध्यस्य।",
+        "transliteration": "om usha va asvasya medhyasya shirah suryash cakshur vatah prano vyattam agnir vaishvanarah samvatsara atma shvasya medhyasya",
+        "translation": "Dawn is the head of the sacrificial horse, the sun its eye, the wind its breath, the open mouth Vaishvanara fire, the year the body of the sacrificial horse.",
+    },
 ]
 
 ALL_UPANISHADS: List[Dict[str, Any]] = [
@@ -537,11 +890,9 @@ class StaticContentRegistry:
 
     def get_chalisa_verses(self, chalisa_id: str) -> List[Dict[str, Any]]:
         cid = chalisa_id.strip().lower()
-        if cid in {"hanuman", "chalisa-hanuman"}:
-            return [dict(v) for v in HANUMAN_CHALISA_VERSES]
-        if cid in {"ganesh", "chalisa-ganesh"}:
-            return [dict(v) for v in GANESH_CHALISA_VERSES]
-        return []
+        if not cid.startswith("chalisa-"):
+            cid = f"chalisa-{cid}"
+        return [dict(v) for v in CHALISA_VERSES.get(cid, [])]
 
     def get_ramayana_verses(self, kanda_id: str, sarga: int) -> List[Dict[str, Any]]:
         wanted = kanda_id.strip().lower()
@@ -579,10 +930,19 @@ class StaticContentRegistry:
         return None
 
     def get_random_mantra(self) -> Dict[str, Any]:
-        import random
-
         pool = list(VEDA_MANTRA_POOL)
         return dict(random.choice(pool)) if pool else {"text": "ॐ", "meaning": "The primordial sound, Brahman"}
+
+    def get_weekday_mantra(self, weekday: int) -> Dict[str, Any]:
+        mantra_id = WEEKDAY_MANTRA_IDS.get(weekday, WEEKDAY_MANTRA_IDS[0])
+        for row in VEDA_MANTRA_POOL:
+            if row.get("id") == mantra_id:
+                return dict(row)
+        deity = WEEKDAY_DEITIES.get(weekday, WEEKDAY_DEITIES[0])[2]
+        for row in VEDA_MANTRA_POOL:
+            if str(row.get("deity") or "").lower() == deity.lower():
+                return dict(row)
+        return self.get_random_mantra()
 
     def get_mantras(self, deity: Optional[str], limit: int) -> List[Dict[str, Any]]:
         out = []

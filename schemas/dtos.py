@@ -74,6 +74,10 @@ class MantraDto(BaseModel):
     deity: Optional[str] = None
     veda: Optional[str] = None
     tags: Optional[List[str]] = None
+    date: Optional[str] = None
+    weekday: Optional[str] = None
+    weekdayHindi: Optional[str] = None
+    rulingDeity: Optional[str] = None
 
 
 class GitaChapterDto(BaseModel):

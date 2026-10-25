@@ -12,10 +12,17 @@ from schemas.dtos import (
 
 class SearchService(Protocol):
     async def search(
-        self, query: str, domain: Optional[str], page: int, size: int
+        self,
+        query: str,
+        domain: Optional[str],
+        page: int,
+        size: int,
+        content_type: Optional[str] = None,
     ) -> List[SearchResultDto]: ...
 
-    async def count(self, query: str, domain: Optional[str]) -> int: ...
+    async def count(
+        self, query: str, domain: Optional[str], content_type: Optional[str] = None
+    ) -> int: ...
 
 
 class VedaService(Protocol):

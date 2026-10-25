@@ -25,6 +25,11 @@ async def list_stotrams(
     return ok_payload(data, page=page, size=size, total=len(full))
 
 
+@router.get("/deities")
+async def list_stotram_deities(svc: StotramService = Depends(get_stotram_service)):
+    return ok_payload(await svc.get_stotram_deities())
+
+
 @router.get("/{stotram_id}")
 async def get_stotram(stotram_id: str, svc: StotramService = Depends(get_stotram_service)):
     return ok_payload(await svc.get_stotram_by_id(stotram_id))

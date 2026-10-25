@@ -14,8 +14,11 @@ def get_mantra_service(request: Request) -> MantraService:
 
 
 @router.get("/random")
-async def get_random_mantra(svc: MantraService = Depends(get_mantra_service)):
-    return ok_payload(await svc.get_random_mantra())
+async def get_random_mantra(
+    date: Optional[str] = None,
+    svc: MantraService = Depends(get_mantra_service),
+):
+    return ok_payload(await svc.get_random_mantra(date))
 
 
 @router.get("")
