@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY api ./api
 COPY clients ./clients
+COPY constants ./constants
 COPY core ./core
 COPY schemas ./schemas
 COPY services ./services
