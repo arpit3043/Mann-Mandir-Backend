@@ -3,59 +3,8 @@ from __future__ import annotations
 from difflib import SequenceMatcher, get_close_matches
 from typing import Any, Iterable, Mapping, Optional, Sequence
 
+from constants.deities import DEITY_ALIASES, DEITY_PREFIXES, DEITY_SUFFIXES
 from core.exceptions import ResourceNotFoundError
-
-ALIASES = {
-    "laxmi": "lakshmi",
-    "laxami": "lakshmi",
-    "lakshami": "lakshmi",
-    "laxmii": "lakshmi",
-    "लक्ष्मी": "lakshmi",
-    "mahalakshmi": "lakshmi",
-    "ganesh": "ganesha",
-    "ganpati": "ganesha",
-    "ganapati": "ganesha",
-    "गणेश": "ganesha",
-    "sarasvati": "saraswati",
-    "सरस्वती": "saraswati",
-    "shiv": "shiva",
-    "mahadev": "shiva",
-    "shankar": "shiva",
-    "bholenath": "shiva",
-    "शिव": "shiva",
-    "महादेव": "shiva",
-    "ram": "rama",
-    "राम": "rama",
-    "krishn": "krishna",
-    "krishna": "vishnukrishna",
-    "vishnu": "vishnukrishna",
-    "jagdish": "vishnukrishna",
-    "कृष्ण": "vishnukrishna",
-    "विष्णु": "vishnukrishna",
-    "narayan": "vishnukrishna",
-    "narayana": "vishnukrishna",
-    "bajrang": "hanuman",
-    "bajrangbali": "hanuman",
-    "anjaneya": "hanuman",
-    "हनुमान": "hanuman",
-    "ambe": "durga",
-    "amba": "durga",
-    "gauri": "durga",
-    "devi": "durga",
-    "durgamata": "durga",
-    "दुर्गा": "durga",
-    "aditya": "surya",
-    "suryadeva": "surya",
-    "सूर्य": "surya",
-    "shanidev": "shani",
-    "shaneshwar": "shani",
-    "शनि": "shani",
-    "parvati": "parvati",
-    "पार्वती": "parvati",
-}
-
-_PREFIXES = ("lord", "goddess", "shri", "shree", "sri")
-_SUFFIXES = ("mata", "deva", "devi")
 
 
 def norm(value: str) -> str:
@@ -68,18 +17,18 @@ def compact(value: str) -> str:
 
 def deity_key(value: str) -> str:
     key = compact(value)
-    for prefix in _PREFIXES:
+    for prefix in DEITY_PREFIXES:
         if key.startswith(prefix) and len(key) > len(prefix) + 2:
-            key = key[len(prefix) :]
-    for suffix in _SUFFIXES:
+            key = key[len(prefix):]
+    for suffix in DEITY_SUFFIXES:
         if key.endswith(suffix) and len(key) > len(suffix) + 2:
             key = key[: -len(suffix)]
-    return ALIASES.get(key, key)
+    return DEITY_ALIASES.get(key, key)
 
 
 def expand_term(token: str) -> list[str]:
     terms = [token]
-    aliased = ALIASES.get(token) or ALIASES.get(compact(token))
+    aliased = DEITY_ALIASES.get(token) or DEITY_ALIASES.get(compact(token))
     mapped = deity_key(token)
     for extra in (aliased, mapped):
         if extra and extra not in terms:
@@ -88,7 +37,7 @@ def expand_term(token: str) -> list[str]:
 
 
 def closest_match(
-    query: str, options: Sequence[str], *, cutoff: float = 0.55
+        query: str, options: Sequence[str], *, cutoff: float = 0.55
 ) -> Optional[str]:
     wanted = deity_key(query)
     raw = compact(query)
@@ -120,9 +69,9 @@ def closest_match(
 
 
 def closest_row(
-    query: str,
-    rows: Sequence[Mapping[str, Any]],
-    fields: Sequence[str] = ("id", "name", "title", "deity", "description"),
+        query: str,
+        rows: Sequence[Mapping[str, Any]],
+        fields: Sequence[str] = ("id", "name", "title", "deity", "description"),
 ) -> Optional[Mapping[str, Any]]:
     q = compact(query)
     if not q or not rows:
@@ -148,7 +97,7 @@ def closest_row(
 
 
 def suggestion_for(
-    query: str, options: Iterable[str], *, fallback: Optional[str] = None
+        query: str, options: Iterable[str], *, fallback: Optional[str] = None
 ) -> str:
     values = [str(opt) for opt in options if opt]
     match = closest_match(query, values)
@@ -195,12 +144,12 @@ def catalog_labels(rows: Sequence[Mapping[str, Any]], *keys: str) -> list[str]:
 
 
 def ensure_found(
-    items: Sequence[Any],
-    *,
-    resource: str,
-    identifier: str,
-    available: Iterable[str],
-    fallback: Optional[str] = None,
+        items: Sequence[Any],
+        *,
+        resource: str,
+        identifier: str,
+        available: Iterable[str],
+        fallback: Optional[str] = None,
 ) -> Sequence[Any]:
     if items:
         return items

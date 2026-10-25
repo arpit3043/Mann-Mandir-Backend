@@ -13,9 +13,9 @@ from services.static_registry import StaticContentRegistry
 
 class DefaultStotramService(StotramService):
     def __init__(
-        self,
-        static: StaticContentRegistry,
-        drik: Optional[DrikPanchangStotramClient] = None,
+            self,
+            static: StaticContentRegistry,
+            drik: Optional[DrikPanchangStotramClient] = None,
     ) -> None:
         self.static = static
         self.drik = drik
@@ -53,7 +53,7 @@ class DefaultStotramService(StotramService):
         return rows
 
     def _find_row(
-        self, stotram_id: str, rows: List[Dict[str, Any]]
+            self, stotram_id: str, rows: List[Dict[str, Any]]
     ) -> Optional[Dict[str, Any]]:
         wanted = norm(stotram_id)
         prefixed = wanted if wanted.startswith("stotram-") else f"stotram-{wanted}"
@@ -76,7 +76,7 @@ class DefaultStotramService(StotramService):
         return sorted({str(row["deity"]) for row in rows if row.get("deity")})
 
     async def get_stotrams(
-        self, deity: Optional[str], page: int, size: int
+            self, deity: Optional[str], page: int, size: int
     ) -> List[StotramDto]:
         rows = await self._catalog()
         if deity and deity.strip():

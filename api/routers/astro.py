@@ -12,10 +12,11 @@ from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from api.responses import ok_payload
+from constants.astrology import HOROSCOPE_DAILY_URL, ZODIAC_SIGNS
+from constants.http import JSON_ACCEPT_HEADER
 from core.config import Settings
 from core.exceptions import ResourceNotFoundError
 from core.suggestions import suggestion_for
-from core.zodiac import ZODIAC_SIGNS
 
 logger = logging.getLogger(__name__)
 
@@ -23,12 +24,12 @@ router = APIRouter()
 
 
 async def _proxy_json(
-    *,
-    request: Request,
-    path: str,
-    method: str = "GET",
-    params: Optional[dict] = None,
-    json_body: Optional[dict] = None,
+        *,
+        request: Request,
+        path: str,
+        method: str = "GET",
+        params: Optional[dict] = None,
+        json_body: Optional[dict] = None,
 ):
     settings: Settings = request.app.state.settings
     base = settings.astro_api_base.rstrip("/") if settings.astro_api_base else ""
@@ -45,12 +46,12 @@ async def _proxy_json(
         write=settings.webclient_timeout_write,
     )
     async with httpx.AsyncClient(
-        timeout=timeout,
-        headers={
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "x-api-key": key,
-        },
+            timeout=timeout,
+            headers={
+                **JSON_ACCEPT_HEADER,
+                "Content-Type": "application/json",
+                "x-api-key": key,
+            },
     ) as client:
         resp = await client.request(method, url, params=params, json=json_body)
         if resp.status_code < 200 or resp.status_code >= 300:
@@ -72,7 +73,7 @@ async def proxy_daily_horoscope(request: Request, sign: str):
             sign,
             suggestion=suggestion_for(cleaned, ZODIAC_SIGNS),
         )
-    url = f"https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily?sign={cleaned}&day=today"
+    url = f"{HOROSCOPE_DAILY_URL}?sign={cleaned}&day=today"
     settings: Settings = request.app.state.settings
     timeout = httpx.Timeout(
         settings.webclient_timeout_read,
@@ -80,7 +81,7 @@ async def proxy_daily_horoscope(request: Request, sign: str):
         write=settings.webclient_timeout_write,
     )
     async with httpx.AsyncClient(
-        timeout=timeout, headers={"Accept": "application/json"}, follow_redirects=True
+            timeout=timeout, headers=JSON_ACCEPT_HEADER, follow_redirects=True
     ) as client:
         resp = await client.request("GET", url)
         if resp.status_code < 200 or resp.status_code >= 300:
@@ -95,22 +96,13 @@ async def proxy_daily_horoscope(request: Request, sign: str):
         return ok_payload(data)
 
 
-# ---------------------------------------------------------------------------
-# In-memory daily cache for Panchang
-# ---------------------------------------------------------------------------
-# The Free Astrology API enforces strict per-second rate limits. Panchang
-# data is valid for an entire calendar day for a given location, so there is
-# no reason to call the upstream API more than once per (date, location) pair.
-#
-# Structure: _panchang_cache[cache_key] = (payload_dict, expires_at_timestamp)
-# ---------------------------------------------------------------------------
 _panchang_cache: Dict[Tuple, Tuple[Dict[str, Any], float]] = {}
 
 
 def _make_cache_key(
-    year: int, month: int, date: int, lat: float, lon: float, tz: float
+        year: int, month: int, date: int, lat: float, lon: float, tz: float
 ) -> Tuple:
-    return (year, month, date, round(lat, 2), round(lon, 2), tz)
+    return year, month, date, round(lat, 2), round(lon, 2), tz
 
 
 def _cache_get(key: Tuple) -> Optional[Dict[str, Any]]:
@@ -125,7 +117,7 @@ def _cache_get(key: Tuple) -> Optional[Dict[str, Any]]:
 
 
 def _cache_set(
-    key: Tuple, payload: Dict[str, Any], year: int, month: int, date: int
+        key: Tuple, payload: Dict[str, Any], year: int, month: int, date: int
 ) -> None:
     try:
         requested_date = datetime.date(year, month, date)
@@ -136,7 +128,6 @@ def _cache_set(
 
     _panchang_cache[key] = (payload, expires_at)
 
-    # Opportunistically evict expired entries to prevent unbounded memory growth
     now = _time.time()
     expired_keys = [k for k, (_, exp) in _panchang_cache.items() if exp < now]
     for k in expired_keys:
@@ -145,22 +136,19 @@ def _cache_set(
 
 @router.get("/panchang")
 async def proxy_panchang(
-    request: Request,
-    year: int,
-    month: int,
-    date: int,
-    lat: float,
-    lon: float,
-    tz: Optional[float] = None,
-    hours: int = 6,
-    minutes: int = 0,
-    seconds: int = 0,
+        request: Request,
+        year: int,
+        month: int,
+        date: int,
+        lat: float,
+        lon: float,
+        tz: Optional[float] = None,
+        hours: int = 6,
+        minutes: int = 0,
+        seconds: int = 0,
 ):
     resolved_tz = tz if tz is not None else 5.5
 
-    # ------------------------------------------------------------------
-    # Cache look-up — return immediately if we already have today's data
-    # ------------------------------------------------------------------
     cache_key = _make_cache_key(year, month, date, lat, lon, resolved_tz)
     cached = _cache_get(cache_key)
     if cached is not None:
@@ -229,12 +217,12 @@ async def proxy_panchang(
             return await fetch_endpoint(client, path)
 
     async with httpx.AsyncClient(
-        timeout=timeout,
-        headers={
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "x-api-key": key,
-        },
+            timeout=timeout,
+            headers={
+                **JSON_ACCEPT_HEADER,
+                "Content-Type": "application/json",
+                "x-api-key": key,
+            },
     ) as client:
         tasks = [
             fetch_endpoint_throttled(client, "tithi-durations"),
@@ -266,9 +254,6 @@ async def proxy_panchang(
     if yoga:
         output["yoga"] = yoga
 
-    # ------------------------------------------------------------------
-    # Store in cache — subsequent requests today skip all upstream calls
-    # ------------------------------------------------------------------
     _cache_set(cache_key, output, year, month, date)
     logger.info("Panchang cached for key=%s", cache_key)
 

@@ -9,43 +9,44 @@ import httpx
 import pybreaker
 
 from clients.http_utils import get_json_cached, get_text_cached
+from constants.drik import (
+    CHALISA_COLLECTION_PATH,
+    CHALISA_PATHS,
+    STOTRAM_COLLECTION_PATH,
+    STOTRAM_PATHS,
+)
+from constants.http import CIRCUIT_FAIL_MAX, CIRCUIT_RESET_SECONDS
 from core.cache import RedisCache
 from core.config import Settings
 
 logger = logging.getLogger(__name__)
 
-_gita_theaum_breaker = pybreaker.CircuitBreaker(
-    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
-)
-_gita_vedic_breaker = pybreaker.CircuitBreaker(
-    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
-)
-_dharmic_breaker = pybreaker.CircuitBreaker(
-    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
-)
-_hanuman_breaker = pybreaker.CircuitBreaker(
-    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
-)
-_havyaka_breaker = pybreaker.CircuitBreaker(
-    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
-)
-_shloka_breaker = pybreaker.CircuitBreaker(
-    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
-)
-_rig_veda_breaker = pybreaker.CircuitBreaker(
-    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
-)
-_drik_breaker = pybreaker.CircuitBreaker(
-    fail_max=5, reset_timeout=60, exclude=[httpx.HTTPStatusError]
-)
+
+def _circuit_breaker() -> pybreaker.CircuitBreaker:
+    return pybreaker.CircuitBreaker(
+        fail_max=CIRCUIT_FAIL_MAX,
+        reset_timeout=CIRCUIT_RESET_SECONDS,
+        exclude=[httpx.HTTPStatusError],
+    )
+
+
+_gita_theaum_breaker = _circuit_breaker()
+_gita_vedic_breaker = _circuit_breaker()
+_dharmic_breaker = _circuit_breaker()
+_hanuman_breaker = _circuit_breaker()
+_havyaka_breaker = _circuit_breaker()
+_shloka_breaker = _circuit_breaker()
+_rig_veda_breaker = _circuit_breaker()
+_drik_breaker = _circuit_breaker()
+_upanishad_breaker = _circuit_breaker()
 
 
 class GitaTheAumClient:
     def __init__(
-        self,
-        http: httpx.AsyncClient,
-        settings: Settings,
-        cache: Optional[RedisCache] = None,
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
     ) -> None:
         self._http = http
         self._settings = settings
@@ -88,22 +89,22 @@ class GitaTheAumClient:
         return data if isinstance(data, list) else None
 
     async def get_verse_translations(
-        self, chapter: int, verse: int
+            self, chapter: int, verse: int
     ) -> Optional[Dict[str, Any]]:
         return await self._safe_get(f"/text/translations/{chapter}/{verse}")
 
     async def get_verse_commentary(
-        self, chapter: int, verse: int
+            self, chapter: int, verse: int
     ) -> Optional[Dict[str, Any]]:
         return await self._safe_get(f"/text/commentaries/{chapter}/{verse}")
 
 
 class GitaVedicClient:
     def __init__(
-        self,
-        http: httpx.AsyncClient,
-        settings: Settings,
-        cache: Optional[RedisCache] = None,
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
     ) -> None:
         self._http = http
         self._settings = settings
@@ -139,7 +140,7 @@ class GitaVedicClient:
         return data if isinstance(data, list) else None
 
     async def get_verses_for_chapter(
-        self, chapter: int
+            self, chapter: int
     ) -> Optional[List[Dict[str, Any]]]:
         data = await self._safe_get(f"/sloks/{chapter}")
         return data if isinstance(data, list) else None
@@ -147,10 +148,10 @@ class GitaVedicClient:
 
 class DharmicDataClient:
     def __init__(
-        self,
-        http: httpx.AsyncClient,
-        settings: Settings,
-        cache: Optional[RedisCache] = None,
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
     ) -> None:
         self._http = http
         self._settings = settings
@@ -208,7 +209,7 @@ class DharmicDataClient:
         return None
 
     async def get_gita_chapter_verses(
-        self, chapter: int
+            self, chapter: int
     ) -> Optional[List[Dict[str, Any]]]:
         data = await self._safe_get(
             f"/SrimadBhagvadGita/bhagavad_gita_chapter_{chapter}.json"
@@ -216,7 +217,7 @@ class DharmicDataClient:
         return self._as_list(data, "BhagavadGitaChapter")
 
     async def get_mahabharata_parva(
-        self, parva_number: int
+            self, parva_number: int
     ) -> Optional[List[Dict[str, Any]]]:
         data = await self._safe_get(
             f"/Mahabharata/mahabharata_book_{parva_number}.json"
@@ -239,7 +240,7 @@ class DharmicDataClient:
         return self._as_list(data)
 
     async def get_rig_veda_mandala(
-        self, mandala: int
+            self, mandala: int
     ) -> Optional[List[Dict[str, Any]]]:
         data = await self._safe_get(f"/Rigveda/rigveda_mandala_{mandala}.json")
         return self._as_list(data)
@@ -251,10 +252,10 @@ class DharmicDataClient:
 
 class HanumanChalisaClient:
     def __init__(
-        self,
-        http: httpx.AsyncClient,
-        settings: Settings,
-        cache: Optional[RedisCache] = None,
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
     ) -> None:
         self._http = http
         self._settings = settings
@@ -288,10 +289,10 @@ class HanumanChalisaClient:
 
 class HavyakaApiClient:
     def __init__(
-        self,
-        http: httpx.AsyncClient,
-        settings: Settings,
-        cache: Optional[RedisCache] = None,
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
     ) -> None:
         self._http = http
         self._settings = settings
@@ -322,12 +323,12 @@ class HavyakaApiClient:
         return self._unwrap(await self._safe_get(f"/mantras?limit={limit}"))
 
     async def get_mantras_by_name(
-        self, name: str, limit: int
+            self, name: str, limit: int
     ) -> Optional[List[Dict[str, Any]]]:
         return self._unwrap(await self._safe_get(f"/mantras?name={name}&limit={limit}"))
 
     def _unwrap(
-        self, wrapped: Optional[Dict[str, Any]]
+            self, wrapped: Optional[Dict[str, Any]]
     ) -> Optional[List[Dict[str, Any]]]:
         if not wrapped or not isinstance(wrapped, dict):
             return None
@@ -339,10 +340,10 @@ class HavyakaApiClient:
 
 class ShlokaApiClient:
     def __init__(
-        self,
-        http: httpx.AsyncClient,
-        settings: Settings,
-        cache: Optional[RedisCache] = None,
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
     ) -> None:
         self._http = http
         self._settings = settings
@@ -375,10 +376,10 @@ class ShlokaApiClient:
 
 class RigVedaApiClient:
     def __init__(
-        self,
-        http: httpx.AsyncClient,
-        settings: Settings,
-        cache: Optional[RedisCache] = None,
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
     ) -> None:
         self._http = http
         self._settings = settings
@@ -447,10 +448,10 @@ class DrikPanchangClient:
     KNOWN_PATHS: Dict[str, str] = {}
 
     def __init__(
-        self,
-        http: httpx.AsyncClient,
-        settings: Settings,
-        cache: Optional[RedisCache] = None,
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
     ) -> None:
         self._http = http
         self._settings = settings
@@ -488,16 +489,8 @@ class DrikPanchangClient:
 
 
 class DrikPanchangChalisaClient(DrikPanchangClient):
-    COLLECTION_PATH = "/lyrics/chalisa/chalisa-collection.html"
-    KNOWN_PATHS = {
-        "chalisa-hanuman": "/lyrics/chalisa/lord-hanuman/shree-hanuman-chalisa.html",
-        "chalisa-ganesh": "/lyrics/chalisa/lord-ganesha/shree-ganesha-chalisa.html",
-        "chalisa-shiva": "/lyrics/chalisa/lord-shiva/shiva-chalisa.html",
-        "chalisa-durga": "/lyrics/chalisa/durga-mata/durga-mata-chalisa.html",
-        "chalisa-lakshmi": "/lyrics/chalisa/lakshmi-mata/lakshmi-mata-chalisa.html",
-        "chalisa-saraswati": "/lyrics/chalisa/saraswati-mata/saraswati-mata-chalisa.html",
-        "chalisa-ram": "/lyrics/chalisa/lord-rama/shree-rama-chalisa.html",
-    }
+    COLLECTION_PATH = CHALISA_COLLECTION_PATH
+    KNOWN_PATHS = CHALISA_PATHS
 
     @staticmethod
     def _id_from_path(path: str) -> str:
@@ -596,7 +589,7 @@ class DrikPanchangChalisaClient(DrikPanchangClient):
         return out
 
     async def get_verses(
-        self, chalisa_id: str, path: Optional[str] = None
+            self, chalisa_id: str, path: Optional[str] = None
     ) -> Optional[List[Dict[str, Any]]]:
         page = path or self.path_for_id(chalisa_id)
         if not page:
@@ -615,13 +608,8 @@ class DrikPanchangChalisaClient(DrikPanchangClient):
 
 
 class DrikPanchangStotramClient(DrikPanchangClient):
-    COLLECTION_PATH = "/lyrics/stotram/stotram-collection.html"
-    KNOWN_PATHS = {
-        "stotram-shiva-tandava": "/lyrics/stotram/lord-shiva/shiva-tandav-stotram.html",
-        "stotram-mahishasura-mardini": "/lyrics/stotram/durga/mahishasura-mardini/mahishasura-mardini-stotram.html",
-        "stotram-aditya-hridayam": "/lyrics/stotram/lord-surya/aditya-hridaya-stotram.html",
-        "stotram-ganesh-atharvashirsha": "/lyrics/stotram/lord-ganesha/ganapati-atharvashirsha-stotram.html",
-    }
+    COLLECTION_PATH = STOTRAM_COLLECTION_PATH
+    KNOWN_PATHS = STOTRAM_PATHS
 
     @staticmethod
     def _id_from_path(path: str) -> str:
@@ -673,7 +661,7 @@ class DrikPanchangStotramClient(DrikPanchangClient):
     def _parse_verses(self, html: str) -> List[Dict[str, Any]]:
         verses: List[Dict[str, Any]] = []
         for group in re.findall(
-            r'<div class="dpLyricsAartiGroup">([\s\S]*?)</div>', html
+                r'<div class="dpLyricsAartiGroup">([\s\S]*?)</div>', html
         ):
             lines: List[str] = []
             for paragraph in re.findall(r"<p>([\s\S]*?)</p>", group):
@@ -699,7 +687,7 @@ class DrikPanchangStotramClient(DrikPanchangClient):
         return verses
 
     async def get_verses(
-        self, stotram_id: str, path: Optional[str] = None
+            self, stotram_id: str, path: Optional[str] = None
     ) -> Optional[List[Dict[str, Any]]]:
         page = path or self.path_for_id(stotram_id)
         if not page:
@@ -716,3 +704,56 @@ class DrikPanchangStotramClient(DrikPanchangClient):
             return None
         verses = self._parse_verses(html)
         return verses or None
+
+
+class UpanishadSourceClient:
+    def __init__(
+            self,
+            http: httpx.AsyncClient,
+            settings: Settings,
+            cache: Optional[RedisCache] = None,
+    ) -> None:
+        self._http = http
+        self._settings = settings
+        self._cache = cache
+        self._ttl = settings.redis_default_ttl
+
+    def _devotional_url(self, filename: str) -> str:
+        base = self._settings.api_upanishad_devotional_base_url.rstrip("/")
+        name = filename if filename.startswith("/") else "/" + filename
+        return base + name
+
+    def _json_url(self, filename: str) -> str:
+        base = self._settings.api_upanishad_json_base_url.rstrip("/")
+        name = filename if filename.startswith("/") else "/" + filename
+        return base + name
+
+    @_upanishad_breaker
+    async def _get_text(self, url: str) -> Optional[str]:
+        return await get_text_cached(self._http, url, self._cache, self._ttl)
+
+    @_upanishad_breaker
+    async def _get_json(self, url: str) -> Optional[Any]:
+        return await get_json_cached(self._http, url, self._cache, self._ttl)
+
+    async def get_devotional_script(self, filename: str) -> Optional[str]:
+        try:
+            text = await self._get_text(self._devotional_url(filename))
+        except pybreaker.CircuitBreakerError:
+            logger.warning("Circuit OPEN — Upanishad source unavailable")
+            return None
+        except (httpx.RequestError, httpx.HTTPStatusError) as exc:
+            logger.error("Upanishad script request failed: %s", exc)
+            return None
+        return text if isinstance(text, str) and text.strip() else None
+
+    async def get_sacred_json(self, filename: str) -> Optional[Dict[str, Any]]:
+        try:
+            data = await self._get_json(self._json_url(filename))
+        except pybreaker.CircuitBreakerError:
+            logger.warning("Circuit OPEN — Upanishad JSON unavailable")
+            return None
+        except (httpx.RequestError, httpx.HTTPStatusError) as exc:
+            logger.error("Upanishad JSON request failed: %s", exc)
+            return None
+        return data if isinstance(data, dict) else None

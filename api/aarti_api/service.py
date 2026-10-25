@@ -21,7 +21,7 @@ class DefaultAartiService(AartiService):
         self._static = static
 
     async def get_aartis(
-        self, deity: Optional[str], page: int, size: int
+            self, deity: Optional[str], page: int, size: int
     ) -> List[AartiDto]:
         rows = self._static.get_all_aartis()
         if deity and deity.strip():

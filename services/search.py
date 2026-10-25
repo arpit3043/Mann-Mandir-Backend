@@ -10,7 +10,8 @@ from api.chalisa_api.service_contract import ChalisaService
 from api.mantra_api.service_contract import MantraService
 from api.scriptures_api.gita_api.service_contract import GitaService
 from api.stotram_api.service_contract import StotramService
-from core.content_domain import ContentDomain, parse_content_domain
+from constants.enums import ContentDomain, parse_content_domain
+from constants.search import SEARCH_TOKEN_PATTERN, SEARCH_TYPE_WORDS, VALID_SEARCH_TYPES
 from core.exceptions import ResourceNotFoundError
 from core.pagination import paginate
 from core.suggestions import compact, expand_term, suggestion_for
@@ -18,39 +19,7 @@ from schemas.dtos import SearchResultDto
 from services.contracts import SearchService, VedaService
 from services.static_registry import CHALISA_VERSES
 
-_TOKEN_RE = re.compile(r"[a-z0-9]+|[\u0900-\u097f]+", re.IGNORECASE)
-
-_TYPE_WORDS = {
-    "aarti": "aarti",
-    "aartis": "aarti",
-    "arti": "aarti",
-    "aarties": "aarti",
-    "आरती": "aarti",
-    "chalisa": "chalisa",
-    "chalisas": "chalisa",
-    "chaleesa": "chalisa",
-    "चालीसा": "chalisa",
-    "stotram": "stotram",
-    "stotra": "stotram",
-    "stotrams": "stotram",
-    "स्तोत्र": "stotram",
-    "स्तोत्रम्": "stotram",
-    "mantra": "mantra",
-    "mantras": "mantra",
-    "मंत्र": "mantra",
-    "मन्त्र": "mantra",
-    "gita": "gita",
-    "geeta": "gita",
-    "गीता": "gita",
-    "veda": "veda",
-    "vedas": "veda",
-    "वेद": "veda",
-    "upanishad": "upanishad",
-    "upanishads": "upanishad",
-    "उपनिषद": "upanishad",
-}
-
-_VALID_TYPES = {"aarti", "chalisa", "stotram", "mantra", "gita", "veda", "upanishad"}
+_TOKEN_RE = re.compile(SEARCH_TOKEN_PATTERN, re.IGNORECASE)
 
 
 @dataclass
@@ -76,8 +45,8 @@ def _parse_types(value: Optional[str]) -> Set[str]:
     for part in re.split(r"[,\s]+", str(value).strip().lower()):
         if not part:
             continue
-        mapped = _TYPE_WORDS.get(part, part)
-        if mapped not in _VALID_TYPES:
+        mapped = SEARCH_TYPE_WORDS.get(part, part)
+        if mapped not in VALID_SEARCH_TYPES:
             raise ValueError("Unknown type. Try aarti, chalisa, stotram or mantra")
         types.add(mapped)
     return types
@@ -88,7 +57,7 @@ def _parse_query(query: str) -> Tuple[List[str], Set[str]]:
     terms: List[str] = []
     seen: Set[str] = set()
     for raw in _tokens(query):
-        mapped_type = _TYPE_WORDS.get(raw)
+        mapped_type = SEARCH_TYPE_WORDS.get(raw)
         if mapped_type:
             types.add(mapped_type)
             continue
@@ -131,12 +100,12 @@ def _field_hit(term: str, value: str) -> float:
     for word in value_tokens:
         compact_word = compact(word)
         if compact_word.startswith(compact_term) or compact_term.startswith(
-            compact_word
+                compact_word
         ):
             return 0.7
         if (
-            len(compact_term) >= 3
-            and SequenceMatcher(None, compact_term, compact_word).ratio() >= 0.78
+                len(compact_term) >= 3
+                and SequenceMatcher(None, compact_term, compact_word).ratio() >= 0.78
         ):
             return 0.55
     return 0.0
@@ -198,13 +167,13 @@ def _to_result(doc: _Doc, score: float) -> SearchResultDto:
 
 class DefaultSearchService(SearchService):
     def __init__(
-        self,
-        aarti: AartiService,
-        chalisa: ChalisaService,
-        stotram: StotramService,
-        mantra: MantraService,
-        gita: GitaService,
-        veda: VedaService,
+            self,
+            aarti: AartiService,
+            chalisa: ChalisaService,
+            stotram: StotramService,
+            mantra: MantraService,
+            gita: GitaService,
+            veda: VedaService,
     ) -> None:
         self.aarti = aarti
         self.chalisa = chalisa
@@ -214,23 +183,23 @@ class DefaultSearchService(SearchService):
         self.veda = veda
 
     async def search(
-        self,
-        query: str,
-        domain: Optional[str],
-        page: int,
-        size: int,
-        content_type: Optional[str] = None,
+            self,
+            query: str,
+            domain: Optional[str],
+            page: int,
+            size: int,
+            content_type: Optional[str] = None,
     ) -> List[SearchResultDto]:
         results = await self._collect(query, domain, content_type)
         return paginate(results, page, size)
 
     async def count(
-        self, query: str, domain: Optional[str], content_type: Optional[str] = None
+            self, query: str, domain: Optional[str], content_type: Optional[str] = None
     ) -> int:
         return len(await self._collect(query, domain, content_type))
 
     async def _collect(
-        self, query: str, domain: Optional[str], content_type: Optional[str] = None
+            self, query: str, domain: Optional[str], content_type: Optional[str] = None
     ) -> List[SearchResultDto]:
         parsed = parse_content_domain(domain)
         terms, types = _parse_query(query)

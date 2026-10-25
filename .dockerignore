@@ -1,7 +1,7 @@
 .git
-.gitignore
 **/.venv
 **/__pycache__
+.gitignore
 **/*.pyc
 .DS_Store
 *.md

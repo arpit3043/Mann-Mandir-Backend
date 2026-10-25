@@ -5,44 +5,34 @@ from typing import Optional
 
 from starlette.requests import Request
 
+from constants.api import (
+    DEFAULT_RESOURCE_NAME,
+    IDENTIFIER_QUERY_KEYS,
+    PATH_RESOURCES,
+    UNKNOWN_IDENTIFIER,
+)
+
 current_request: ContextVar[Optional[Request]] = ContextVar(
     "current_request", default=None
 )
 
-_PATH_RESOURCES = (
-    ("/god/aartis", "Aarti"),
-    ("/god/chalisas", "Chalisa"),
-    ("/god/stotram", "Stotram"),
-    ("/god/mantras", "Mantra"),
-    ("/vedas/mantras", "Mantra"),
-    ("/vedas/upanishads", "Upanishad"),
-    ("/vedas/rig", "Rig Veda"),
-    ("/vedas", "Veda"),
-    ("/scriptures/gita", "Gita"),
-    ("/scriptures/ramayana", "Ramayana"),
-    ("/scriptures/mahabharata", "Mahabharata"),
-    ("/search", "Search"),
-    ("/panchang", "Panchang"),
-    ("/astro", "Astro"),
-)
-
 
 def resource_from_path(path: str) -> str:
-    for suffix, name in _PATH_RESOURCES:
+    for suffix, name in PATH_RESOURCES:
         if suffix in path:
             return name
-    return "Result"
+    return DEFAULT_RESOURCE_NAME
 
 
 def identifier_from_request() -> tuple[str, str]:
     request = current_request.get()
     if request is None:
-        return "Result", "requested data"
+        return DEFAULT_RESOURCE_NAME, UNKNOWN_IDENTIFIER
     resource = resource_from_path(request.url.path)
-    for key in ("deity", "query", "q", "poet", "sign", "name"):
+    for key in IDENTIFIER_QUERY_KEYS:
         value = request.query_params.get(key)
         if value and value.strip():
             return resource, value.strip()
     parts = [part for part in request.url.path.split("/") if part]
-    ident = parts[-1] if parts else "requested data"
+    ident = parts[-1] if parts else UNKNOWN_IDENTIFIER
     return resource, ident

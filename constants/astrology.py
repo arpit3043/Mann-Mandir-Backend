@@ -14,3 +14,6 @@ ZODIAC_SIGNS = (
     "aquarius",
     "pisces",
 )
+HOROSCOPE_DAILY_URL = (
+    "https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily"
+)

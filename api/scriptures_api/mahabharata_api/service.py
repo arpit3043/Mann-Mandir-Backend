@@ -18,7 +18,7 @@ def _as_int(value, default: int = 0) -> int:
 
 class DefaultMahabharataService(MahabharataService):
     def __init__(
-        self, dharmic: DharmicDataClient, static: StaticContentRegistry
+            self, dharmic: DharmicDataClient, static: StaticContentRegistry
     ) -> None:
         self._dharmic = dharmic
         self._static = static
@@ -48,7 +48,7 @@ class DefaultMahabharataService(MahabharataService):
         )
 
     async def _verses_for_chapter(
-        self, parva_number: int, chapter_number: int
+            self, parva_number: int, chapter_number: int
     ) -> List[MahabharataVerseDto]:
         await self.get_mahabharata_parva(parva_number)
         raw = await self._dharmic.get_mahabharata_parva(parva_number)
@@ -78,7 +78,7 @@ class DefaultMahabharataService(MahabharataService):
         ]
 
     async def get_mahabharata_verses(
-        self, parva_number: int, chapter_number: int, page: int, size: int
+            self, parva_number: int, chapter_number: int, page: int, size: int
     ) -> List[MahabharataVerseDto]:
         all_verses = await self._verses_for_chapter(parva_number, chapter_number)
         if not all_verses:
@@ -90,7 +90,7 @@ class DefaultMahabharataService(MahabharataService):
         return paginate(all_verses, page, size)
 
     async def get_mahabharata_verse(
-        self, parva_number: int, chapter_number: int, verse: int
+            self, parva_number: int, chapter_number: int, verse: int
     ) -> MahabharataVerseDto:
         for v in await self._verses_for_chapter(parva_number, chapter_number):
             if v.verse == verse:

@@ -168,16 +168,6 @@ class VedaDto(BaseModel):
     verses: int = 0
 
 
-class UpanishadDto(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    id: str
-    name: str
-    associatedVeda: Optional[str] = None
-    description: Optional[str] = None
-    chapters: int = 0
-
-
 class UpanishadVerseDto(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
@@ -187,7 +177,20 @@ class UpanishadVerseDto(BaseModel):
     sanskrit: Optional[str] = None
     transliteration: Optional[str] = None
     translation: Optional[str] = None
+    hindiTranslation: Optional[str] = None
     commentary: Optional[str] = None
+
+
+class UpanishadDto(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+
+    id: str
+    name: str
+    associatedVeda: Optional[str] = None
+    description: Optional[str] = None
+    chapters: int = 0
+    verseCount: int = 0
+    verses: Optional[List[UpanishadVerseDto]] = None
 
 
 class SearchResultDto(BaseModel):

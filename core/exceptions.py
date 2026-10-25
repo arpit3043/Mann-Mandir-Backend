@@ -3,7 +3,7 @@ from typing import Optional
 
 class ResourceNotFoundError(Exception):
     def __init__(
-        self, resource_type: str, identifier: str, suggestion: Optional[str] = None
+            self, resource_type: str, identifier: str, suggestion: Optional[str] = None
     ) -> None:
         self.resource_type = resource_type
         self.identifier = identifier

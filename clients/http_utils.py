@@ -5,14 +5,15 @@ from typing import Any, Optional
 
 import httpx
 
+from constants.http import HTML_HEADERS
 from core.cache import RedisCache
 
 logger = logging.getLogger(__name__)
 
 
 async def get_json(
-    client: httpx.AsyncClient,
-    url: str,
+        client: httpx.AsyncClient,
+        url: str,
 ) -> Optional[Any]:
     response = await client.get(url)
     if response.status_code == 404:
@@ -28,10 +29,10 @@ async def get_json(
 
 
 async def get_json_cached(
-    client: httpx.AsyncClient,
-    url: str,
-    cache: Optional[RedisCache],
-    ttl: int,
+        client: httpx.AsyncClient,
+        url: str,
+        cache: Optional[RedisCache],
+        ttl: int,
 ) -> Optional[Any]:
     if cache is not None:
         key = cache.make_key(url)
@@ -50,17 +51,11 @@ async def get_json_cached(
     return result
 
 
-_HTML_HEADERS = {
-    "Accept": "text/html,application/xhtml+xml",
-    "User-Agent": "Mozilla/5.0 (compatible; MannMandir/1.0)",
-}
-
-
 async def get_text(
-    client: httpx.AsyncClient,
-    url: str,
+        client: httpx.AsyncClient,
+        url: str,
 ) -> Optional[str]:
-    response = await client.get(url, headers=_HTML_HEADERS)
+    response = await client.get(url, headers=HTML_HEADERS)
     if response.status_code == 404:
         return None
     response.raise_for_status()
@@ -68,10 +63,10 @@ async def get_text(
 
 
 async def get_text_cached(
-    client: httpx.AsyncClient,
-    url: str,
-    cache: Optional[RedisCache],
-    ttl: int,
+        client: httpx.AsyncClient,
+        url: str,
+        cache: Optional[RedisCache],
+        ttl: int,
 ) -> Optional[str]:
     if cache is not None:
         key = cache.make_key(url)

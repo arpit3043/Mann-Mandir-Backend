@@ -5,9 +5,14 @@ from schemas.dtos import ChalisaDto, ChalisaVerseDto
 
 class ChalisaService(Protocol):
     async def get_chalisas(
-        self, deity: Optional[str], page: int, size: int
-    ) -> List[ChalisaDto]: ...
-    async def get_chalisa_by_id(self, chalisa_id: str) -> ChalisaDto: ...
+            self, deity: Optional[str], page: int, size: int
+    ) -> List[ChalisaDto]:
+        pass
+
+    async def get_chalisa_by_id(self, chalisa_id: str) -> ChalisaDto:
+        pass
+
     async def get_chalisa_verse(
-        self, chalisa_id: str, verse_number: int
-    ) -> ChalisaVerseDto: ...
+            self, chalisa_id: str, verse_number: int
+    ) -> ChalisaVerseDto:
+        pass

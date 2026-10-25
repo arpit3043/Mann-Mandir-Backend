@@ -6,12 +6,13 @@ from zoneinfo import ZoneInfo
 
 from api.mantra_api.service_contract import MantraService
 from clients.upstream import HavyakaApiClient, ShlokaApiClient
+from constants.hindu import IST_TIMEZONE, WEEKDAY_DEITIES
 from core.pagination import paginate
 from core.suggestions import ensure_found
 from schemas.dtos import MantraDto
-from services.static_registry import WEEKDAY_DEITIES, StaticContentRegistry
+from services.static_registry import StaticContentRegistry
 
-_IST = ZoneInfo("Asia/Kolkata")
+_IST = ZoneInfo(IST_TIMEZONE)
 
 
 def _fill_text(dto: MantraDto) -> MantraDto:
@@ -24,7 +25,7 @@ def _fill_text(dto: MantraDto) -> MantraDto:
 
 def _map_havyaka(raw: dict) -> MantraDto:
     text = (
-        str(raw.get("shloka") or raw.get("text") or raw.get("devanagari") or "") or None
+            str(raw.get("shloka") or raw.get("text") or raw.get("devanagari") or "") or None
     )
     return _fill_text(
         MantraDto(
@@ -53,17 +54,17 @@ def _hindu_today(date: Optional[str] = None) -> dt.date:
 
 class DefaultMantraService(MantraService):
     def __init__(
-        self,
-        havyaka: HavyakaApiClient,
-        shloka: ShlokaApiClient,
-        static: StaticContentRegistry,
+            self,
+            havyaka: HavyakaApiClient,
+            shloka: ShlokaApiClient,
+            static: StaticContentRegistry,
     ) -> None:
         self.havyaka = havyaka
         self.shloka = shloka
         self.static = static
 
     async def get_mantras(
-        self, deity: Optional[str], page: int, size: int
+            self, deity: Optional[str], page: int, size: int
     ) -> List[MantraDto]:
         fetch_limit = 200 if size > 200 else max(size * 5, 50)
         raw = await self.havyaka.get_mantras(limit=fetch_limit)

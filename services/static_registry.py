@@ -4,6 +4,8 @@ import copy
 import random
 from typing import Any, Dict, List, Optional
 
+from constants.hindu import WEEKDAY_DEITIES, WEEKDAY_MANTRA_IDS
+
 ALL_AARTIS: List[Dict[str, Any]] = [
     {
         "id": "aarti-ganesh",
@@ -299,26 +301,6 @@ VEDA_MANTRA_POOL: List[Dict[str, Any]] = [
         "tags": ["shani", "shanivar", "saturday"],
     },
 ]
-
-# Hindu vara (weekday) ruling deities, Monday=0
-WEEKDAY_MANTRA_IDS = {
-    0: "m3",  # Monday — Shiva
-    1: "m7",  # Tuesday — Hanuman
-    2: "m8",  # Wednesday — Ganesha
-    3: "m4",  # Thursday — Vishnu
-    4: "m9",  # Friday — Lakshmi
-    5: "m10",  # Saturday — Shani
-    6: "m1",  # Sunday — Surya
-}
-WEEKDAY_DEITIES = {
-    0: ("Monday", "सोमवार", "Shiva"),
-    1: ("Tuesday", "मंगलवार", "Hanuman"),
-    2: ("Wednesday", "बुधवार", "Ganesha"),
-    3: ("Thursday", "गुरुवार", "Vishnu"),
-    4: ("Friday", "शुक्रवार", "Lakshmi"),
-    5: ("Saturday", "शनिवार", "Shani"),
-    6: ("Sunday", "रविवार", "Surya"),
-}
 
 GITA_CHAPTERS: List[Dict[str, Any]] = [
     {
@@ -705,11 +687,11 @@ HANUMAN_CHALISA_VERSES: List[Dict[str, Any]] = [
 
 
 def _chalisa_verse(
-    number: int,
-    verse_type: str,
-    devanagari: str,
-    transliteration: str,
-    english: str,
+        number: int,
+        verse_type: str,
+        devanagari: str,
+        transliteration: str,
+        english: str,
 ) -> Dict[str, Any]:
     return {
         "verseNumber": number,
@@ -1183,42 +1165,88 @@ ALL_UPANISHADS: List[Dict[str, Any]] = [
         "name": "Isha Upanishad",
         "associatedVeda": "Yajur",
         "chapters": 1,
-        "description": "Divine in all things.",
+        "verseCount": 18,
+        "description": "The Lord pervades all this; enjoy through renunciation.",
     },
     {
         "id": "kena",
         "name": "Kena Upanishad",
         "associatedVeda": "Sama",
         "chapters": 4,
-        "description": "Nature of Brahman.",
+        "verseCount": 35,
+        "description": "By whom is the mind directed? The unknowable Brahman.",
     },
     {
         "id": "katha",
         "name": "Katha Upanishad",
         "associatedVeda": "Yajur",
         "chapters": 6,
-        "description": "Nachiketa and Yama.",
+        "verseCount": 119,
+        "description": "Nachiketa's dialogue with Yama on the immortal Self.",
+    },
+    {
+        "id": "prashna",
+        "name": "Prashna Upanishad",
+        "associatedVeda": "Atharva",
+        "chapters": 6,
+        "verseCount": 67,
+        "description": "Six questions to sage Pippalada on prana and the Self.",
     },
     {
         "id": "mundaka",
         "name": "Mundaka Upanishad",
         "associatedVeda": "Atharva",
+        "chapters": 6,
+        "verseCount": 64,
+        "description": "Higher knowledge of Brahman and lower ritual knowledge.",
+    },
+    {
+        "id": "mandukya",
+        "name": "Mandukya Upanishad",
+        "associatedVeda": "Atharva",
+        "chapters": 1,
+        "verseCount": 12,
+        "description": "Om and the four states of consciousness.",
+    },
+    {
+        "id": "taittiriya",
+        "name": "Taittiriya Upanishad",
+        "associatedVeda": "Yajur",
         "chapters": 3,
-        "description": "Higher and lower knowledge.",
+        "verseCount": 31,
+        "description": "The five sheaths of the Self and Brahman as truth-knowledge-infinite.",
+    },
+    {
+        "id": "aitareya",
+        "name": "Aitareya Upanishad",
+        "associatedVeda": "Rig",
+        "chapters": 5,
+        "verseCount": 33,
+        "description": "Creation from Atman; consciousness is Brahman.",
     },
     {
         "id": "chandogya",
         "name": "Chandogya Upanishad",
         "associatedVeda": "Sama",
         "chapters": 8,
-        "description": "Tat tvam asi.",
+        "verseCount": 627,
+        "description": "Tat tvam asi — thou art That.",
     },
     {
         "id": "brihadaranyaka",
         "name": "Brihadaranyaka Upanishad",
         "associatedVeda": "Yajur",
         "chapters": 6,
-        "description": "Largest Upanishad.",
+        "verseCount": 435,
+        "description": "Yajnavalkya's teaching; neti-neti and Aham Brahmasmi.",
+    },
+    {
+        "id": "shvetashvatara",
+        "name": "Shvetashvatara Upanishad",
+        "associatedVeda": "Yajur",
+        "chapters": 6,
+        "verseCount": 113,
+        "description": "The personal Lord, grace, and the yoga of the Self.",
     },
 ]
 
@@ -1266,7 +1294,7 @@ class StaticContentRegistry:
             dict(v)
             for v in RAMAYANA_VERSES
             if str(v.get("kandaId", "")).lower() == wanted
-            and int(v.get("sarga") or 0) == sarga
+               and int(v.get("sarga") or 0) == sarga
         ]
 
     def get_mahabharata_verses(self, parva: int, chapter: int) -> List[Dict[str, Any]]:
@@ -1274,7 +1302,7 @@ class StaticContentRegistry:
             dict(v)
             for v in MAHABHARATA_VERSES
             if int(v.get("parva") or 0) == parva
-            and int(v.get("chapter") or 0) == chapter
+               and int(v.get("chapter") or 0) == chapter
         ]
 
     def get_rig_veda_verses(self, mandala: Optional[int]) -> List[Dict[str, Any]]:
@@ -1285,15 +1313,17 @@ class StaticContentRegistry:
         ]
 
     def get_upanishad_verses(
-        self, upanishad_id: str, chapter: int
+            self, upanishad_id: str, chapter: Optional[int] = None
     ) -> List[Dict[str, Any]]:
         wanted = upanishad_id.strip().lower()
-        return [
+        rows = [
             dict(v)
             for v in UPANISHAD_VERSES
             if str(v.get("upanishadId", "")).lower() == wanted
-            and int(v.get("chapter") or 0) == chapter
         ]
+        if chapter is None:
+            return rows
+        return [row for row in rows if int(row.get("chapter") or 0) == chapter]
 
     def get_chalisa_by_deity(self, deity: str) -> Optional[Dict[str, Any]]:
         d = deity.strip().lower()

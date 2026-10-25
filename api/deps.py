@@ -22,6 +22,7 @@ from clients.upstream import (
     HavyakaApiClient,
     RigVedaApiClient,
     ShlokaApiClient,
+    UpanishadSourceClient,
 )
 from core.cache import RedisCache
 from core.config import Settings
@@ -46,17 +47,17 @@ class AppServices:
     )
 
     def __init__(
-        self,
-        aarti: DefaultAartiService,
-        chalisa: DefaultChalisaService,
-        stotram: DefaultStotramService,
-        mantra: DefaultMantraService,
-        gita: DefaultGitaService,
-        ramayana: DefaultRamayanaService,
-        mahabharata: DefaultMahabharataService,
-        veda: DefaultVedaService,
-        search: DefaultSearchService,
-        panchang: DefaultPanchangService,
+            self,
+            aarti: DefaultAartiService,
+            chalisa: DefaultChalisaService,
+            stotram: DefaultStotramService,
+            mantra: DefaultMantraService,
+            gita: DefaultGitaService,
+            ramayana: DefaultRamayanaService,
+            mahabharata: DefaultMahabharataService,
+            veda: DefaultVedaService,
+            search: DefaultSearchService,
+            panchang: DefaultPanchangService,
     ) -> None:
         self.aarti = aarti
         self.chalisa = chalisa
@@ -83,9 +84,9 @@ def get_search_service(request: Request) -> SearchService:
 
 
 def build_services(
-    http_client: Any,
-    settings: Settings,
-    cache: Optional[RedisCache] = None,
+        http_client: Any,
+        settings: Settings,
+        cache: Optional[RedisCache] = None,
 ) -> AppServices:
     static = StaticContentRegistry()
     hanuman = HanumanChalisaClient(http_client, settings, cache)
@@ -97,6 +98,7 @@ def build_services(
     gita_vedic = GitaVedicClient(http_client, settings, cache)
     dharmic = DharmicDataClient(http_client, settings, cache)
     rig = RigVedaApiClient(http_client, settings, cache)
+    upanishad_source = UpanishadSourceClient(http_client, settings, cache)
 
     aarti = DefaultAartiService(static)
     chalisa = DefaultChalisaService(hanuman, drik, static)
@@ -107,7 +109,7 @@ def build_services(
     ramayana = DefaultRamayanaService(dharmic, static)
     mahabharata = DefaultMahabharataService(dharmic, static)
 
-    veda = DefaultVedaService(rig, havyaka, dharmic, static)
+    veda = DefaultVedaService(rig, havyaka, dharmic, upanishad_source, static)
     search = DefaultSearchService(aarti, chalisa, stotram, mantra, gita, veda)
     panchang = DefaultPanchangService(http_client)
     return AppServices(

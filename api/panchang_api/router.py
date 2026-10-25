@@ -17,13 +17,13 @@ async def panchang_today(svc: PanchangService = Depends(get_panchang_service)):
 
 @router.get("/date/{date}")
 async def panchang_by_date(
-    date: str, svc: PanchangService = Depends(get_panchang_service)
+        date: str, svc: PanchangService = Depends(get_panchang_service)
 ):
     return ok_payload(await svc.get_panchang_by_date(date))
 
 
 @router.get("/horoscope/daily/{sign}")
 async def daily_horoscope(
-    sign: str, svc: PanchangService = Depends(get_panchang_service)
+        sign: str, svc: PanchangService = Depends(get_panchang_service)
 ):
     return ok_payload(await svc.get_daily_horoscope(sign))

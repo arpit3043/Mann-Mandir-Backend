@@ -18,7 +18,7 @@ def _as_int(value, default: int = 0) -> int:
 
 class DefaultRamayanaService(RamayanaService):
     def __init__(
-        self, dharmic: DharmicDataClient, static: StaticContentRegistry
+            self, dharmic: DharmicDataClient, static: StaticContentRegistry
     ) -> None:
         self._dharmic = dharmic
         self.static = static
@@ -40,7 +40,7 @@ class DefaultRamayanaService(RamayanaService):
         )
 
     async def _verses_for_sarga(
-        self, kanda_id: str, sarga: int
+            self, kanda_id: str, sarga: int
     ) -> List[RamayanaVerseDto]:
         await self.get_ramayana_kanda(kanda_id)
         raw = await self._dharmic.get_ramayana_kanda(kanda_id)
@@ -48,12 +48,12 @@ class DefaultRamayanaService(RamayanaService):
             out: List[RamayanaVerseDto] = []
             for item in raw:
                 if (
-                    _as_int(
-                        item.get("sarg")
-                        if item.get("sarg") is not None
-                        else item.get("sarga")
-                    )
-                    != sarga
+                        _as_int(
+                            item.get("sarg")
+                            if item.get("sarg") is not None
+                            else item.get("sarga")
+                        )
+                        != sarga
                 ):
                     continue
                 out.append(
@@ -66,7 +66,7 @@ class DefaultRamayanaService(RamayanaService):
                             else item.get("verse")
                         ),
                         original=str(item.get("text") or item.get("original") or "")
-                        or None,
+                                 or None,
                         transliteration=str(item.get("transliteration") or "") or None,
                         translation=str(item.get("translation") or "") or None,
                     )
@@ -79,7 +79,7 @@ class DefaultRamayanaService(RamayanaService):
         ]
 
     async def get_ramayana_verses(
-        self, kanda_id: str, sarga: int, skip: int, limit: int
+            self, kanda_id: str, sarga: int, skip: int, limit: int
     ) -> List[RamayanaVerseDto]:
         rows = await self._verses_for_sarga(kanda_id, sarga)
         if not rows:
@@ -93,7 +93,7 @@ class DefaultRamayanaService(RamayanaService):
         return paginate(rows, page, size)
 
     async def get_ramayana_verse(
-        self, kanda_id: str, sarga: int, verse: int
+            self, kanda_id: str, sarga: int, verse: int
     ) -> RamayanaVerseDto:
         for v in await self._verses_for_sarga(kanda_id, sarga):
             if v.verse == verse:

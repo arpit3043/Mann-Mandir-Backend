@@ -2,27 +2,14 @@ from typing import Any, Dict, List, Optional
 
 from api.scriptures_api.gita_api.service_contract import GitaService
 from clients.upstream import DharmicDataClient, GitaTheAumClient, GitaVedicClient
+from constants.scriptures import (
+    GITA_COMMENTARY_AUTHORS,
+    GITA_EN_TRANSLATION_KEYS,
+    GITA_HI_TRANSLATION_KEYS,
+)
 from core.exceptions import ResourceNotFoundError
 from schemas.dtos import GitaChapterDto, GitaVerseDto
 from services.static_registry import StaticContentRegistry
-
-_EN_TRANSLATION_KEYS = (
-    "swami sivananda",
-    "shri purohit swami",
-    "swami gambirananda",
-    "swami adidevananda",
-    "dr. s. sankaranarayan",
-)
-_HI_TRANSLATION_KEYS = (
-    "swami tejomayananda",
-    "swami ramsukhdas",
-    "sri harikrishnadas goenka",
-)
-_COMMENTARY_AUTHORS = (
-    "Swami Sivananda",
-    "Swami Gambirananda",
-    "Sri Shankaracharya",
-)
 
 
 def _as_int(value: Any, default: int = 0) -> int:
@@ -45,7 +32,7 @@ def _localized_text(value: Any) -> str:
 
 
 def _map_theaum_chapter(
-    c: Dict[str, Any], *, include_summary: bool = True
+        c: Dict[str, Any], *, include_summary: bool = True
 ) -> GitaChapterDto:
     summary = _localized_text(c.get("summary")) if include_summary else None
     return GitaChapterDto(
@@ -65,11 +52,11 @@ def _pick_translations(raw: Any) -> Dict[str, str]:
     if not isinstance(raw, dict):
         return translations
     lowered = {str(k).strip().lower(): str(val) for k, val in raw.items() if val}
-    for key in _EN_TRANSLATION_KEYS:
+    for key in GITA_EN_TRANSLATION_KEYS:
         if lowered.get(key):
             translations["en"] = lowered[key]
             break
-    for key in _HI_TRANSLATION_KEYS:
+    for key in GITA_HI_TRANSLATION_KEYS:
         if lowered.get(key):
             translations["hi"] = lowered[key]
             break
@@ -80,7 +67,7 @@ def _pick_commentaries(raw: Any) -> Optional[Dict[str, str]]:
     if not isinstance(raw, dict):
         return None
     out: Dict[str, str] = {}
-    for author in _COMMENTARY_AUTHORS:
+    for author in GITA_COMMENTARY_AUTHORS:
         value = raw.get(author)
         if value:
             text = str(value).strip()
@@ -89,7 +76,7 @@ def _pick_commentaries(raw: Any) -> Optional[Dict[str, str]]:
 
 
 def _map_dharmic_verse(
-    chapter_number: int, v: Dict[str, Any], *, include_commentaries: bool = False
+        chapter_number: int, v: Dict[str, Any], *, include_commentaries: bool = False
 ) -> GitaVerseDto:
     verse = _as_int(v.get("verse"))
     translations = _pick_translations(v.get("translations"))
@@ -107,7 +94,7 @@ def _map_dharmic_verse(
 
 
 def _map_gita_verse(
-    chapter_number: int, v: Dict[str, Any], verse_number: Optional[int] = None
+        chapter_number: int, v: Dict[str, Any], verse_number: Optional[int] = None
 ) -> GitaVerseDto:
     verse = verse_number if verse_number is not None else _as_int(v.get("verse"))
     translations: Dict[str, str] = {}
@@ -141,11 +128,11 @@ def _map_gita_verse(
 
 class DefaultGitaService(GitaService):
     def __init__(
-        self,
-        gita_theaum: GitaTheAumClient,
-        gita_vedic: GitaVedicClient,
-        dharmic: DharmicDataClient,
-        static: StaticContentRegistry,
+            self,
+            gita_theaum: GitaTheAumClient,
+            gita_vedic: GitaVedicClient,
+            dharmic: DharmicDataClient,
+            static: StaticContentRegistry,
     ) -> None:
         self._gita_theaum = gita_theaum
         self._gita_vedic = gita_vedic
@@ -184,7 +171,7 @@ class DefaultGitaService(GitaService):
         )
 
     async def _dharmic_verses(
-        self, chapter_number: int, *, include_commentaries: bool
+            self, chapter_number: int, *, include_commentaries: bool
     ) -> List[GitaVerseDto]:
         raw = await self._dharmic.get_gita_chapter_verses(chapter_number)
         if not raw:
@@ -198,7 +185,7 @@ class DefaultGitaService(GitaService):
         ]
 
     async def get_gita_verses_by_chapter(
-        self, chapter_number: int
+            self, chapter_number: int
     ) -> List[GitaVerseDto]:
         verses = await self._dharmic_verses(chapter_number, include_commentaries=False)
         if verses:
@@ -215,7 +202,7 @@ class DefaultGitaService(GitaService):
         )
 
     async def get_gita_verse(
-        self, chapter_number: int, verse_number: int
+            self, chapter_number: int, verse_number: int
     ) -> GitaVerseDto:
         verses = await self._dharmic_verses(chapter_number, include_commentaries=True)
         for verse in verses:

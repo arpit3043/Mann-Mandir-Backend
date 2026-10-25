@@ -11,14 +11,14 @@ from schemas.api_response import ApiResponse, meta_from_totals
 
 
 def ok_payload(
-    data: Any,
-    *,
-    page: Optional[int] = None,
-    size: Optional[int] = None,
-    total: Optional[int] = None,
-    resource: Optional[str] = None,
-    query: Optional[str] = None,
-    available: Optional[Iterable[str]] = None,
+        data: Any,
+        *,
+        page: Optional[int] = None,
+        size: Optional[int] = None,
+        total: Optional[int] = None,
+        resource: Optional[str] = None,
+        query: Optional[str] = None,
+        available: Optional[Iterable[str]] = None,
 ) -> dict[str, Any]:
     encoded = jsonable_encoder(data)
     empty_list = isinstance(encoded, list) and len(encoded) == 0

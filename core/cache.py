@@ -12,18 +12,14 @@ logger = logging.getLogger(__name__)
 
 class RedisCache:
     def __init__(
-        self,
-        master: redis.StrictRedis,
-        replicas: Optional[List[redis.StrictRedis]] = None,
+            self,
+            master: redis.StrictRedis,
+            replicas: Optional[List[redis.StrictRedis]] = None,
     ) -> None:
         self._master = master
         self._replicas: List[redis.StrictRedis] = replicas or []
         # Round-robin iterator over replicas; falls back to master when empty.
         self._replica_cycle = cycle(self._replicas) if self._replicas else None
-
-    # ------------------------------------------------------------------
-    # Public API
-    # ------------------------------------------------------------------
 
     def get(self, key: str) -> Optional[Any]:
         client = self._next_read_client()
@@ -62,29 +58,20 @@ class RedisCache:
         except redis.RedisError:
             return False
 
-    # ------------------------------------------------------------------
-    # Internals
-    # ------------------------------------------------------------------
-
     def _next_read_client(self) -> redis.StrictRedis:
         if self._replica_cycle is not None:
             return next(self._replica_cycle)
         return self._master
 
 
-# ---------------------------------------------------------------------------
-# Factory
-# ---------------------------------------------------------------------------
-
-
 def build_redis_cache(
-    master_host: str,
-    master_port: int,
-    replica_specs: List[tuple[str, int]],
-    password: str,
-    db: int,
-    socket_timeout: float,
-    tls: bool = False,
+        master_host: str,
+        master_port: int,
+        replica_specs: List[tuple[str, int]],
+        password: str,
+        db: int,
+        socket_timeout: float,
+        tls: bool = False,
 ) -> RedisCache:
     common: dict[str, Any] = {
         "db": db,

@@ -34,7 +34,7 @@ def _map_verse(raw: Dict[str, Any]) -> ChalisaVerseDto:
         devanagari=raw.get("verse") or raw.get("devanagari"),
         transliteration=raw.get("transliteration"),
         englishTranslation=_english_from_translations(raw.get("translations"))
-        or raw.get("englishTranslation"),
+                           or raw.get("englishTranslation"),
         hindiTranslation=raw.get("hindiTranslation"),
         tags=raw.get("tags") if isinstance(raw.get("tags"), list) else None,
     )
@@ -42,10 +42,10 @@ def _map_verse(raw: Dict[str, Any]) -> ChalisaVerseDto:
 
 class DefaultChalisaService(ChalisaService):
     def __init__(
-        self,
-        hanuman: HanumanChalisaClient,
-        drik: DrikPanchangChalisaClient,
-        static: StaticContentRegistry,
+            self,
+            hanuman: HanumanChalisaClient,
+            drik: DrikPanchangChalisaClient,
+            static: StaticContentRegistry,
     ) -> None:
         self.hanuman = hanuman
         self.drik = drik
@@ -96,9 +96,9 @@ class DefaultChalisaService(ChalisaService):
             deity = str(item.get("deity") or "").lower()
             title = str(item.get("title") or "").lower()
             if (
-                cid in {wanted, prefixed}
-                or deity == wanted
-                or prefixed in title.replace(" ", "-")
+                    cid in {wanted, prefixed}
+                    or deity == wanted
+                    or prefixed in title.replace(" ", "-")
             ):
                 return {
                     "id": item["id"],
@@ -124,7 +124,7 @@ class DefaultChalisaService(ChalisaService):
         return [ChalisaVerseDto.model_validate(v) for v in rows]
 
     async def get_chalisas(
-        self, deity: Optional[str], page: int, size: int
+            self, deity: Optional[str], page: int, size: int
     ) -> List[ChalisaDto]:
         all_rows = await self._catalog()
         if deity and deity.strip():
@@ -161,7 +161,7 @@ class DefaultChalisaService(ChalisaService):
         return dto
 
     async def get_chalisa_verse(
-        self, chalisa_id: str, verse_number: int
+            self, chalisa_id: str, verse_number: int
     ) -> ChalisaVerseDto:
         found = await self._find_chalisa(chalisa_id)
         if not found:

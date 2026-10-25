@@ -28,13 +28,15 @@ class Settings(BaseSettings):
     api_dharmicdata_base_url: str = (
         "https://raw.githubusercontent.com/bhavykhatri/DharmicData/main"
     )
-    # Free Astrology API (server-side proxy)
+    api_upanishad_devotional_base_url: str = (
+        "https://cdn.jsdelivr.net/npm/hindu-devotional-texts@0.7.0/dist/scriptures"
+    )
+    api_upanishad_json_base_url: str = (
+        "https://raw.githubusercontent.com/itz-rajkeshav/sacred-texts/main/src/upanishad/Data"
+    )
+
     astro_api_base: str = ""
     astro_api_key: str = ""
-
-    # ------------------------------------------------------------------
-    # Redis — master / replica configuration
-    # ------------------------------------------------------------------
     redis_enabled: bool = True
 
     redis_master_host: str = "localhost"

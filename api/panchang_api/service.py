@@ -4,111 +4,40 @@ import datetime as dt
 import logging
 import math
 from typing import Any, Optional
+from zoneinfo import ZoneInfo
 
 import httpx
 
 from api.panchang_api.service_contract import PanchangService
+from constants.astrology import HOROSCOPE_DAILY_URL, ZODIAC_SIGNS
+from constants.hindu import (
+    AYANA_DAKSHINAYANA,
+    AYANA_UTTARAYANA,
+    IST_TIMEZONE,
+    KRISHNA_AMAVASYA,
+    NAKSHATRAS,
+    PAKSHA_KRISHNA,
+    PAKSHA_SHUKLA,
+    RITU_BY_MONTH,
+    TITHI_NAMES,
+    UTTARAYANA_END_MONTH,
+    UTTARAYANA_START_MONTH,
+    WEEKDAYS,
+    WEEKDAYS_HI,
+    YOGA_NAMES,
+)
 from core.exceptions import ResourceNotFoundError
 from core.suggestions import suggestion_for
-from core.zodiac import ZODIAC_SIGNS
 
 logger = logging.getLogger(__name__)
-
-_TITHI_NAMES = [
-    "Pratipada",
-    "Dwitiya",
-    "Tritiya",
-    "Chaturthi",
-    "Panchami",
-    "Shashthi",
-    "Saptami",
-    "Ashtami",
-    "Navami",
-    "Dashami",
-    "Ekadashi",
-    "Dwadashi",
-    "Trayodashi",
-    "Chaturdashi",
-    "Purnima",
-]
-_KRISHNA_15 = "Amavasya"
-_NAKSHATRAS = [
-    "Ashwini",
-    "Bharani",
-    "Krittika",
-    "Rohini",
-    "Mrigashirsha",
-    "Ardra",
-    "Punarvasu",
-    "Pushya",
-    "Ashlesha",
-    "Magha",
-    "Purva Phalguni",
-    "Uttara Phalguni",
-    "Hasta",
-    "Chitra",
-    "Swati",
-    "Vishakha",
-    "Anuradha",
-    "Jyeshtha",
-    "Mula",
-    "Purva Ashadha",
-    "Uttara Ashadha",
-    "Shravana",
-    "Dhanishta",
-    "Shatabhisha",
-    "Purva Bhadrapada",
-    "Uttara Bhadrapada",
-    "Revati",
-]
-_YOGA_NAMES = [
-    "Vishkambha",
-    "Priti",
-    "Ayushman",
-    "Saubhagya",
-    "Shobhana",
-    "Atiganda",
-    "Sukarma",
-    "Dhriti",
-    "Shoola",
-    "Ganda",
-    "Vriddhi",
-    "Dhruva",
-    "Vyaghata",
-    "Harshana",
-    "Vajra",
-    "Siddhi",
-    "Vyatipata",
-    "Variyan",
-    "Parigha",
-    "Shiva",
-    "Siddha",
-    "Sadhya",
-    "Shubha",
-    "Shukla",
-    "Brahma",
-    "Indra",
-    "Vaidhriti",
-]
-_WEEKDAYS = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-]
-_WEEKDAYS_HI = ["सोमवार", "मंगलवार", "बुधवार", "गुरुवार", "शुक्रवार", "शनिवार", "रविवार"]
-_HOROSCOPE_URL = "https://horoscope-app-api.vercel.app/api/v1/get-horoscope/daily"
 
 
 def _julian_day(moment: dt.datetime) -> float:
     y = moment.year
     m = moment.month
     d = (
-        moment.day
-        + (moment.hour + moment.minute / 60.0 + moment.second / 3600.0) / 24.0
+            moment.day
+            + (moment.hour + moment.minute / 60.0 + moment.second / 3600.0) / 24.0
     )
     if m <= 2:
         y -= 1
@@ -139,36 +68,29 @@ def _panchang_for(moment: dt.datetime) -> dict[str, Any]:
     elongation = (moon - sun) % 360
     tithi_index = int(elongation / 12)
     if tithi_index >= 15:
-        paksha = "Krishna"
+        paksha = PAKSHA_KRISHNA
         tithi_name = (
-            _KRISHNA_15 if tithi_index == 29 else _TITHI_NAMES[tithi_index - 15]
+            KRISHNA_AMAVASYA if tithi_index == 29 else TITHI_NAMES[tithi_index - 15]
         )
         tithi_number = tithi_index - 14
     else:
-        paksha = "Shukla"
-        tithi_name = _TITHI_NAMES[tithi_index]
+        paksha = PAKSHA_SHUKLA
+        tithi_name = TITHI_NAMES[tithi_index]
         tithi_number = tithi_index + 1
-    nakshatra = _NAKSHATRAS[int(moon / (360 / 27)) % 27]
-    yoga = _YOGA_NAMES[int(((moon + sun) % 360) / (360 / 27)) % 27]
+    nakshatra = NAKSHATRAS[int(moon / (360 / 27)) % 27]
+    yoga = YOGA_NAMES[int(((moon + sun) % 360) / (360 / 27)) % 27]
     weekday = moment.weekday()
     month = moment.month
-    if month in (4, 5):
-        ritu = "Vasanta"
-    elif month in (6, 7):
-        ritu = "Grishma"
-    elif month in (8, 9):
-        ritu = "Varsha"
-    elif month in (10, 11):
-        ritu = "Sharad"
-    elif month == 12 or month == 1:
-        ritu = "Hemanta"
-    else:
-        ritu = "Shishira"
-    ayana = "Uttarayana" if 3 <= month < 9 else "Dakshinayana"
+    ritu = RITU_BY_MONTH[month]
+    ayana = (
+        AYANA_UTTARAYANA
+        if UTTARAYANA_START_MONTH <= month < UTTARAYANA_END_MONTH
+        else AYANA_DAKSHINAYANA
+    )
     return {
         "date": moment.date().isoformat(),
-        "weekday": _WEEKDAYS[weekday],
-        "weekdayHindi": _WEEKDAYS_HI[weekday],
+        "weekday": WEEKDAYS[weekday],
+        "weekdayHindi": WEEKDAYS_HI[weekday],
         "tithi": tithi_name,
         "tithiNumber": tithi_number,
         "paksha": paksha,
@@ -195,7 +117,7 @@ class DefaultPanchangService(PanchangService):
         noon = dt.datetime.combine(
             parsed,
             dt.time(12, 0),
-            tzinfo=dt.timezone(dt.timedelta(hours=5, minutes=30)),
+            tzinfo=ZoneInfo(IST_TIMEZONE),
         )
         return _panchang_for(noon)
 
@@ -211,7 +133,7 @@ class DefaultPanchangService(PanchangService):
             )
         if self._http is None:
             return _panchang_for(dt.datetime.now(dt.timezone.utc).astimezone())
-        url = f"{_HOROSCOPE_URL}?sign={cleaned}&day=today"
+        url = f"{HOROSCOPE_DAILY_URL}?sign={cleaned}&day=today"
         try:
             resp = await self._http.get(url)
             if resp.status_code == 200:

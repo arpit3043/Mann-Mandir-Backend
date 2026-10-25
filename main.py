@@ -19,6 +19,7 @@ from api.scriptures_api.gita_api import router as gita_router
 from api.scriptures_api.mahabharata_api import router as mahabharata_router
 from api.scriptures_api.ramayana_api import router as ramayana_router
 from api.stotram_api import router as stotram_router
+from constants.http import JSON_ACCEPT_HEADER
 from core.cache import RedisCache, build_redis_cache
 from core.config import Settings
 from core.exceptions import ResourceNotFoundError
@@ -110,11 +111,6 @@ def _mount_routes(app: FastAPI, api_prefix: str) -> None:
     )
 
 
-# ---------------------------------------------------------------------------
-# App lifecycle
-# ---------------------------------------------------------------------------
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     timeout = httpx.Timeout(
@@ -124,18 +120,14 @@ async def lifespan(app: FastAPI):
     )
     cache = _build_cache(settings)
     async with httpx.AsyncClient(
-        timeout=timeout,
-        headers={"Accept": "application/json"},
-        follow_redirects=True,
+            timeout=timeout,
+            headers=JSON_ACCEPT_HEADER,
+            follow_redirects=True,
     ) as client:
         app.state.settings = settings
         app.state.services = build_services(client, settings, cache)
         yield
 
-
-# ---------------------------------------------------------------------------
-# FastAPI application
-# ---------------------------------------------------------------------------
 
 app = FastAPI(
     title="Mann Mandir Backend",

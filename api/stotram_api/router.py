@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Request
 
 from api.responses import ok_payload
 from api.stotram_api.service_contract import StotramService
-from core.pagination import JAVA_MAX_INT
+from constants.api import DEFAULT_PAGE_SIZE, JAVA_MAX_INT
 from core.pagination import paginate as slice_page
 
 router = APIRouter()
@@ -16,10 +16,10 @@ def get_stotram_service(request: Request) -> StotramService:
 
 @router.get("")
 async def list_stotrams(
-    deity: Optional[str] = None,
-    page: int = 0,
-    size: int = 20,
-    svc: StotramService = Depends(get_stotram_service),
+        deity: Optional[str] = None,
+        page: int = 0,
+        size: int = DEFAULT_PAGE_SIZE,
+        svc: StotramService = Depends(get_stotram_service),
 ):
     full = await svc.get_stotrams(deity, 0, JAVA_MAX_INT)
     data = slice_page(full, page, size)
@@ -33,6 +33,6 @@ async def list_stotram_deities(svc: StotramService = Depends(get_stotram_service
 
 @router.get("/{stotram_id}")
 async def get_stotram(
-    stotram_id: str, svc: StotramService = Depends(get_stotram_service)
+        stotram_id: str, svc: StotramService = Depends(get_stotram_service)
 ):
     return ok_payload(await svc.get_stotram_by_id(stotram_id))

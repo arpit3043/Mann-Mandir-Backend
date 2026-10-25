@@ -6,6 +6,8 @@ from typing import Any, Generic, Optional, TypeVar
 
 from pydantic import BaseModel, Field
 
+from constants.api import DEFAULT_PAGE_SIZE
+
 T = TypeVar("T")
 
 
@@ -39,7 +41,7 @@ class ApiResponse(BaseModel, Generic[T]):
 
     @staticmethod
     def ok_data(
-        data: T, pagination: Optional[PaginationMeta] = None
+            data: T, pagination: Optional[PaginationMeta] = None
     ) -> "ApiResponse[T]":
         return ApiResponse(success=True, data=data, paginationMeta=pagination)
 
@@ -56,7 +58,7 @@ class ApiResponse(BaseModel, Generic[T]):
 
 def meta_from_totals(page: int, size: int, total: int) -> PaginationMeta:
     if size <= 0:
-        size = 20
+        size = DEFAULT_PAGE_SIZE
     total_pages = int(math.ceil(total / size)) if total > 0 else 0
     has_next = page < total_pages - 1 if total_pages > 0 else False
     return PaginationMeta(
